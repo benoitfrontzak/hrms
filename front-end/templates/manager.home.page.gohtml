@@ -1,0 +1,35 @@
+{{template "base.manager" . }}
+
+{{define "content"}}
+
+  <div class="container">
+      <div class="row justify-content-md-center">
+          <div class="col-sm-6 mt-3 text-center">
+              <h1 class="text-danger mt-3">Welcome manager</h1>
+              <hr>
+              <p class="text-start fw-bold">Paseto payload:</p>
+              <div class="row">
+                <div class="col text-start">Uuid</div>
+                <div class="col-10 text-end">{{.ID}}</div>
+              </div>
+              <div class="row">
+                <div class="col text-start">Email</div>
+                <div class="col-10 text-end">{{.Email}}</div>
+              </div>
+              <div class="row">
+                <div class="col text-start">Role</div>
+                <div class="col-10 text-end">{{.Role}}</div>
+              </div>
+              <div class="row">
+                <div class="col text-start">Issued</div>
+                <div class="col-10 text-end">{{.IssuedAt}}</div>
+              </div>
+              <div class="row">
+                <div class="col text-start">Expired</div>
+                <div class="col-10 text-end">{{.ExpiredAt}}</div>
+              </div>
+          </div>
+      </div>
+  </div>
+  
+{{end}}

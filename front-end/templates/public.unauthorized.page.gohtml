@@ -1,0 +1,38 @@
+{{template "base" . }}
+
+{{define "content"}}
+<div class="container">
+    <div class="row justify-content-md-center">
+        <div class="col-sm-6 mt-3 text-center">
+            <hr>
+            <div class="row">
+                <div class="col"><h2><i class="bi-exclamation-diamond-fill"></i> Unauthorized access</h2></div>
+            </div>
+            <div class="row">
+                <div class="col"><p>Your account does not have access to this page.</p></div>
+            </div>
+            <div class="row">
+                <div class="col"><img src="/static/images/unauthorized.jpg" style="width:100%; height:auto" /></div>
+            </div>
+             <div class="row">
+                <div class="col"><p>Please <a href="http://localhost">login</a> again</p></div>
+            </div>
+             <div class="row">
+                <div class="col">This page will auto redirect in <span id="countdown">10</span> seconds.</div>
+            </div>
+        </div>
+    </div>
+</div>
+{{end}}
+
+{{define "js"}}
+    <script>
+        var c = 10
+        // Update the count down every 1 second
+        // Redirect to login page when countdown finish
+        var x = setInterval(function() {
+        (c != 1) ? c -= 1 : window.location.href = "/"
+        document.querySelector("#countdown").innerHTML = c
+        }, 1000)
+    </script>
+{{end}}

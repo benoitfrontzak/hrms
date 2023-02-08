@@ -1,0 +1,19 @@
+{{template "base.admin" . }}
+
+{{define "content"}}
+
+  <div class="container">
+      <hr />
+      My users are: <br/>
+      {{$i :=1}}
+      {{range .Data}}
+        {{$e := .Email}}
+        {{$fn := .Firstname}}
+        {{$ln := .Lastname}}
+
+        My user {{$i}} is {{$e}}, {{$fn}}, {{$ln}} <br/>
+        {{$i = inc $i}}
+      {{end}}
+  </div>
+  add some comment modificaiton
+{{end}}

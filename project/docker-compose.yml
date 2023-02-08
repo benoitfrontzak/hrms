@@ -1,0 +1,80 @@
+version: '3'
+
+services:
+  broker-service:
+    build:
+      context: ./../broker-service
+      dockerfile: ./../broker-service/broker-service.dockerfile
+    restart: always
+    ports:
+      - "8088:8088"
+    deploy:
+      mode: replicated
+      replicas: 1
+    environment:
+      DSN: "amqp://root:rootroot@rabbitmq"
+      
+  authentication-service:
+    build:
+      context: ./../authentication-service
+      dockerfile: ./../authentication-service/authentication-service.dockerfile
+    restart: always
+    ports:
+      - "8081:8081"
+    deploy:
+      mode: replicated
+      replicas: 1
+    environment:
+      DSN: "host=backend port=5432 user=postgres password=rootroot dbname=authentication sslmode=disable timezone=UTC connect_timeout=5"
+    
+  logger-service:
+    build:
+      context: ./../logger-service
+      dockerfile: ./../logger-service/logger-service.dockerfile
+    restart: always
+    ports:
+      - "8080:8080"
+    deploy:
+      mode: replicated
+      replicas: 1
+  
+  amqp-service:
+    build:
+      context: ./../amqp-service
+      dockerfile: ./../amqp-service/amqp-service.dockerfile
+    deploy:
+      mode: replicated
+      replicas: 1
+    environment:
+      DSN: "amqp://root:rootroot@rabbitmq"
+    restart: always
+
+  rabbitmq3:
+        container_name: "rabbitmq"
+        image: rabbitmq:3.11-management-alpine
+        environment:
+            - RABBITMQ_DEFAULT_USER=root
+            - RABBITMQ_DEFAULT_PASS=rootroot
+        ports:
+            # AMQP protocol port
+            - '5672:5672'
+            # HTTP management UI
+            - '15672:15672'
+        deploy:
+          mode: replicated
+          replicas: 1
+        volumes:
+          - ./db-data/rabbitmq/:/var/lib/rabbitmq/
+  
+  mailer-service:
+    build:
+      context: ./../mailer-service
+      dockerfile: ./../mailer-service/mailer-service.dockerfile
+    restart: always
+    deploy:
+      mode: replicated
+      replicas: 1
+    ports:
+      - "8888:8888"
+
+  

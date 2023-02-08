@@ -1,0 +1,26 @@
+{
+	"folders": [
+		{
+			"path": "front-end"
+		},
+		{
+			"path": "project"
+		},
+		{
+			"path": "authentication-service"
+		},
+		{
+			"path": "logger-service"
+		},
+		{
+			"path": "amqp-service"
+		},
+		{
+			"path": "mailer-service"
+		},
+		{
+			"path": "broker-service"
+		}
+	],
+	"settings": {}
+}
