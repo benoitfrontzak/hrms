@@ -37,3 +37,9 @@ type httpContextStruct struct {
 	Auth bool
 	User TokenData
 }
+
+// TemplateData is the struct given to any HTML template
+type TemplateData struct {
+	User TokenData
+	Data any
+}

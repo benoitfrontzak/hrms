@@ -21,24 +21,29 @@ func (r *httpContextStruct) authorization(w http.ResponseWriter) {
 	authorized := r.Auth
 	user := r.User
 
+	// Template Data
+	td := TemplateData{
+		User: r.User,
+	}
+
 	// Authorized request
 	if authorized {
 		switch user.Role {
 		case 1:
 			// Render superAdminHome page
-			render.RenderTemplate(w, "superAdmin.home.page.gohtml", user)
+			render.RenderTemplate(w, "superAdmin.home.page.gohtml", td)
 
 		case 2:
 			// Render adminHome page
-			render.RenderTemplate(w, "admin.home.page.gohtml", user)
+			render.RenderTemplate(w, "admin.home.page.gohtml", td)
 
 		case 3:
 			// Render managerHome page
-			render.RenderTemplate(w, "manager.home.page.gohtml", user)
+			render.RenderTemplate(w, "manager.home.page.gohtml", td)
 
 		case 4:
 			// Render userHome page
-			render.RenderTemplate(w, "user.home.page.gohtml", user)
+			render.RenderTemplate(w, "user.home.page.gohtml", td)
 
 		default:
 			var empty any

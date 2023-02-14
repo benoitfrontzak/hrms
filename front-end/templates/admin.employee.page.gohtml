@@ -1,0 +1,15 @@
+{{template "base.admin" . }}
+
+{{define "content"}}
+
+  <div class="container">
+    <div class="row text-end mt-3">
+      <div class="col-sm"><a href="/employee/add" class="btn btn-danger"><i class="bi bi-plus-circle-fill"></i> Add</a></div>
+    </div>
+    <hr />
+    <div class="row">
+      <div class="col-sm">search by employee code</div>
+      <div class="col-sm"><input type="text" class="form-control" name="searchByEmployeeID" name="searchByEmployeeID" /></div>
+    </div>
+  </div>
+{{end}}

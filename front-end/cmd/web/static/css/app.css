@@ -1,0 +1,21 @@
+/* Bootstrap customization */
+  .nav-link{color: #dc3545;}
+  .nav-link:hover{color:#dc3546b0;}
+
+  /* Custom */
+  .space{
+    min-height: 2em;
+  }
+  .pointer{
+    cursor: pointer;
+  }
+  .pointer:hover{
+    color: #dc3545;
+    font-weight: bold;
+  }
+  .smaller{
+    font-size:x-small;
+  }
+  .hide{
+    display: none;
+  }
