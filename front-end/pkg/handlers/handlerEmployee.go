@@ -66,12 +66,10 @@ func showEmployeeHome(w http.ResponseWriter, myc httpContextStruct) {
 	// Admin employee home page
 	case 2:
 		render.RenderTemplate(w, "admin.employee.page.gohtml", td)
-
-	// User employee home page
-	case 3:
-		// Fetch employee profile (TODO)
-
-		render.RenderTemplate(w, "user.employee.page.gohtml", td)
+	// Only admin is allowed to access employee
+	default:
+		var empty any
+		render.RenderTemplate(w, "public.unauthorized.page.gohtml", empty)
 	}
 }
 func showEmployeeAddForm(w http.ResponseWriter, myc httpContextStruct) {

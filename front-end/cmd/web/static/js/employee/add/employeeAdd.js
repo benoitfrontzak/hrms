@@ -16,7 +16,7 @@ window.addEventListener('DOMContentLoaded', () => {
     // Set parameters to enable show|hide card function
     const showCard = true,
           hideCard = false,
-          myCards = ['identity', 'contact', 'emergency', 'spouseIdentity','spouseContact', 'payrollInfo']
+          myCards = ['identity', 'contact', 'emergency', 'spouseIdentity','spouseContact', 'payrollInfo', 'employmentInfo', 'epf', 'socso', 'incomeTax', 'others', 'payroll']
     // Enable show|hide function for each card
     myCards.forEach(card => {
         document.querySelector('#'+card+'Hide').addEventListener('click', () => { helpers.displayCardByID(card, hideCard) })

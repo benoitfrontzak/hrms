@@ -15,13 +15,6 @@ type payloadMail struct {
 	Message    string `json:"email_message"`
 }
 
-// RPCPayload is a struct which holds the information to be sent to the logger-service
-type RPCPayload struct {
-	Collection string
-	Name       string
-	Data       string
-}
-
 // My queue is the queue name declare by amqp-service
 var myQ = "mailer"
 

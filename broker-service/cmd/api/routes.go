@@ -10,6 +10,7 @@ func multiplexer() http.Handler {
 
 	// Statics routes
 	mux.HandleFunc("/sendEmail", handlers.Repo.SendEmail)
+	mux.HandleFunc("/createEmployee", handlers.Repo.CreateEmployee)
 
 	return mux
 }

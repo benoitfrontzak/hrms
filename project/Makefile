@@ -4,6 +4,7 @@ AUTH_BINARY=authApp
 LOGGER_BINARY=loggerApp
 AMQP_BINARY=amqpApp
 MAIL_BINARY=mailerApp
+EMPLOYEE_BINARY=employeeApp
 
 ## up: starts all containers in the background without forcing build
 up:
@@ -12,7 +13,7 @@ up:
 	@echo "Docker images started!"
 
 ## up_build: stops docker-compose (if running), builds all projects and starts docker compose
-up_build: build_broker build_auth build_logger build_amqp build_mailer
+up_build: build_broker build_auth build_logger build_amqp build_mailer build_employee
 	@echo "Stopping docker images (if running...)"
 	docker-compose down
 	@echo "Building (when required) and starting docker images..."
@@ -53,6 +54,12 @@ build_amqp:
 build_mailer:
 	@echo "Building mailer binary..."
 	cd ../mailer-service && env GOOS=linux CGO_ENABLED=0 go build -o ${MAIL_BINARY} ./cmd/api
+	@echo "Done!"
+
+## build_employee: builds the mail binary as a linux executable
+build_employee:
+	@echo "Building employee binary..."
+	cd ../employee-service && env GOOS=linux CGO_ENABLED=0 go build -o ${EMPLOYEE_BINARY} ./cmd/api
 	@echo "Done!"
 
 ## build_front: builds the frone end binary

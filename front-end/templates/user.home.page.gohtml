@@ -2,34 +2,254 @@
 
 {{define "content"}}
 
-  <div class="container">
-      <div class="row justify-content-md-center">
-          <div class="col-sm-6 mt-3 text-center">
-              <h1 class="text-danger mt-3">Welcome user</h1>
-              <hr>
-              <p class="text-start fw-bold">Paseto payload:</p>
-              <div class="row">
-                <div class="col text-start">Uuid</div>
-                <div class="col-10 text-end">{{.ID}}</div>
-              </div>
-              <div class="row">
-                <div class="col text-start">Email</div>
-                <div class="col-10 text-end">{{.Email}}</div>
-              </div>
-              <div class="row">
-                <div class="col text-start">Role</div>
-                <div class="col-10 text-end">{{.Role}}</div>
-              </div>
-              <div class="row">
-                <div class="col text-start">Issued</div>
-                <div class="col-10 text-end">{{.IssuedAt}}</div>
-              </div>
-              <div class="row">
-                <div class="col text-start">Expired</div>
-                <div class="col-10 text-end">{{.ExpiredAt}}</div>
-              </div>
+  <div class="container-fluid bg-light">
+      <!-- Title: Employee self-service -->
+      <div class="row justify-content-md-center border my-3 bg-white">
+          <div class="col-sm-12 my-3 text-start">
+            <h4><i class="bi-card-list"></i> Employee self-service</h4>            
           </div>
       </div>
+
+      <!-- Cards: On leave today | On leave tomorrow | My pending request | Requested my approval -->
+      <div class="d-flex justify-content-between">
+        <div class="space"></div>
+        <!-- Card: On leave today -->
+        <div class="card">
+          <div class="card-header bg-dark fw-bolder text-white">
+            <div class="d-flex justify-content-between">
+              <div class="flex-grow-1"><i class="bi-calendar-event-fill"></i> On leave today</div>
+            </div>    
+          </div>
+          <div class="card-body">
+            <div class="row"> <div class="col-sm-12 mt-3 text-center">todo...TING RONG</div> </div>
+            <div class="row"> <div class="col-sm-12 mt-3 text-end smaller pointer" data-bs-toggle="modal" data-bs-target="#onLeaveToday">see details <i class="bi-caret-right-square-fill"></i></div> </div>
+          </div>
+        </div>
+
+        <!-- Card: On leave tomorrow -->
+        <div class="card">
+          <div class="card-header bg-dark fw-bolder text-white">
+            <div class="d-flex justify-content-between">
+              <div class="flex-grow-1"><i class="bi-calendar-range-fill"></i> On leave tomorrow</div>
+            </div>    
+          </div>
+          <div class="card-body">
+            <div class="row"> <div class="col-sm-12 mt-3 text-center">todo...TING RONG</div> </div>
+            <div class="row"> <div class="col-sm-12 mt-3 text-end smaller pointer" data-bs-toggle="modal" data-bs-target="#onLeaveTomorrow">see details <i class="bi-caret-right-square-fill"></i></div> </div>
+          </div>
+        </div>
+
+        <!-- Card: My pending request -->
+        <div class="card">
+          <div class="card-header bg-dark fw-bolder text-white">
+            <div class="d-flex justify-content-between">
+              <div class="flex-grow-1"><i class="bi-clipboard-data"></i> My pending request</div>
+            </div>    
+          </div>
+          <div class="card-body">
+            <div class="row"> <div class="col-sm-12 mt-3 text-center">todo...CHOONG MING</div> </div>
+            <div class="row"> <div class="col-sm-12 mt-3 text-end smaller pointer" data-bs-toggle="modal" data-bs-target="#myPendingRequest">see details <i class="bi-caret-right-square-fill"></i></div> </div>
+          </div>
+        </div>
+
+        <!-- Card: Requested my approval -->
+        <div class="card">
+          <div class="card-header bg-dark fw-bolder text-white">
+            <div class="d-flex justify-content-between">
+              <div class="flex-grow-1"><i class="bi-clipboard-check"></i> Requested my approval</div>
+            </div>    
+          </div>
+          <div class="card-body">
+            <div class="row"> <div class="col-sm-12 mt-3 text-center">todo...CHOONG MING</div> </div>
+            <div class="row"> <div class="col-sm-12 mt-3 text-end smaller pointer" data-bs-toggle="modal" data-bs-target="#requestedMyApproval">see details <i class="bi-caret-right-square-fill"></i></div> </div>
+          </div>
+        </div>
+        <div class="space"></div>
+      </div>
+
+      <div class="space"></div>
+
+      <!-- Cards: Profile | My claim -->
+      <div class="row justify-content-md-center">
+        <div class="col-sm-6 my-3 text-center">
+          <!-- Card: Profile -->
+          <div class="card">
+            <div class="card-header bg-dark fw-bolder text-white">
+              <div class="row">
+                <div class="col text-start">Profile</div>
+              </div>    
+            </div>
+            <div class="card-body">
+              <div class="row"> <div class="col-sm-12 mt-3 text-center">todo...BEN</div> </div>
+              <div class="row"> <div class="col-sm-12 mt-3 text-end"> <a href="#" class="btn btn-light text-secondary">Leave</a> </div> </div>
+              <div class="row"> <div class="col-sm-12 mt-3 text-end"> <a href="#" class="btn btn-light text-secondary">Claim</a> </div> </div>
+            </div>
+          </div>            
+        </div>
+        <div class="col-sm-6 my-3 text-center">
+          <!-- Card: My claim -->
+          <div class="card">
+            <div class="card-header bg-dark fw-bolder text-white">
+              <div class="d-flex justify-content-between">
+                <div>My claim</div>
+                <div><i class="bi-download"></i></div>
+              </div>    
+            </div>
+            <div class="card-body">
+              <div class="row"> <div class="col-sm-12 mt-3 text-center">todo...CHOONG MING</div> </div>
+              <div class="row"> 
+                <div class="col-sm-4 text-end"></div> 
+                <div class="col-sm-4 text-end"></div> 
+                <div class="col-sm-4 text-end fw-bolder">Total</div> 
+              </div>
+              <div class="row">
+                <div class="col-sm-4 text-end"></div> 
+                <div class="col-sm-4 text-end"></div> 
+                <div class="col-sm-4 text-end border-bottom fw-bolder">RM todo...</div>
+              </div>
+              <div class="space"></div>
+              <div class="row"> 
+                <div class="col-sm-4 text-end"></div> 
+                <div class="col-sm-4 text-end"></div> 
+                <div class="col-sm-4 text-end smaller">Draft: RM todo...</div> 
+              </div>
+              <div class="row"> 
+                <div class="col-sm-4 text-end"></div> 
+                <div class="col-sm-4 text-end"></div> 
+                <div class="col-sm-4 text-end smaller">Applied: RM todo...</div> 
+              </div>
+              <div class="row"> 
+                <div class="col-sm-4 text-end"></div> 
+                <div class="col-sm-4 text-end"></div> 
+                <div class="col-sm-4 text-end smaller">Rejected: RM todo...</div> 
+              </div>
+              <div class="row"> 
+                <div class="col-sm-4 text-end"></div> 
+                <div class="col-sm-4 text-end"></div> 
+                <div class="col-sm-4 text-end smaller">Approved: RM todo...</div> 
+              </div>
+            </div>
+          </div>            
+        </div>
+      </div>
+
+      <div class="space"></div>
+
+      <!-- Cards: Leave -->
+      <div class="row justify-content-md-center">
+        <div class="col-sm-12 my-3 text-center">
+          <!-- Card: Profile -->
+          <div class="card">
+            <div class="card-header bg-dark fw-bolder text-white">
+              <div class="row">
+                <div class="col text-start">Leave</div>
+              </div>    
+            </div>
+            <div class="card-body">
+              <div class="row"> <div class="col-sm-12 mt-3 text-center">todo...TING RONG</div> </div>
+            </div>
+          </div>            
+        </div>
+      </div>
+
+      <div class="space"></div>
+
   </div>
 
+<!-- Modal: On leave today -->
+<div class="modal fade" id="onLeaveToday" tabindex="-1" aria-labelledby="onLeaveTodayLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="onLeaveTodayLabel">On leave today</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="d-flex flex-row justify-content-between border bd-highlight"> 
+          <div class="">Name</div>
+          <div class="">Deparment</div>
+          <div class="">Reason</div>
+          <div class="">Leave type</div>
+          <div class="">Time</div>
+        </div>
+        <span class="mt-3 smaller">TO DO...fetch from API</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: On leave tomorrow -->
+<div class="modal fade" id="onLeaveTomorrow" tabindex="-1" aria-labelledby="onLeaveTomorrowLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="onLeaveTomorrowLabel">On leave tomorrow</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="d-flex flex-row justify-content-between border bd-highlight"> 
+          <div class="">Name</div>
+          <div class="">Deparment</div>
+          <div class="">Reason</div>
+          <div class="">Leave type</div>
+          <div class="">Time</div>
+        </div>
+        <span class="mt-3 smaller">TO DO...fetch from API</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: My pending request -->
+<div class="modal fade" id="myPendingRequest" tabindex="-1" aria-labelledby="myPendingRequestLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="myPendingRequestLabel">My pending request</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="d-flex flex-row justify-content-between border bd-highlight"> 
+          <div class="">Requested</div>
+          <div class="">Description</div>
+          <div class="">Requested Date</div>
+        </div>
+        <span class="mt-3 smaller">TO DO...fetch from API</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Requested my approval -->
+<div class="modal fade" id="requestedMyApproval" tabindex="-1" aria-labelledby="requestedMyApprovalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="requestedMyApprovalLabel">Requested my approval</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="d-flex flex-row justify-content-between border bd-highlight"> 
+          <div class="">Employee</div>
+          <div class="">Requested</div>
+          <div class="">Description</div>
+          <div class="">Requested Date</div>
+        </div>
+        <span class="mt-3 smaller">TO DO...fetch from API</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 {{end}}

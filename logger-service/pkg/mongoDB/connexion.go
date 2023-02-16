@@ -3,17 +3,16 @@ package mongoDB
 import (
 	"context"
 	"log"
+	"os"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 var Client *mongo.Client
+var DSN = os.Getenv("DSN")
 
-const (
-	DSN = "mongodb://backend:27017"
-	DB  = "logs"
-)
+const DB = "logs"
 
 // ConnectToDB connect to mongo db
 func ConnectToDB() (*mongo.Client, error) {

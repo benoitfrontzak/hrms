@@ -13,7 +13,20 @@ services:
       replicas: 1
     environment:
       DSN: "amqp://root:rootroot@rabbitmq"
-      
+
+  employee-service:
+    build:
+      context: ./../employee-service
+      dockerfile: ./../employee-service/employee-service.dockerfile
+    restart: always
+    ports:
+      - "8882:8882"
+    deploy:
+      mode: replicated
+      replicas: 1
+    environment:
+      DSN: "host=backend port=5432 user=postgres password=rootroot dbname=EMPLOYEE sslmode=disable timezone=UTC connect_timeout=5"
+
   authentication-service:
     build:
       context: ./../authentication-service
@@ -37,7 +50,9 @@ services:
     deploy:
       mode: replicated
       replicas: 1
-  
+    environment:
+      DSN: "mongodb://backend:27017"
+
   amqp-service:
     build:
       context: ./../amqp-service
