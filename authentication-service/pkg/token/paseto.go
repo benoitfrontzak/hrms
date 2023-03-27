@@ -28,8 +28,8 @@ func NewPaseto(symetricKey string) (*Paseto, error) {
 }
 
 // CreateToken creates a new token for a specific username and duration
-func (p *Paseto) CreateToken(email, nickname string, role int) (string, error) {
-	payload, err := NewPayload(email, nickname, role)
+func (p *Paseto) CreateToken(email, nickname string, role, eid int) (string, error) {
+	payload, err := NewPayload(email, nickname, role, eid)
 	if err != nil {
 		return "", err
 	}

@@ -11,7 +11,7 @@ import (
 
 const (
 	unauthorized = "http://localhost/unauthorized"
-	authorize    = "http://localhost:8081/verifyCookie"
+	authorize    = "http://localhost:8081/api/v1/authentication/verifyCookie"
 )
 
 // Middleware checks if secure cookie exists
@@ -23,7 +23,6 @@ func Middleware(next http.Handler) http.Handler {
 		// Get secure cookie from request
 		cookie, err := r.Cookie(CookieName)
 		if err != nil {
-			log.Printf("failed to extract the cookie: %s", err)
 			http.Redirect(w, r, unauthorized, http.StatusSeeOther)
 			return
 		}

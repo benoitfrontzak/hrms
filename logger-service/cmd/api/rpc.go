@@ -7,7 +7,6 @@ import (
 	"logger/pkg/mongoDB"
 	"net"
 	"net/rpc"
-	"time"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -21,6 +20,8 @@ type RPCPayload struct {
 	Collection string
 	Name       string
 	Data       string
+	CreatedAt  string
+	CreatedBy  string
 }
 
 // LogInfo writes our payload to mongo DB
@@ -29,7 +30,8 @@ func (r *RPCServer) LogInfo(payload RPCPayload, resp *string) error {
 	result, err := collection.InsertOne(context.TODO(), mongoDB.LogEntry{
 		Name:      payload.Name,
 		Data:      payload.Data,
-		CreatedAt: time.Now().String(),
+		CreatedAt: payload.CreatedAt,
+		CreatedBy: payload.CreatedBy,
 	})
 
 	if err != nil {

@@ -3,15 +3,68 @@
 {{define "content"}}
 
   <div class="container-fluid">
-    <div class="row text-end mt-3">
-      <div class="col-sm"><a href="#" class="btn btn-danger" id="openCreateEmployee" data-bs-toggle="modal" data-bs-target="#createEmployee"><i class="bi bi-plus-circle-fill"></i> add</a></div>
+    <!-- ACTION BUTTON -->
+    <div class="d-flex flex-row-reverse mt-3">
+      <div class="p-2 bd-highlight"><a href="#" class="btn btn-danger" id="openCreateEmployee" data-bs-toggle="modal" data-bs-target="#createEmployee"><i class="bi bi-plus-circle-fill"></i> add</a></div>
+      <div class="p-2 bd-highlight"><a href="#" class="btn btn-danger" id="deleteAllEmployee"><i class="bi-dash-circle"></i> delete</a></div>
+      <div class="p-2 bd-highlight">
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">View</button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            <li><a class="dropdown-item" href="#" id="activeBtn">Active</a></li>
+            <li><a class="dropdown-item" href="#" id="inactiveBtn">Inactive</a></li>
+            <li><a class="dropdown-item" href="#" id="deletedBtn">Deleted</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- WARNING DELETE MESSAGE -->
+    <div class="alert alert-warning mt-3 hide" role="alert" id="deleteWarningMessageDiv">
+      <div class="d-flex justify-content-between">
+        <div class="flex-grow-1"><h4 class="alert-heading"><i class="bi-exclamation-diamond-fill"></i> Warning!</h4></div>
+        <div class="flex-shrink-1"><i class="bi-x-circle-fill pointer" id="hidedeleteWarningMessage"></i></div>
+      </div>      
+      <p>You must select at least one entry before deleting...</p>
+      <hr>
+      <p class="mb-0 smaller">Please check in on some of those fields below...</p>
     </div>
     <hr />
-    <div class="row">
-      <div class="col-sm">search by employee code</div>
-      <div class="col-sm"><input type="text" class="form-control" name="searchByEmployeeID" name="searchByEmployeeID" /></div>
+
+    <table id="employeeSummary" class="display stripe" style="width:100%">
+      <thead>
+          <tr>
+              <th>Code</th>
+              <th>Fullname</th>
+              <th>Email</th>
+              <th>Mobile</th>
+              <th>Birthdate</th>
+              <th>Race</th>
+              <th>Gender</th>
+              <th></th>
+          </tr>
+      </thead>
+      <tbody id="employeeSummaryBody"></tbody>
+     </table>
+
+  </div>
+<!-- modal: Confirm employee deletion -->
+<div class="modal fade" id="confirmDelete" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirm delete</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p id="confirmDeleteBody"></p>
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="btn btn-danger" id="confirmDeleteSubmit"><i class="bi bi-save2-fill"></i> Confirm</a>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">close</button>
+      </div>
     </div>
   </div>
+</div>
 
 <!-- modal: Create employee -->
 <div class="modal fade" id="createEmployee" tabindex="-1" aria-labelledby="createEmployeelabel" aria-hidden="true">
@@ -22,345 +75,316 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
       </div>
       <form name="createEmployeeForm" id="createEmployeeForm">
-      <div class="modal-body">
-        <!-- WARNING MESSAGE -->
-        <div class="alert alert-warning mt-3 hide" role="alert" id="warningMessageDiv">
-          <div class="d-flex justify-content-between">
-            <div class="flex-grow-1"><h4 class="alert-heading"><i class="bi-exclamation-diamond-fill"></i> Warning!</h4></div>
-            <div class="flex-shrink-1"><i class="bi-x-circle-fill pointer" id="hideWarningMessage"></i></div>
-          </div>      
-          <p id="warningMessageBody">Please you must fill those fields</p>
-          <hr>
-          <p class="mb-0 smaller">Please check in on some of those fields below...</p>
-        </div>
-        <div class="space"></div>
-        <!-- card: identity -->
-        <div class="card">
-          <!-- card header: identity  -->
-          <div class="card-header bg-dark fw-bolder text-white">
+        <div class="modal-body">
+          <!-- WARNING MESSAGE -->
+          <div class="alert alert-warning mt-3 hide" role="alert" id="warningMessageDiv">
             <div class="d-flex justify-content-between">
-              <div class="flex-grow-1"><i class="bi-person-lines-fill"></i> identity</div>
-              <div class="flex-shrink-1"><span class="fw-bolder fst-italic"><small><i class="bi-x-circle-fill" id="identityHide"></i><i class="bi-fullscreen hide" id="identityShow"></i></small></span></div>
-            </div>    
+              <div class="flex-grow-1"><h4 class="alert-heading"><i class="bi-exclamation-diamond-fill"></i> Warning!</h4></div>
+              <div class="flex-shrink-1"><i class="bi-x-circle-fill pointer" id="hideWarningMessage"></i></div>
+            </div>      
+            <p id="warningMessageBody">Please you must fill those fields</p>
+            <hr>
+            <p class="mb-0 smaller">Please check in on some of those fields below...</p>
           </div>
-          <!-- card body: identity -->
-          <div class="card-body" id="identityBodyCard">
-            <!-- identity: 1st row (firstName | middlename | familyname) -->
-            <div class="row my-3">
-              <!-- identity:  firstName -->
-              <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="firstName" name="firstName" />
-                <div class="fw-lighter fst-italic smaller mt-1"><i class="bi-shield-fill-exclamation"></i> first name</div>
-                <div class="fw-bolder text-danger fst-italic smaller" id="firstNameError"></div>
-              </div>
-              <!-- identity:  middleName -->
-              <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="middleName" name="middleName" />
-                <div class="fw-lighter fst-italic smaller"><i class="bi-shield-fill-exclamation"></i> middle name</div>
-                <div class="fw-bolder text-danger fst-italic smaller" id="middleNameError"></div>
-              </div>
-              <!-- identity:  familyName -->
-              <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="familyName" name="familyName" />
-                <div class="fw-lighter fst-italic smaller"><i class="bi-shield-fill-exclamation"></i> family name</div>
-                <div class="fw-bolder text-danger fst-italic smaller" id="familyNameError"></div>
-              </div>
+          <div class="space"></div>
+          <!-- card: identity -->
+          <div class="card">
+            <!-- card header: identity  -->
+            <div class="card-header bg-dark fw-bolder text-white">
+              <div class="d-flex justify-content-between">
+                <div class="flex-grow-1"><i class="bi-person-lines-fill"></i> identity</div>
+                <div class="flex-shrink-1"><span class="fw-bolder fst-italic"><small><i class="bi-x-circle-fill" id="identityHide"></i><i class="bi-fullscreen hide" id="identityShow"></i></small></span></div>
+              </div>    
             </div>
-            <div class="space"></div>
-            <!-- identity: 2nd row (givenname | employee code | gender & marital status) -->
-            <div class="row my-3">
-              <!-- identity:  givenName -->
-              <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="givenName" name="givenName" />
-                <div class="fw-lighter fst-italic smaller">given name</div>
-                <div class="fw-bolder text-danger fst-italic smaller" id="givenNameError"></div>
-              </div>
-              <!-- identity:  employee code -->
-              <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="employeeCode" name="employeeCode" />
-                <div class="fw-lighter fst-italic smaller"><i class="bi-shield-fill-exclamation"></i> employee code</div>
-                <div class="fw-bolder text-danger fst-italic smaller" id="employeeCodeError"></div>
-              </div>
-              <!-- identity:  gender & marital status --> 
-              <div class="col-sm-4">
-                <div class="row">
-                  <div class="col">
-                     <div class="form-check">
-                      <input class="form-check-input" type="radio" name="gender" id="gender1" value=1 checked>
-                      <label class="form-check-label" for="gender1">male</label>
-                    </div>
-                    <div class="form-check">
-                      <input class="form-check-input" type="radio" name="gender" id="gender2" value=0>
-                      <label class="form-check-label" for="gender2">female</label>
-                    </div>
-                  </div> 
-                  <div class="col">
-                    <div class="form-check">
-                      <input class="form-check-input" type="radio" name="maritalstatus" id="maritalstatus1" value=0 checked>
-                      <label class="form-check-label" for="maritalstatus1">single</label>
-                    </div>
-                    <div class="form-check">
-                      <input class="form-check-input" type="radio" name="maritalstatus" id="maritalstatus2" value=1>
-                      <label class="form-check-label" for="maritalstatus2">married</label>
-                    </div>
-                  </div> 
+            <!-- card body: identity -->
+            <div class="card-body" id="identityBodyCard">
+              <!-- identity: 1st row (firstName | middlename | familyname) -->
+              <div class="row my-3">
+                <!-- identity:  firstName -->
+                <div class="col-sm-4">
+                  <input type="text" class="form-control form-control-sm" id="firstName" name="firstName" />
+                  <div class="fw-lighter fst-italic smaller mt-1"><i class="bi-shield-fill-exclamation"></i> first name</div>
+                  <div class="fw-bolder text-danger fst-italic smaller" id="firstNameError"></div>
+                </div>
+                <!-- identity:  middleName -->
+                <div class="col-sm-4">
+                  <input type="text" class="form-control form-control-sm" id="middleName" name="middleName" />
+                  <div class="fw-lighter fst-italic smaller"><i class="bi-shield-fill-exclamation"></i> middle name</div>
+                  <div class="fw-bolder text-danger fst-italic smaller" id="middleNameError"></div>
+                </div>
+                <!-- identity:  familyName -->
+                <div class="col-sm-4">
+                  <input type="text" class="form-control form-control-sm" id="familyName" name="familyName" />
+                  <div class="fw-lighter fst-italic smaller"><i class="bi-shield-fill-exclamation"></i> family name</div>
+                  <div class="fw-bolder text-danger fst-italic smaller" id="familyNameError"></div>
                 </div>
               </div>
+              <div class="space"></div>
+              <!-- identity: 2nd row (givenname | employee code | gender & marital status) -->
+              <div class="row my-3">
+                <!-- identity:  givenName -->
+                <div class="col-sm-4">
+                  <input type="text" class="form-control form-control-sm" id="givenName" name="givenName" />
+                  <div class="fw-lighter fst-italic smaller">given name</div>
+                  <div class="fw-bolder text-danger fst-italic smaller" id="givenNameError"></div>
+                </div>
+                <!-- identity:  employee code -->
+                <div class="col-sm-4">
+                  <input type="text" class="form-control form-control-sm" id="employeeCode" name="employeeCode" />
+                  <div class="fw-lighter fst-italic smaller"><i class="bi-shield-fill-exclamation"></i> employee code</div>
+                  <div class="fw-bolder text-danger fst-italic smaller" id="employeeCodeError"></div>
+                </div>
+                <!-- identity:  gender & marital status --> 
+                <div class="col-sm-4">
+                  <div class="row">
+                    <div class="col">
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="gender" id="gender1" value="1" checked>
+                        <label class="form-check-label" for="gender1">male</label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="gender" id="gender2" value="0">
+                        <label class="form-check-label" for="gender2">female</label>
+                      </div>
+                    </div> 
+                    <div class="col">
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="maritalstatus" id="maritalstatus1" value=0 checked>
+                        <label class="form-check-label" for="maritalstatus1">single</label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="maritalstatus" id="maritalstatus2" value=1>
+                        <label class="form-check-label" for="maritalstatus2">married</label>
+                      </div>
+                    </div> 
+                  </div>
+                </div>
+              </div>
+              <div class="space"></div>
+              <hr />
+              <!-- identity: 3rd row (ic number | passport number | passport expiry date) -->
+              <div class="row my-3">
+                <!-- identity:  ic number -->
+                <div class="col-sm-4">                
+                  <input type="text" class="form-control form-control-sm" id="icNumber" name="icNumber" />
+                  <div class="fw-lighter fst-italic smaller mt-1">ic number</div>
+                  <div class="fw-bolder text-danger fst-italic smaller" id="icNumberError"></div>
+                </div>
+                <!-- identity:  passport number -->
+                <div class="col-sm-4">
+                  <input type="text" class="form-control form-control-sm" id="passportNumber" name="passportNumber" />
+                  <div class="fw-lighter fst-italic smaller">passport number</div>
+                  <div class="fw-bolder text-danger fst-italic smaller" id="passportNumberError"></div>
+                </div>
+                <!-- identity:  passport expiry date -->
+                <div class="col-sm-4">
+                  <input type="date" class="form-control form-control-sm" value=NULL id="passportExpiryAt" name="passportExpiryAt" />
+                  <div class="fw-lighter fst-italic smaller">passport expiry date</div>
+                  <div class="fw-bolder text-danger fst-italic smaller" id="passportExpiryAtError"></div>
+                </div>
+              </div>
+              <div class="space"></div>
+              <hr />         
+              <!-- identity: 4th row (nationality | residence country | immigration number) -->
+              <div class="row my-3">
+                <!-- identity: nationality -->
+                <div class="col-sm-4">
+                  <select class="form-control form-control-sm" id="nationality" name="nationality"></select>
+                  <div class="fw-lighter fst-italic smaller mt-1"><i class="bi-shield-fill-exclamation"></i> nationality</div>
+                  <div class="fw-bolder text-danger fst-italic smaller" id="nationalityError"></div>
+                </div>
+                <!-- identity: residence country --> 
+                <div class="col-sm-4">             
+                  <select class="form-control form-control-sm" id="residence" name="residence"></select>
+                  <div class="fw-lighter fst-italic smaller mt-1"><i class="bi-shield-fill-exclamation"></i> residence country</div>
+                  <div class="fw-bolder text-danger fst-italic smaller" id="residenceError"></div>
+                </div>
+                <!-- identity: immigration number -->
+                <div class="col-sm-4">
+                  <input type="text" class="form-control form-control-sm" id="immigrationNumber" name="immigrationNumber" />
+                  <div class="fw-lighter fst-italic smaller">immigration number</div>
+                  <div class="fw-bolder text-danger fst-italic smaller" id="immigrationNumberError"></div>
+                </div>
+              </div> 
+              <div class="space"></div>
+              <hr />
+              <!-- identity: 5th row (birth date | race | religion) -->
+              <div class="row my-3">
+                <!-- identity: birth date -->
+                <div class="col-sm-4">
+                  <input type="date" class="form-control form-control-sm" value=NULL id="birthdate" name="birthdate" />
+                  <div class="fw-lighter fst-italic smaller">date of birth</div>
+                  <div class="fw-bolder text-danger fst-italic smaller" id="birthdateError"></div>
+                </div>
+                <!-- identity:  race -->
+                <div class="col-sm-4">
+                  <select class="form-control form-control-sm" id="race" name="race"></select>
+                  <div class="fw-lighter fst-italic smaller">race</div>
+                  <div class="fw-bolder text-danger fst-italic smaller" id="raceError"></div>
+                </div>
+                <!-- identity:  religion -->
+                <div class="col-sm-4">
+                  <select class="form-control form-control-sm" id="religion" name="religion"></select>          
+                  <div class="fw-lighter fst-italic smaller">religion</div>
+                  <div class="fw-bolder text-danger fst-italic smaller" id="religionError"></div>
+                </div>
+              </div>  
+              <div class="space"></div>
+              <hr />
+              <!-- identity: 6th row (is active & is foreigner & is disable person) -->
+              <div class="row mb-3">
+                <!-- identity: is active & is foreigner & is disable person -->
+                <div class="col-sm-4">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="1" id="isActive" name="isActive">
+                    <label class="form-check-label fw-lighter fst-italic smaller" for="isActive">is active</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="1" id="isForeigner" name="isForeigner">
+                    <label class="form-check-label fw-lighter fst-italic smaller" for="isForeigner">is foreigner</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="1" id="isDisable" id="isDisable">
+                    <label class="form-check-label fw-lighter fst-italic smaller" for="isDisable">is disable person</label>
+                  </div>
+                </div>
+                <div class="col-sm-4"></div>
+                <div class="col-sm-4"></div>
+              </div> 
             </div>
-            <div class="space"></div>
-            <hr />
-            <!-- identity: 3rd row (ic number | passport number | passport expiry date) -->
-            <div class="row my-3">
-              <!-- identity:  ic number -->
-              <div class="col-sm-4">                
-                <input type="text" class="form-control form-control-sm" id="icNumber" name="icNumber" />
-                <div class="fw-lighter fst-italic smaller mt-1">ic number</div>
-                <div class="fw-bolder text-danger fst-italic smaller" id="icNumberError"></div>
-              </div>
-              <!-- identity:  passport number -->
-              <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="passportNumber" name="passportNumber" />
-                <div class="fw-lighter fst-italic smaller">passport number</div>
-                <div class="fw-bolder text-danger fst-italic smaller" id="passportNumberError"></div>
-              </div>
-              <!-- identity:  passport expiry date -->
-              <div class="col-sm-4">
-                <input type="date" class="form-control form-control-sm" id="passportExpiryAt" name="passportExpiryAt" />
-                <div class="fw-lighter fst-italic smaller">passport expiry date</div>
-                <div class="fw-bolder text-danger fst-italic smaller" id="passportExpiryAtError"></div>
-              </div>
-            </div>
-            <div class="space"></div>
-            <hr />         
-            <!-- identity: 4th row (nationality | residence country | immigration number) -->
-            <div class="row my-3">
-              <!-- identity: nationality -->
-              <div class="col-sm-4">
-                <select class="form-control form-control-sm" id="nationality" name="nationality">
-                  <option selected hidden value=""></option>                  
-                  <option value=0>Malaysian</option>
-                  <option value=1>Chinese</option>
-                  <option value=2>Indian</option>
-                  <option value=3>other</option>
-                </select>
-                <div class="fw-lighter fst-italic smaller mt-1"><i class="bi-shield-fill-exclamation"></i> nationality</div>
-                <div class="fw-bolder text-danger fst-italic smaller" id="nationalityError"></div>
-              </div>
-              <!-- identity: residence country --> 
-              <div class="col-sm-4">             
-                <select class="form-control form-control-sm" id="residence" name="residence">
-                  <option selected hidden value=""></option>                  
-                  <option value=0>malaysia</option>
-                  <option value=1>other</option>
-                </select>
-                <div class="fw-lighter fst-italic smaller mt-1"><i class="bi-shield-fill-exclamation"></i> residence country</div>
-                <div class="fw-bolder text-danger fst-italic smaller" id="residenceError"></div>
-              </div>
-              <!-- identity: immigration number -->
-              <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="immigrationNumber" name="immigrationNumber" />
-                <div class="fw-lighter fst-italic smaller">immigration number</div>
-                <div class="fw-bolder text-danger fst-italic smaller" id="immigrationNumberError"></div>
-              </div>
-            </div> 
-            <div class="space"></div>
-            <hr />
-            <!-- identity: 5th row (birth date | race | religion) -->
-            <div class="row my-3">
-              <!-- identity: birth date -->
-              <div class="col-sm-4">
-                <input type="date" class="form-control form-control-sm" id="birthdate" name="birthdate" />
-                <div class="fw-lighter fst-italic smaller">date of birth</div>
-                <div class="fw-bolder text-danger fst-italic smaller" id="birthdateError"></div>
-              </div>
-              <!-- identity:  race -->
-              <div class="col-sm-4">
-                <select class="form-control form-control-sm" id="race" name="race">
-                  <option selected hidden value=""></option>                  
-                  <option value=0>malay</option>
-                  <option value=1>chinese</option>
-                  <option value=2>indian</option>
-                  <option value=3>other</option>
-                </select>
-                <div class="fw-lighter fst-italic smaller">race</div>
-                <div class="fw-bolder text-danger fst-italic smaller" id="raceError"></div>
-              </div>
-              <!-- identity:  religion -->
-              <div class="col-sm-4">
-                <select class="form-control form-control-sm" id="religion" name="religion">
-                  <option selected hidden value=""></option>                  
-                  <option value=0>islam</option>
-                  <option value=1>buddhism</option>
-                  <option value=2>hinduism</option>
-                  <option value=3>christianity</option>
-                </select>          
-                <div class="fw-lighter fst-italic smaller">religion</div>
-                <div class="fw-bolder text-danger fst-italic smaller" id="religionError"></div>
-              </div>
-            </div>  
-            <div class="space"></div>
-            <hr />
-            <!-- identity: 7th row (is foreigner & is disable person | has e-claim & has e-leave) -->
-            <div class="row mb-3">
-              <!-- identity: is foreigner & is disable person -->
-              <div class="col-sm-4">
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="1" id="isActive" name="isActive">
-                  <label class="form-check-label fw-lighter fst-italic smaller" for="isActive">is active</label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="1" id="isForeigner" name="isForeigner">
-                  <label class="form-check-label fw-lighter fst-italic smaller" for="isForeigner">is foreigner</label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="1" id="isDisable" id="isDisable">
-                  <label class="form-check-label fw-lighter fst-italic smaller" for="isDisable">is disable person</label>
-                </div>
-              </div>
-              <div class="col-sm-4"></div>
-              <!-- identity: has e-claim & has e-leave -->
-              <div class="col-sm-4">
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="1" id="eclaim" name="eclaim">
-                  <label class="form-check-label fw-lighter fst-italic smaller" for="eclaim">has e-claim</label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="1" id="eleave" name="eleave">
-                  <label class="form-check-label fw-lighter fst-italic smaller" for="eleave">has e-leave</label>
-                </div>
-              </div>
-            </div> 
           </div>
+          <!-- card: access-->
+          <div class="card mt-3">
+            <!-- card header: access  -->
+            <div class="card-header bg-dark fw-bolder text-white">
+              <div class="d-flex justify-content-between">
+                <div class="flex-grow-1"><i class="bi-person-lines-fill"></i> Access</div>
+                <div class="flex-shrink-1"><span class="fw-bolder fst-italic"><small><i class="bi-x-circle-fill" id="accessHide"></i><i class="bi-fullscreen hide" id="accessShow"></i></small></span></div>
+              </div>
+            </div>
+            <!-- card body: access -->
+            <div class="card-body" id="accessBodyCard">
+              <!-- access:  1st row (has e-claim & has e-leave | user role) -->
+              <div class="row mb-3">
+                <div class="col-sm-4"></div>
+                <div class="col-sm-4"></div>
+                <!-- access: user role -->
+                <!-- from authentication: superAdmin = 1 | admin = 2 | manager = 3 | user = 4 -->
+                <div class="col-sm-4">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="role" id="role1" value="4" checked>
+                    <label class="form-check-label" for="role1">user</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="role" id="role2" value="2">
+                    <label class="form-check-label" for="role2">admin</label>
+                  </div>
+                </div>      
+              </div>        
+              <div class="space"></div>
+            </div>
+          </div>
+          <!-- card: contact-->
+          <div class="card mt-3">
+            <!-- card header: contact  -->
+            <div class="card-header bg-dark fw-bolder text-white">
+              <div class="d-flex justify-content-between">
+                <div class="flex-grow-1"><i class="bi-person-lines-fill"></i> contact</div>
+                <div class="flex-shrink-1"><span class="fw-bolder fst-italic"><small><i class="bi-x-circle-fill" id="contactHide"></i><i class="bi-fullscreen hide" id="contactShow"></i></small></span></div>
+              </div>
+            </div>
+            <!-- card body: contact -->
+            <div class="card-body" id="contactBodyCard">
+              <!-- contact:  1st row (address: streetaddr1 | streetAddressLine2 | zip code) -->
+              <div class="row mb-3">
+                <!-- contact: streetaddr1 -->
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" id="streetaddr1" name="streetaddr1" />
+                    <div class="fw-lighter fst-italic smaller"><i class="bi-shield-fill-exclamation"></i> street address</div>
+                    <div class="fw-bolder text-danger fst-italic smaller" id="streetaddr1Error"></div>
+                </div>
+                <!-- contact: streetaddr2 -->
+                <div class="col-sm-4">
+                  <input type="text" class="form-control" id="streetaddr2" name="streetaddr2" />
+                  <div class="fw-lighter fst-italic smaller"><i class="bi-shield-fill-exclamation"></i> street address line2</div>
+                  <div class="fw-bolder text-danger fst-italic smaller" id="streetaddr2Error"></div>
+                </div>
+                <!-- contact: zip code -->
+                <div class="col-sm-4">
+                  <input type="text" class="form-control" id="zip" name="zip" />
+                  <div class="fw-lighter fst-italic smaller"><i class="bi-shield-fill-exclamation"></i> zip code</div>
+                  <div class="fw-bolder text-danger fst-italic smaller" id="zipError"></div>
+                </div>      
+              </div>
+              <!-- contact:  2nd row (address: city | state | country) -->
+              <div class="row mb-3">
+                <!-- contact: city -->
+                <div class="col-sm-4">
+                  <input type="text" class="form-control" id="city" name="city" />
+                  <div class="fw-lighter fst-italic smaller"><i class="bi-shield-fill-exclamation"></i> city</div>
+                  <div class="fw-bolder text-danger fst-italic smaller" id="cityError"></div>
+                </div>              
+                <!-- contact: state -->
+                <div class="col-sm-4">
+                  <input type="text" class="form-control" id="state" name="state" />
+                  <div class="fw-lighter fst-italic smaller"><i class="bi-shield-fill-exclamation"></i> state / province</div>
+                  <div class="fw-bolder text-danger fst-italic smaller" id="stateError"></div>
+                </div>              
+                <!-- contact: country -->
+                <div class="col-sm-4">
+                  <select class="form-control form-control-sm" id="country" name="country">
+                    <option selected hidden value=""></option>                  
+                    <option value=0>Malaysian</option>
+                    <option value=1>Chinese</option>
+                    <option value=2>Indian</option>
+                    <option value=3>other</option>
+                  </select>
+                  <div class="fw-lighter fst-italic smaller"><i class="bi-shield-fill-exclamation"></i> country</div>
+                  <div class="fw-bolder text-danger fst-italic smaller" id="countryError"></div>
+                </div>
+              </div>
+              <div class="space"></div>
+              <hr />
+              <!-- contact:  3rd row (primary phone | secondary phone) -->
+              <div class="row mb-3">
+                <!-- contact: primary phone -->
+                <div class="col-sm-4">
+                  <input type="text" class="form-control form-control-sm" id="primaryPhone" name="primaryPhone" />
+                  <div class="fw-lighter fst-italic smaller"><i class="bi-shield-fill-exclamation"></i> primary phone</div>
+                  <div class="fw-bolder text-danger fst-italic smaller" id="primaryPhoneError"></div>
+                </div>
+                <!-- contact: secondary phone -->
+                <div class="col-sm-4">
+                  <input type="text" class="form-control form-control-sm" id="secondaryPhone" name="secondaryPhone" />
+                  <div class="fw-lighter fst-italic smaller">secondary phone</div>
+                  <div class="fw-bolder text-danger fst-italic smaller" id="secondaryPhoneError"></div>
+                </div>
+                <div class="col-sm-4"></div>
+              </div>
+              <!-- contact:  4th row (primary email | secondary email) -->
+              <div class="row mb-3">
+                <!-- contact: primary email -->
+                <div class="col-sm-4">
+                  <input type="text" class="form-control form-control-sm" id="primaryEmail" name="primaryEmail" />
+                  <div class="fw-lighter fst-italic smaller mt-1"><i class="bi-shield-fill-exclamation"></i> primary email</div>
+                  <div class="fw-bolder text-danger fst-italic smaller" id="primaryEmailError"></div>
+                </div>
+                <!-- contact: secondary email -->
+                <div class="col-sm-4">
+                  <input type="text" class="form-control form-control-sm" id="secondaryEmail" name="secondaryEmail" />
+                  <div class="fw-lighter fst-italic smaller">secondary email</div>
+                  <div class="fw-bolder text-danger fst-italic smaller" id="secondaryEmailError"></div>
+                </div>
+                <div class="col-sm-4"></div>
+              </div>
+              <div class="space"></div>
+            </div>
+          </div>
+          <div class="space"></div>
         </div>
-        <!-- card: contact-->
-        <div class="card mt-3">
-          <!-- card header: contact  -->
-          <div class="card-header bg-dark fw-bolder text-white">
-             <div class="d-flex justify-content-between">
-              <div class="flex-grow-1"><i class="bi-person-lines-fill"></i> contact</div>
-              <div class="flex-shrink-1"><span class="fw-bolder fst-italic"><small><i class="bi-x-circle-fill" id="contactHide"></i><i class="bi-fullscreen hide" id="contactShow"></i></small></span></div>
-            </div>
-          </div>
-          <!-- card body: contact -->
-          <div class="card-body" id="contactBodyCard">
-            <!-- contact:  1st row (address: streetAddressLine1 | streetAddressLine2 | zip code) -->
-            <div class="row mb-3">
-              <!-- contact: streetAddressLine1 -->
-              <div class="col-sm-4">
-                  <input type="text" class="form-control" id="streetAddressLine1" name="streetAddressLine1" required />
-                  <div class="fw-lighter fst-italic smaller"><i class="bi-shield-fill-exclamation"></i> street address</div>
-                  <div class="fw-bolder text-danger fst-italic smaller" id="streetAddressLine1Error"></div>
-              </div>
-              <!-- contact: streetAddressLine2 -->
-              <div class="col-sm-4">
-                <input type="text" class="form-control" id="streetAddressLine2" name="streetAddressLine2" required />
-                <div class="fw-lighter fst-italic smaller"><i class="bi-shield-fill-exclamation"></i> street address line2</div>
-                <div class="fw-bolder text-danger fst-italic smaller" id="streetAddressLine2Error"></div>
-              </div>
-              <!-- contact: zip code -->
-              <div class="col-sm-4">
-                <input type="text" class="form-control" id="zip" name="zip" required />
-                <div class="fw-lighter fst-italic smaller"><i class="bi-shield-fill-exclamation"></i> zip code</div>
-                <div class="fw-bolder text-danger fst-italic smaller" id="zipError"></div>
-              </div>      
-            </div>
-            <!-- contact:  2nd row (address: city | state | country) -->
-            <div class="row mb-3">
-              <!-- contact: city -->
-              <div class="col-sm-4">
-                <input type="text" class="form-control" id="city" name="city" required />
-                <div class="fw-lighter fst-italic smaller"><i class="bi-shield-fill-exclamation"></i> city</div>
-                <div class="fw-bolder text-danger fst-italic smaller" id="cityError"></div>
-              </div>              
-              <!-- contact: state -->
-              <div class="col-sm-4">
-                <input type="text" class="form-control" id="state" name="state" required />
-                <div class="fw-lighter fst-italic smaller"><i class="bi-shield-fill-exclamation"></i> state / province</div>
-                <div class="fw-bolder text-danger fst-italic smaller" id="stateError"></div>
-              </div>              
-              <!-- contact: country -->
-              <div class="col-sm-4">
-                <input type="text" class="form-control" id="country" name="country" required />
-                <div class="fw-lighter fst-italic smaller"><i class="bi-shield-fill-exclamation"></i> country</div>
-                <div class="fw-bolder text-danger fst-italic smaller" id="countryError"></div>
-              </div>
-            </div>
-            <div class="space"></div>
-            <hr />
-            <!-- contact:  3rd row (primary phone | secondary phone) -->
-            <div class="row mb-3">
-              <!-- contact: primary phone -->
-              <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="primaryPhone" name="primaryPhone" />
-                <div class="fw-lighter fst-italic smaller"><i class="bi-shield-fill-exclamation"></i> primary phone</div>
-                <div class="fw-bolder text-danger fst-italic smaller" id="primaryPhoneError"></div>
-              </div>
-              <!-- contact: secondary phone -->
-              <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="secondaryPhonw" name="secondaryPhonw" />
-                <div class="fw-lighter fst-italic smaller">secondary phone</div>
-                <div class="fw-bolder text-danger fst-italic smaller" id="secondaryPhonwError"></div>
-              </div>
-              <div class="col-sm-4"></div>
-            </div>
-            <!-- contact:  4th row (primary email | secondary email) -->
-            <div class="row mb-3">
-              <!-- contact: primary email -->
-              <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="primaryEmail" name="primaryEmail" />
-                <div class="fw-lighter fst-italic smaller mt-1"><i class="bi-shield-fill-exclamation"></i> primary email</div>
-                <div class="fw-bolder text-danger fst-italic smaller" id="primaryEmailError"></div>
-              </div>
-              <!-- contact: secondary email -->
-              <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="secondaryEmail" name="secondaryEmail" />
-                <div class="fw-lighter fst-italic smaller">secondary email</div>
-                <div class="fw-bolder text-danger fst-italic smaller" id="secondaryEmailError"></div>
-              </div>
-              <div class="col-sm-4"></div>
-            </div>
-            <div class="space"></div>
-          </div>
-        </div>
-        <!-- card: emergency contact-->
-        <div class="card mt-3">
-          <!-- card header: emergency contact  -->
-          <div class="card-header bg-dark fw-bolder text-white">
-             <div class="d-flex justify-content-between">
-              <div class="flex-grow-1"><i class="bi-person-lines-fill"></i> emergency contact</div>
-              <div class="flex-shrink-1"><span class="fw-bolder fst-italic"><small><i class="bi-x-circle-fill" id="emergencyHide"></i><i class="bi-fullscreen hide" id="emergencyShow"></i></small></span></div>
-            </div>
-          </div>
-          <!-- card body: emergency contact -->
-          <div class="card-body" id="emergencyBodyCard">
-            <!-- emergency contact:  1st row (fullname | givenname | employee code) -->
-            <div class="row mb-3">
-              <!-- emergency contact: fullname -->
-              <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="fullnameEC" name="fullnameEC" />
-                <div class="fw-lighter fst-italic smaller mt-1">full name</div>
-                <div class="fw-bolder text-danger fst-italic smaller" id="fullnameECError"></div>
-              </div>
-              <!-- emergency contact: phone -->
-              <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="phoneEC" name="phoneEC" />
-                <div class="fw-lighter fst-italic smaller">phone</div>
-                <div class="fw-bolder text-danger fst-italic smaller" id="phoneECError"></div>
-              </div>
-              <!-- emergency contact: relationship -->
-              <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="relationshipEC" name="relationshipEC" />
-                <div class="fw-lighter fst-italic smaller">relationship</div>
-                <div class="fw-bolder text-danger fst-italic smaller" id="relationshipECError"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="space"></div>
-      </div>
       </form>
       <div class="modal-footer">
-      <a href="#" class="btn btn-danger" id="employeeAddSubmit"><i class="bi bi-save2-fill"></i> Save</a>
+        <a href="#" class="btn btn-danger" id="employeeAddSubmit"><i class="bi bi-save2-fill"></i> Save</a>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">close</button>
       </div>
     </div>
@@ -369,9 +393,14 @@
 {{end}}
 
 {{define "js"}}
+<script>
+  const connectedEmail = {{.User.Email}},
+        connectedID = {{.User.EmployeeID}}
+</script>
 
-<script src="/static/js/common/Main_helpers.js"></script>
-<script src="/static/js/employee/read/EmployeeRead_helpers.js"></script>
-<script src="/static/js/employee/read/EmployeeRead_API.js"></script>
-<script src="/static/js/employee/read/employeeRead.js"></script>
+<script src="/static/js/common/MainHelpers.js"></script>
+
+<script src="/static/js/employee/crd/EmployeeAPI.js"></script>
+<script src="/static/js/employee/crd/EmployeeHelpers.js"></script>
+<script src="/static/js/employee/crd/employee.js"></script>
 {{end}}

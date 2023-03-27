@@ -11,23 +11,28 @@
             
             <title>Thundersoft Payroll</title>    
 
-            <!-- Bootstrap 5.0.2 CSS -->
-           <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
-            
-            <!-- Bootstrap Icons 1.10.3 CSS -->
-            <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css" rel="stylesheet"> 
-            <!--<link href="/static/css/bootstrap.min.css" type="text/css" rel="stylesheet" />-->
-            
-            <!-- Core custom app CSS  -->
-            <link href="/static/css/app.css" type="text/css" rel="stylesheet" />
-            
             <!-- Bootstrap 5.0.2 Bundle with Popper -->
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-
-            <!-- Jquery -->
-            <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
             
+            <!-- Bootstrap Icons 1.10.3 -->
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css" rel="stylesheet">
+
+            <!-- Jquery 3.6.4 -->
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+            <!-- DataTables -->
+            <script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+            <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" />
+            
+            <!-- Bootstrap Datepicker -->
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+            
+            <!-- Core custom app CSS  -->
+            <link rel="stylesheet" href="/static/css/app.css" />
+
             <!-- Favicons -->
             <link href="/static/images/favicon.ico" sizes="180x180" rel="apple-touch-icon" />
             <link href="/static/images/favicon.ico" sizes="32x32" type="image/png" rel="icon" />
@@ -49,48 +54,54 @@
             <!-- Responsive navbar -->
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <div class="container-fluid">
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-                    <a class="navbar-brand" href="#">
-                    <img src="/static/images/ThunderSoft_logo_full.png" alt="Logo Thundersoft" width="auto" height="30" class="d-inline-block align-text-top">
-                    </a>
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Home admin</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/employee">Employee</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Configuration
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+                        <a class="navbar-brand" href="/home">
+                        <img src="/static/images/ThunderSoft_logo_full.png" alt="Logo Thundersoft" width="auto" height="30" class="d-inline-block align-text-top">
                         </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <li><a class="dropdown-item" href="#">To do lah</a></li>
-                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
-                        </ul>
-                    </li>
-                    </ul>
-                    <form class="d-flex">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            {{.User.Nickname}}
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <li><a class="dropdown-item" href="#">Profile</a></li>
-                            <li><a class="dropdown-item" href="/mailer">Send email</a></li>
-                            <li><a class="dropdown-item" href="/logout">Logout</a></li>
-                        </ul>
-                        </li>
-                    </ul>          
-                    </form>
-                    <h2><i class="bi bi-person-fill-lock"></i></h2>
-                    
-                </div>
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li class="nav-item"> <a class="nav-link active" aria-current="page" href="/home">Home</a> </li>
+                            <li class="nav-item"> <a class="nav-link" href="/employee">Employee</a> </li>
+                            <li class="nav-item"> <a class="nav-link" href="/claim">Claim</a> </li>
+                            <li class="nav-item"> <a class="nav-link" href="/leave">Leave</a> </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Configuration
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <li><a class="dropdown-item" href="/configuration/employee">Employee</a></li>
+                                <li><a class="dropdown-item" href="/configuration/claim">Claim</a></li>
+                                <li><a class="dropdown-item" href="/configuration/leave">Leave</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Definition
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <li><a class="dropdown-item" href="/definition/claim">Claim</a></li>
+                                <li><a class="dropdown-item" href="/definition/leave">Leave</a></li>
+                                </ul>
+                            </li>
+                        </ul>                    
+                        <ul class="navbar-nav me-3 mb-2 mb-lg-0">
+                            <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                {{.User.Nickname}}
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <li><a class="dropdown-item" href="#">Profile</a></li>
+                                <li><a class="dropdown-item" href="/myclaim">Claim</a> </li>
+                                <li><a class="dropdown-item" href="/myleave">Leave</a> </li>
+                                <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                            </ul>
+                            </li>
+                        </ul>              
+                        <h1 class="me-3"><i class="bi bi-person-fill-lock me-3"></i></h1>
+                        <div class="me-3"></div>
+                    </div>
                 </div>
             </nav>
 

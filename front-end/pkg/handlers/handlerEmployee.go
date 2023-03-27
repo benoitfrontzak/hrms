@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"frontend/pkg/render"
-	"log"
 	"net/http"
 	"strings"
 )
@@ -18,103 +17,34 @@ func (rep *Repository) Employee(w http.ResponseWriter, r *http.Request) {
 
 	// Get my context from middleware request
 	myc := r.Context().Value(httpContext).(httpContextStruct)
-	if !myc.Auth {
+
+	// If unauthorized request or unexpected request method
+	if !myc.Auth || r.Method != "GET" {
 		var empty any
-		// Render unauthorized page
 		render.RenderTemplate(w, "unauthorized.page.gohtml", empty)
 		return
 	}
 
-	// Check request method (GET|POST)
-	switch r.Method {
-
-	case "GET":
-		employeeGET(w, myc, r.URL.Path)
-
-	case "POST":
-		employeePOST(w, myc, r.URL.Path)
-
-	default:
-		log.Println("Sorry, only GET & POST method are supported.")
-		return
-	}
-
-}
-
-func employeeGET(w http.ResponseWriter, myc httpContextStruct, url string) {
-	// Get expected action from URL (/employee/delete/)
-	sURL := strings.Split(url, "/")
-	action := sURL[2]
-
-	switch action {
-	case "add":
-		showEmployeeAddForm(w, myc)
-	case "update":
-		// showEmployeeEditForm(w, r)
-	case "delete":
-		// deleteEmployeeByID(w, r)
-	default:
-		showEmployeeHome(w, myc)
-	}
-}
-func showEmployeeHome(w http.ResponseWriter, myc httpContextStruct) {
-	// Role: 1: superAdmin; 2 : admin; 3: Manager; 4: User
+	// store template data
 	td := TemplateData{
 		User: myc.User,
 	}
-	switch myc.User.Role {
-	// Admin employee home page
-	case 2:
-		render.RenderTemplate(w, "admin.employee.page.gohtml", td)
-	// Only admin is allowed to access employee
-	default:
+
+	// check action requested
+	// action := strings.TrimPrefix(r.URL.Path, "/employee/")
+	action := strings.Split(r.URL.Path, "/")[2]
+
+	// Role: 1=superAdmin; 2=admin; 3=Manager; 4=User
+	// only admin is allowed to managed employee
+	if myc.User.Role == 2 {
+		switch action {
+		case "update":
+			render.RenderTemplate(w, "admin.employee.update.page.gohtml", td)
+		default:
+			render.RenderTemplate(w, "admin.employee.page.gohtml", td)
+		}
+	} else {
 		var empty any
-		render.RenderTemplate(w, "public.unauthorized.page.gohtml", empty)
+		render.RenderTemplate(w, "unauthorized.page.gohtml", empty)
 	}
 }
-func showEmployeeAddForm(w http.ResponseWriter, myc httpContextStruct) {
-
-	// Role: 1: superAdmin; 2 : admin; 3: Manager; 4: User
-	td := TemplateData{
-		User: myc.User,
-	}
-	switch myc.User.Role {
-	// Admin add employee page
-	case 2:
-		render.RenderTemplate(w, "admin.employee.add.page.gohtml", td)
-
-	}
-}
-func employeePOST(w http.ResponseWriter, myc httpContextStruct, url string) {
-	sURL := strings.Split(url, "/")
-	action := sURL[2]
-
-	switch action {
-	// case "add":
-	// 	showEmployeeAddForm(w, myc)
-	// case "update":
-	// 	showEmployeeEditForm(w, r)
-	// case "delete":
-	// 	deleteEmployeeByID(w, r)
-	// default:
-	// 	showEmployeeHome(w, myc)
-	}
-}
-
-// func fetchAllUsers() (resp *http.Response, err error) {
-// 	resp, err = http.Get("http://localhost:8081/allUsers")
-// 	if err != nil {
-// 		log.Println("error while query http.Get: ", err)
-// 		return nil, err
-// 	}
-// 	return
-// }
-
-// Fetch all employees (TO put inside handler)
-// usr, _ := fetchAllUsers()
-// var p jsonResponse
-// err := json.NewDecoder(usr.Body).Decode(&p)
-// if err != nil {
-// 	http.Error(w, err.Error(), http.StatusBadRequest)
-// 	return
-// }

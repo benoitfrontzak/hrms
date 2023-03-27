@@ -27,7 +27,8 @@ type LogEntry struct {
 	ID        string `bson:"_id,omitempty" json:"id,omitempty"`
 	Name      string `bson:"name" json:"name"`
 	Data      string `bson:"data" json:"data"`
-	CreatedAt string `bson:"created_at" json:"created_at"`
+	CreatedAt string `bson:"created_at" json:"createdAt"`
+	CreatedBy string `bson:"created_by" json:"createdBy"`
 }
 
 // Insert function inserts a log entry to a given collection c

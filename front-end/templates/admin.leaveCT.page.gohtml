@@ -1,0 +1,93 @@
+{{template "base.admin" . }}
+
+{{define "content"}}
+
+  <div class="container-fluid">
+    <!-- ACTION BUTTON -->
+    <div class="d-flex flex-row-reverse mt-3">
+      <div class="p-2 bd-highlight"><a href="#" class="hide btn btn-danger" id="openModal" data-bs-toggle="modal" data-bs-target="#ctModal"><i class="bi bi-plus-circle-fill"></i> add</a></div>
+      <div class="p-2 bd-highlight"><a href="#" class="hide btn btn-danger" id="deleteCT"><i class="bi-dash-circle"></i> delete</a></div>
+      <div class="p-2 bd-highlight">
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dataView" data-bs-toggle="dropdown" aria-expanded="false">View</button>
+          <ul class="dropdown-menu" aria-labelledby="dataView" id="viewList"></ul>
+        </div>
+      </div>
+    </div>
+    <hr />
+
+    <!-- CONFIG TABLE -->    
+    <div class="row justify-content-md-center">
+      <div class="col-sm-6">
+        <h2 class="text-secondary" id="configTableTitle"></h2>
+        <div class="d-flex justify-content-between" >
+          <div><h4>Name</h4></div>
+          <div><h4>Action</h4></div>
+        </div>
+        <div id="configTableData">Click on view button to select which config table you want to manage</div>
+      </div>
+    </div>
+    
+
+  </div>
+<!-- modal: Confirm employee deletion -->
+<div class="modal fade" id="confirmDelete" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirm delete</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p id="confirmDeleteBody"></p>
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="btn btn-danger" id="confirmDeleteSubmit"><i class="bi bi-save2-fill"></i> Confirm</a>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- modal: Create new config table entry -->
+<div class="modal fade" id="ctModal" tabindex="-1" aria-labelledby="ctModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="ctModalLabel">Add new entry</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+      </div>
+      <form name="ctForm" id="ctForm">
+      <input type="hidden" name="ctName" id="ctName" />
+      <input type="hidden" name="connectedEmail" id="connectedEmail" value="{{.User.Email}}" />
+      <div class="modal-body">
+        <div class="row my-3">
+          <!-- identity:  ct new value -->
+          <div class="col-sm-4">
+            <input type="text" class="form-control form-control-sm" id="ctNewValue" name="ctNewValue" required />
+            <div class="fw-lighter fst-italic smaller mt-1"><i class="bi-shield-fill-exclamation"></i> name</div>
+          </div>
+        </div>
+      </div>
+      </form>
+      <div class="modal-footer">
+        <a href="#" class="btn btn-danger" id="ctSubmit"><i class="bi bi-save2-fill"></i> Save</a>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">close</button>
+      </div>
+    </div>
+  </div>
+</div>
+{{end}}
+
+{{define "js"}}
+<script>
+  const connectedEmail = {{.User.Email}},
+        connectedID = {{.User.EmployeeID}}
+</script>
+
+<script src="/static/js/common/MainHelpers.js"></script>
+
+<script src="/static/js/leave/configuration/LeaveConfigAPI.js"></script>
+<script src="/static/js/leave/configuration/LeaveConfigHelpers.js"></script>
+<script src="/static/js/leave/configuration/leaveConfig.js"></script>
+{{end}}

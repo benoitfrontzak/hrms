@@ -16,7 +16,7 @@
 </nav>
 
 <!-- Login form -->
-<form method="POST" action="http://localhost:8081/authenticate" >
+<form method="POST" action="http://localhost:8081/api/v1/authentication/authenticate" >
 
 <div class="container">
     <div class="row justify-content-md-center">
@@ -24,25 +24,25 @@
             <h1 class="text-danger mt-3">Login</h1>
             <hr>                
             <div class="mb-3 row">
-              <label for="email_input" class="col-sm-2 col-form-label">Email</label>
+              <label for="email" class="col-sm-2 col-form-label">Email</label>
               <div class="col-sm-10">
-                <input type="text" class="form-control" id="email_input" name="email_input" required />
+                <input type="text" class="form-control" name="email" required />
               </div>
             </div>
             <div class="mb-3 row mb-3">
-              <label for="password_input" class="col-sm-2 col-form-label">Password</label>
+              <label for="password" class="col-sm-2 col-form-label">Password</label>
               <div class="col-sm-10">
-                <input type="password" class="form-control" id="password_input" name="password_input" required />
+                <input type="password" class="form-control" name="password" required />
               </div>
             </div>
             <div class="mb-3 row">
               <div class="col-sm text-end">
-                <button type="submit" class="btn btn-danger" id="submit_button">Submit</button>
+                <button type="submit" class="btn btn-danger">Submit</button>
              </div>
            </div>
         </div>
     </div>
 </div>
 
-</form>
+
 {{end}}

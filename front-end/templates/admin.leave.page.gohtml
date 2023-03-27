@@ -1,0 +1,117 @@
+{{template "base.admin" . }}
+
+{{define "content"}}
+
+<div class="container-fluid" style="width:100%">
+    <!-- ACTION BUTTON -->
+    <div class="d-flex flex-row-reverse mt-3">
+      <div class="p-2 bd-highlight"><a href="#" class="btn btn-danger" id="approveBtn"><i class="bi bi-plus-circle-fill"></i> approve</a></div>
+      <div class="p-2 bd-highlight"><a href="#" class="btn btn-danger" id="rejectBtn"><i class="bi-dash-circle"></i> reject</a></div>
+      <div class="p-2 bd-highlight">
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">View</button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            <li><a class="dropdown-item" href="#" id="approvedBtn">Approved</a></li>
+            <li><a class="dropdown-item" href="#" id="rejectedBtn">Rejected</a></li>
+            <li><a class="dropdown-item" href="#" id="pendingBtn">Pending</a></li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+    <!-- WARNING MODAL MESSAGE -->
+    <div class="alert alert-warning mt-3 hide" role="alert" id="modalWarningMessageDiv">
+      <div class="d-flex justify-content-between">
+        <div class="flex-grow-1"><h4 class="alert-heading"><i class="bi-exclamation-diamond-fill"></i> Warning!</h4></div>
+        <div class="flex-shrink-1"><i class="bi-x-circle-fill pointer" id="hideModalWarningMessage"></i></div>
+      </div>      
+      <p>You must select at least one entry before...</p>
+      <hr>
+      <p class="mb-0 smaller">Please check in on some of those fields below...</p>
+    </div>
+    
+    <hr />
+    <!-- TABLE -->
+    <div class="text-warning hide" id="noData">No data to display</div>
+    <table id="myClaimTable" class="display stripe" style="width:100%">
+        <thead>
+            <tr>
+              <th>Employee</th>
+              <th>Leave</th>
+              <th>Description</th>
+              <th>Status</th>
+              <th>Approved at</th>
+              <th>Approved by</th>
+              <th>Reason</th>
+              <th>Dates</th>
+              <th></th>
+            </tr>
+        </thead>
+        <tbody id="myClaimBody"></tbody>
+    </table>
+
+</div>
+
+<!-- modal: Reject leaves -->
+<div class="modal fade" id="rejectModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirm rejection</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="text-warning" id="selectedLeaveRejection"></div>
+        <div class="row mt-3">
+          <div class="col-sm-4"></div>
+          <div class="col-sm-8">
+            <div class="form-floating">
+              <textarea class="form-control" placeholder="Leave a reason here" name="reject" id="reject" style="height: 100px"></textarea>
+              <label for="reject">Reject reason</label>
+              <div class="fw-bolder text-danger fst-italic smaller" id="rejectError"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="btn btn-danger" id="rejectSubmit"><i class="bi bi-save2-fill"></i> Confirm</a>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- modal: Approve claims -->
+<div class="modal fade" id="approveModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirm approval</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="text-warning" id="selectedLeavesApproval"></div>
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="btn btn-danger" id="approveSubmit"><i class="bi bi-save2-fill"></i> Confirm</a>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{end}}
+
+{{define "js"}}
+
+<script>
+  const connectedEmail = {{.User.Email}},
+        connectedID = {{.User.EmployeeID}}
+</script>
+
+<script src="/static/js/common/MainHelpers.js"></script>
+
+<script src="/static/js/leave/application/LeaveHelpers.js"></script>
+<script src="/static/js/leave/application/LeaveAPI.js"></script>
+<script src="/static/js/leave/application/leave.js"></script>
+{{end}}

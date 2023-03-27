@@ -33,17 +33,15 @@ type Models struct {
 
 // User is the structure which holds one user from the database.
 type User struct {
-	ID        int       `json:"id"`
-	Email     string    `json:"email"`
-	Firstname string    `json:"firstname,omitempty"`
-	Lastname  string    `json:"lastname,omitempty"`
-	Nickname  string    `json:"nickname,omitempty"`
-	Password  string    `json:"-"`
-	Active    int       `json:"active"`
-	Role      int       `json:"role"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-	// TerminatedAt string    `json:"terminated_at"`
+	ID         int    `json:"id"`
+	Email      string `json:"email"`
+	Firstname  string `json:"firstname,omitempty"`
+	Lastname   string `json:"lastname,omitempty"`
+	Nickname   string `json:"nickname,omitempty"`
+	Password   string `json:"password,omitempty"`
+	Active     int    `json:"active"`
+	Role       int    `json:"role"`
+	EmployeeID int    `json:"employeeID"`
 }
 
 // GetAll returns a slice of all users, sorted by last name
@@ -51,8 +49,7 @@ func (u *User) GetAll() ([]*User, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
-	query := `select id, email, firstname, lastname, nickname, password, active, role, created_at, updated_at
-	from users order by lastname`
+	query := `select id, email, firstname, lastname, nickname, password, active, role, employee_id from "USERS" order by lastname`
 
 	rows, err := db.QueryContext(ctx, query)
 	if err != nil {
@@ -73,9 +70,7 @@ func (u *User) GetAll() ([]*User, error) {
 			&user.Password,
 			&user.Active,
 			&user.Role,
-			&user.CreatedAt,
-			&user.UpdatedAt,
-			// &user.TerminatedAt,
+			&user.EmployeeID,
 		)
 		if err != nil {
 			log.Println("Error scanning", err)
@@ -93,7 +88,7 @@ func (u *User) GetByEmail(email string) (*User, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
-	query := `select id, email, firstname, lastname, nickname, password, active, role, created_at, updated_at  from users where email = $1`
+	query := `select id, email, firstname, lastname, nickname, password, active, role, employee_id from "USERS" where email = $1 AND active = 1`
 
 	var user User
 	row := db.QueryRowContext(ctx, query, email)
@@ -107,8 +102,7 @@ func (u *User) GetByEmail(email string) (*User, error) {
 		&user.Password,
 		&user.Active,
 		&user.Role,
-		&user.CreatedAt,
-		&user.UpdatedAt,
+		&user.EmployeeID,
 	)
 
 	if err != nil {
@@ -123,7 +117,7 @@ func (u *User) GetOne(id int) (*User, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
-	query := `select id, email, firstname, lastname, password, active, created_at, updated_at from users where id = $1`
+	query := `select id, email, firstname, lastname, nickname, password, active, role, employee_id from "USERS" where id = $1`
 
 	var user User
 	row := db.QueryRowContext(ctx, query, id)
@@ -137,9 +131,7 @@ func (u *User) GetOne(id int) (*User, error) {
 		&user.Password,
 		&user.Active,
 		&user.Role,
-		&user.CreatedAt,
-		&user.UpdatedAt,
-		// &user.TerminatedAt,
+		&user.EmployeeID,
 	)
 
 	if err != nil {
@@ -151,32 +143,28 @@ func (u *User) GetOne(id int) (*User, error) {
 
 // Update updates one user in the database, using the information
 // stored in the receiver u
-func (u *User) Update() error {
+func (u *User) Update(user User) error {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
-	stmt := `update users set
-		email = $1,
-		firstname = $2,
-		lastname = $3,
-		nickname = $4,
-		active = $5,
-		role = $6,
-		updated_at = $7
-		terminated_at = $8
-		where id = $9
-	`
+	stmt := `UPDATE "USERS" 
+			 SET
+				email = $1,
+				firstname = $2,
+				lastname = $3,
+				nickname = $4,
+				active = $5,
+				role = $6
+			 WHERE employee_id = $7`
 
 	_, err := db.ExecContext(ctx, stmt,
-		u.Email,
-		u.Firstname,
-		u.Lastname,
-		u.Nickname,
-		u.Active,
-		u.Role,
-		time.Now(),
-		// u.TerminatedAt,
-		u.ID,
+		user.Email,
+		user.Firstname,
+		user.Lastname,
+		user.Nickname,
+		user.Active,
+		user.Role,
+		user.EmployeeID,
 	)
 
 	if err != nil {
@@ -191,7 +179,7 @@ func (u *User) DeleteByID(id int) error {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
-	stmt := `delete from users where id = $1`
+	stmt := `delete from "USERS" where id = $1`
 
 	_, err := db.ExecContext(ctx, stmt, id)
 	if err != nil {
@@ -212,8 +200,8 @@ func (u *User) Insert(user User) (int, error) {
 	}
 
 	var newID int
-	stmt := `insert into users (email, firstname, lastname, nickname, password, active, role, created_at, updated_at)
-		values ($1, $2, $3, $4, $5, $6, $7, $8, $9) returning id`
+	stmt := `insert into "USERS" (email, firstname, lastname, nickname, password, active, role, employee_id)
+		values ($1, $2, $3, $4, $5, $6, $7, $8) returning id`
 
 	err = db.QueryRowContext(ctx, stmt,
 		user.Email,
@@ -223,8 +211,7 @@ func (u *User) Insert(user User) (int, error) {
 		hashedPassword,
 		user.Active,
 		user.Role,
-		time.Now(),
-		time.Now(),
+		user.EmployeeID,
 	).Scan(&newID)
 
 	if err != nil {

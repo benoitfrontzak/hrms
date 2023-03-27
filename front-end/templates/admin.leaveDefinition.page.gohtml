@@ -1,0 +1,261 @@
+{{template "base.admin" . }}
+
+{{define "content"}}
+
+<div class="container-fluid" style="width:100%">
+    <!-- ACTION BUTTON -->
+    <div class="d-flex flex-row-reverse mt-3">
+      <div class="p-2 bd-highlight"><a href="#" class="btn btn-danger" id="deleteAllLeaveDefinition"><i class="bi-dash-circle"></i> delete</a></div>
+      <div class="p-2 bd-highlight"><a href="#" class="btn btn-danger" id="openCreateLeaveDefinition" data-bs-toggle="modal" data-bs-target="#createLeaveDefinition"><i class="bi bi-plus-circle-fill"></i> add</a></div>
+    </div>
+    <!-- WARNING DELETE MESSAGE -->
+    <div class="alert alert-warning mt-3 hide" role="alert" id="deleteWarningMessageDiv">
+      <div class="d-flex justify-content-between">
+        <div class="flex-grow-1"><h4 class="alert-heading"><i class="bi-exclamation-diamond-fill"></i> Warning!</h4></div>
+        <div class="flex-shrink-1"><i class="bi-x-circle-fill pointer" id="hidedeleteWarningMessage"></i></div>
+      </div>      
+      <p>You must select at least one entry before deleting...</p>
+      <hr>
+      <p class="mb-0 smaller">Please check in on some of those fields below...</p>
+    </div>
+    
+    <hr />
+    <!-- TABLE -->
+    <table id="leaveDefinitionTable" class="display stripe" style="width:100%">
+        <thead>
+            <tr>
+              <th>Code</th>
+              <th>Description</th>
+              <th>Unpaid</th>
+              <th>Replacement</th>
+              <th>Attachment</th>
+              <th>Expiry</th>
+              <th>Gender</th>
+              <th>Limitation</th>
+              <th>Calculation</th>
+              <th></th>
+            </tr>
+        </thead>
+
+        <tbody id="leaveDefinitionBody"></tbody>
+    </table>
+
+</div>
+
+<!-- modal: Confirm employee deletion -->
+<div class="modal fade" id="confirmDelete" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirm delete</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p id="confirmDeleteBody"></p>
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="btn btn-danger" id="confirmDeleteSubmit"><i class="bi bi-save2-fill"></i> Confirm</a>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ADD NEW LEAVE DEFINITION -->
+<div class="modal fade" id="createLeaveDefinition" tabindex="-1">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="createLeaveDefinitionTitle">New leave</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form name="createLeaveDefinitionForm" id="createLeaveDefinitionForm">
+        <div class="modal-body">
+          <!-- WARNING MESSAGE -->
+          <div class="alert alert-warning mt-3 hide" role="alert" id="warningMessageDiv">
+            <div class="d-flex justify-content-between">
+              <div class="flex-grow-1"><h4 class="alert-heading"><i class="bi-exclamation-diamond-fill"></i> Warning!</h4></div>
+              <div class="flex-shrink-1"><i class="bi-x-circle-fill pointer" id="hideWarningMessage"></i></div>
+            </div>      
+            <p id="warningMessageBody">Please you must fill those fields</p>
+            <hr>
+            <p class="mb-0 smaller">Please check in on some of those fields below...</p>
+          </div>
+          <!-- this hidden field is used to store the form action (create|edit) -->
+          <input type="hidden" id="formAction" value="create" />
+          <input type="hidden" name="rowid" id="rowid" value="0" />
+
+          <h4 class="text-warning">Definition</h4>
+          <!-- Leave definition 1st row: Code | Description -->
+          <div class="row mt-3">
+            <!-- Leave definition Code -->
+            <div class="col-sm-4">
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="code" name="code" />
+                  <label for="code"><i class="bi-shield-fill-exclamation"></i> code</label>
+                </div>
+                <div class="fw-bolder text-danger fst-italic smaller" id="codeError"></div>
+            </div>
+            <div class="col-sm-4"> </div>
+            <!-- Leave definition Description -->
+            <div class="col-sm-4">
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="description" name="description" />
+                  <label for="description"><i class="bi-shield-fill-exclamation"></i> description</label>
+                </div>
+                <div class="fw-bolder text-danger fst-italic smaller" id="descriptionError"></div>
+            </div>            
+          </div>
+          <!-- Leave definition 2nd row: Expiry | Gender -->
+          <div class="row mt-3">
+              <!-- Leave definition Expiry -->
+              <div class="col-sm-4">
+                <div class="form-floating">
+                    <select class="form-select" id="expiry" name="expiry" aria-label="Select one month">
+                      <option selected hidden value="0">Full year</option>
+                      <option value="1">January</option>
+                      <option value="2">February</option>
+                      <option value="3">March</option>
+                      <option value="4">April</option>
+                      <option value="5">May</option>
+                      <option value="6">June</option>
+                      <option value="7">July</option>
+                      <option value="8">August</option>
+                      <option value="9">September</option>
+                      <option value="10">October</option>
+                      <option value="11">November</option>
+                      <option value="12">December</option>
+                    </select>
+                    <label for="expiry"><i class="bi-shield-fill-exclamation"></i> expiry</label>
+                </div>
+                <div class="fw-bolder text-danger fst-italic smaller" id="expiryError"></div>
+              </div>
+              <div class="col-sm-4"></div>
+              <!-- Leave definition Gender -->
+              <div class="col-sm-4">
+                <div class="form-floating">
+                    <select class="form-select" id="gender" name="gender" aria-label="Select one month">
+                      <option selected hidden value="">Please select a value</option>
+                      <option value="1">Male</option>
+                      <option value="2">Female</option>
+                      <option value="3">All</option>
+                    </select>
+                    <label for="gender"><i class="bi-shield-fill-exclamation"></i> gender</label>
+                </div>
+                <div class="fw-bolder text-danger fst-italic smaller" id="genderError"></div>
+              </div>
+          </div>
+          <!-- Leave definition 3rd  mt-3: Limitation | Calculation -->
+          <div class="row mt-3">
+              <!-- Leave definition Limitation -->
+              <div class="col-sm-4">
+                <div class="form-floating">
+                    <select class="form-select" id="limitation" name="limitation" aria-label="Select one month"></select>
+                    <label for="limitation"><i class="bi-shield-fill-exclamation"></i> limitation</label>
+                </div>
+                <div class="fw-bolder text-danger fst-italic smaller" id="limitationError"></div>
+              </div>
+              <div class="col-sm-4"></div>
+              <!-- Leave definition Calculation -->
+              <div class="col-sm-4">
+                <div class="form-floating">
+                    <select class="form-select" id="calculation" name="calculation" aria-label="Select one month"></select>
+                    <label for="calculation"><i class="bi-shield-fill-exclamation"></i> calculation</label>
+                </div>
+                <div class="fw-bolder text-danger fst-italic smaller" id="calculationError"></div>
+              </div>
+          </div>
+          <!-- Divider -->
+          <div class="space"></div>
+          <hr />
+          <h4 class="text-warning">Option</h4>
+          <!-- Leave definition last row: Unpaid | Replacement | Attachment -->
+          <div class="row">
+              <!-- Leave definition Unpaid -->
+              <div class="col-sm-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="unpaid" id="unpaid1" value="1">
+                  <label class="form-check-label" for="unpaid1">unpaid leave is allowed</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="unpaid" id="unpaid2" value="0" checked>
+                  <label class="form-check-label" for="unpaid2">unpaid leave is not allowed</label>
+                </div>
+              </div>
+              <!-- Leave definition Replacement -->
+              <div class="col-sm-4"> 
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="replacement" id="replacement1" value="1">
+                  <label class="form-check-label" for="replacement1">do required replacement day</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="replacement" id="replacement2" value="0" checked>
+                  <label class="form-check-label" for="replacement2">do not required replacement day</label>
+                </div>
+              </div>
+              <!-- Leave definition Attachment -->
+              <div class="col-sm-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="attachment" id="attachment1" value="1">
+                  <label class="form-check-label" for="attachment1">do required attachment</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="attachment" id="attachment2" value="0" checked>
+                  <label class="form-check-label" for="attachment2">do not required attachment</label>
+                </div>
+              </div>
+          </div>          
+          <!-- Divider -->
+          <div class="space"></div>
+          <hr />
+          <div class="row mb-3">
+            <div class="col-sm-6"><h4 class="text-warning">Rules</h4></div>
+            <div class="col-sm-6 text-end" id="addDetailsBtn"><a href="#" class="btn btn-danger" id="addDetails"><i class="bi bi-plus-circle-fill"></i> add</a></div>
+          </div>          
+          <!-- Leave definition details 1st row: Seniority | Entitled -->
+          <div class="row mb-3" id="defaultDetailRow">
+            <!-- Leave definition details Seniority -->
+            <div class="col-sm-4">
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="seniority0" name="seniority0" value="0" />
+                  <label for="seniority"><i class="bi-shield-fill-exclamation"></i> seniority</label>
+                </div>
+                <div class="fw-bolder text-danger fst-italic smaller" id="seniority0Error"></div>
+            </div>
+            <!-- Leave definition details Entitled -->
+            <div class="col-sm-4">
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="entitled0" name="entitled0" />
+                  <label for="entitled"><i class="bi-shield-fill-exclamation"></i> entitled</label>
+                </div>
+                <div class="fw-bolder text-danger fst-italic smaller" id="entitled0Error"></div>
+            </div> 
+            <div class="col-sm-4"></div>           
+          </div>
+          <div id="existingDetailRows"></div>
+          <div id="extraDetailRows"></div>
+        </div>
+      </form>
+      <div class="modal-footer">
+        <a href="#" class="btn btn-danger" id="createLeaveDefinitionSubmit"><i class="bi bi-save2-fill"></i> Save</a>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{end}}
+
+{{define "js"}}
+
+<script>
+  const connectedEmail = {{.User.Email}},
+        connectedID = {{.User.EmployeeID}}
+</script>
+
+<script src="/static/js/common/MainHelpers.js"></script>
+
+<script src="/static/js/leave/definition/LeaveDefinitionHelpers.js"></script>
+<script src="/static/js/leave/definition/LeaveDefinitionAPI.js"></script>
+<script src="/static/js/leave/definition/leaveDefinition.js"></script>
+{{end}}

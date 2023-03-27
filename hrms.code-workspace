@@ -13,16 +13,16 @@
 			"path": "logger-service"
 		},
 		{
-			"path": "amqp-service"
-		},
-		{
-			"path": "mailer-service"
-		},
-		{
 			"path": "broker-service"
 		},
 		{
 			"path": "employee-service"
+		},
+		{
+			"path": "claim-service"
+		},
+		{
+			"path": "leave-service"
 		}
 	],
 	"settings": {}

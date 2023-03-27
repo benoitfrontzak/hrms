@@ -14,19 +14,6 @@ services:
     environment:
       DSN: "amqp://root:rootroot@rabbitmq"
 
-  employee-service:
-    build:
-      context: ./../employee-service
-      dockerfile: ./../employee-service/employee-service.dockerfile
-    restart: always
-    ports:
-      - "8882:8882"
-    deploy:
-      mode: replicated
-      replicas: 1
-    environment:
-      DSN: "host=backend port=5432 user=postgres password=rootroot dbname=EMPLOYEE sslmode=disable timezone=UTC connect_timeout=5"
-
   authentication-service:
     build:
       context: ./../authentication-service
@@ -38,7 +25,7 @@ services:
       mode: replicated
       replicas: 1
     environment:
-      DSN: "host=backend port=5432 user=postgres password=rootroot dbname=authentication sslmode=disable timezone=UTC connect_timeout=5"
+      DSN: "host=backend port=5432 user=postgres password=rootroot dbname=AUTHENTICATION sslmode=disable timezone=UTC connect_timeout=5"
     
   logger-service:
     build:
@@ -52,44 +39,43 @@ services:
       replicas: 1
     environment:
       DSN: "mongodb://backend:27017"
-
-  amqp-service:
+  
+  leave-service:
     build:
-      context: ./../amqp-service
-      dockerfile: ./../amqp-service/amqp-service.dockerfile
+      context: ./../leave-service
+      dockerfile: ./../leave-service/leave-service.dockerfile
+    restart: always
+    ports:
+      - "8881:8881"
     deploy:
       mode: replicated
       replicas: 1
     environment:
-      DSN: "amqp://root:rootroot@rabbitmq"
-    restart: always
+      DSN: "host=backend port=5432 user=postgres password=rootroot dbname=LEAVE sslmode=disable timezone=UTC connect_timeout=5"
 
-  rabbitmq3:
-        container_name: "rabbitmq"
-        image: rabbitmq:3.11-management-alpine
-        environment:
-            - RABBITMQ_DEFAULT_USER=root
-            - RABBITMQ_DEFAULT_PASS=rootroot
-        ports:
-            # AMQP protocol port
-            - '5672:5672'
-            # HTTP management UI
-            - '15672:15672'
-        deploy:
-          mode: replicated
-          replicas: 1
-        volumes:
-          - ./db-data/rabbitmq/:/var/lib/rabbitmq/
-  
-  mailer-service:
+  employee-service:
     build:
-      context: ./../mailer-service
-      dockerfile: ./../mailer-service/mailer-service.dockerfile
+      context: ./../employee-service
+      dockerfile: ./../employee-service/employee-service.dockerfile
     restart: always
+    ports:
+      - "8882:8882"
     deploy:
       mode: replicated
       replicas: 1
-    ports:
-      - "8888:8888"
+    environment:
+      DSN: "host=backend port=5432 user=postgres password=rootroot dbname=EMPLOYEE sslmode=disable timezone=UTC connect_timeout=5"
 
+  claim-service:
+    build:
+      context: ./../claim-service
+      dockerfile: ./../claim-service/claim-service.dockerfile
+    restart: always
+    ports:
+      - "8883:8883"
+    deploy:
+      mode: replicated
+      replicas: 1
+    environment:
+      DSN: "host=backend port=5432 user=postgres password=rootroot dbname=CLAIM sslmode=disable timezone=UTC connect_timeout=5"
   

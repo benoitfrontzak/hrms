@@ -1,0 +1,174 @@
+{{template "base.admin" . }}
+
+{{define "content"}}
+
+<div class="container-fluid" style="width:100%">
+    <!-- ACTION BUTTON -->
+    <div class="d-flex flex-row-reverse mt-3">
+      <div class="p-2 bd-highlight"><a href="#" class="btn btn-danger" id="openCreateMyClaim" data-bs-toggle="modal" data-bs-target="#myClaim"><i class="bi bi-plus-circle-fill"></i> add</a></div>
+      <div class="p-2 bd-highlight"><a href="#" class="btn btn-danger" id="deleteAllMyClaim"><i class="bi-dash-circle"></i> delete</a></div>
+    </div>
+    <!-- WARNING DELETE MESSAGE -->
+    <div class="alert alert-warning mt-3 hide" role="alert" id="deleteWarningMessageDiv">
+      <div class="d-flex justify-content-between">
+        <div class="flex-grow-1"><h4 class="alert-heading"><i class="bi-exclamation-diamond-fill"></i> Warning!</h4></div>
+        <div class="flex-shrink-1"><i class="bi-x-circle-fill pointer" id="hidedeleteWarningMessage"></i></div>
+      </div>      
+      <p>You must select at least one entry before deleting...</p>
+      <hr>
+      <p class="mb-0 smaller">Please check in on some of those fields below...</p>
+    </div>
+    
+    <hr />
+
+    <div id="gotData">
+    <!-- TABLE -->
+    <table id="myClaimTable" class="display stripe" style="width:100%">
+        <thead>
+            <tr>
+              <th>Allowance</th>
+              <th>Category</th>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Amount</th>
+              <th>Status</th>
+              <th>Approved at</th>
+              <th>Approved by</th>
+              <th>Approved amount</th>
+              <th>Reason</th>
+            <th></th>
+            </tr>
+        </thead>
+        <tbody id="myClaimBody"></tbody>
+    </table>
+    </div>
+
+    <!-- NO DATA -->
+    <div class="hide" id="noData">No data to display</div>
+</div>
+
+<!-- modal: Confirm employee deletion -->
+<div class="modal fade" id="confirmDelete" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirm delete</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p id="confirmDeleteBody"></p>
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="btn btn-danger" id="confirmDeleteSubmit"><i class="bi bi-save2-fill"></i> Confirm</a>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: myClaim -->
+<div class="modal fade" id="myClaim" tabindex="-1" aria-labelledby="myClaimLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="myClaimLabel">New Claim</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- WARNING MESSAGE -->
+        <div class="alert alert-warning mt-3 hide" role="alert" id="warningMessageDiv">
+          <div class="d-flex justify-content-between">
+            <div class="flex-grow-1"><h4 class="alert-heading"><i class="bi-exclamation-diamond-fill"></i> Warning!</h4></div>
+            <div class="flex-shrink-1"><i class="bi-x-circle-fill pointer" id="hideWarningMessage"></i></div>
+          </div>      
+          <p id="warningMessageBody">Please you must fill those fields</p>
+          <hr>
+          <p class="mb-0 smaller">Please check in on some of those fields below...</p>
+        </div>
+
+        <div class="space"></div>
+
+        <form id="claimForm" name="claimForm">
+          <!-- Hidden fields -->
+          <input type="hidden" id="confirmation" value="" />
+          <input type="hidden" id="seniority"    value="" />
+          <input type="hidden" id="docRequired"  value="" />
+          <input type="hidden" id="limitation"   value="" />
+          <input type="hidden" name="employeeid" id="employeeid"   value="{{.User.EmployeeID}}" />
+
+          <!-- 1st row (Claim definition | claim amount) -->
+          <div class="row mb-3">
+            <!-- claim definition -->
+            <div class="col-sm-4">
+              <div class="form-floating">
+                  <select class="form-select" id="claimDefinition" name="claimDefinition" aria-label="Select one claim definition"></select>
+                  <label for="claimDefinition"><i class="bi-shield-fill-exclamation"></i> claim definition</label>
+              </div>
+              <div class="fw-bolder text-danger fst-italic smaller" id="claimDefinitionError"></div>
+            </div>
+            <div class="col-sm-4"></div>          
+            <!-- Claim amount -->
+            <div class="col-sm-4">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="amount" name="amount" />
+                <label for="amount"><i class="bi-shield-fill-exclamation"></i> amount</label>
+                <div class="fw-bolder text-danger fst-italic smaller" id="amountError"></div>
+              </div>          
+            </div>          
+          </div>
+          <!-- 2n row (category | name) -->
+          <div class="row mb-3">
+            <!-- Claim category -->
+            <div class="col-sm-4 hide" id="categoryDiv">
+              <div class="form-floating">
+                <select class="form-select" id="category" name="category" aria-label="Select one category"></select>
+                <label for="category"><i class="bi-shield-fill-exclamation"></i> category</label>
+              </div>
+              <div class="fw-bolder text-danger fst-italic smaller" id="categoryError"></div>
+            </div>
+            <!-- Claim name -->
+            <div class="col-sm-4 hide" id="nameDiv">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="name" name="name" />
+                <label for="name"><i class="bi-shield-fill-exclamation"></i> name</label>
+              </div>
+              <div class="fw-bolder text-danger fst-italic smaller" id="nameError"></div>
+            </div>
+            <div class="col-sm-4"></div>
+          </div>
+          <!-- 3rd row (description) -->
+          <div class="row mb-3">
+            <!-- Claim description -->
+            <div class="col-sm-12">
+              <div class="form-floating">
+                <textarea class="form-control" name="description" id="description" style="height: 100px"></textarea>
+                <label for="description"><i class="bi-shield-fill-exclamation"></i> description</label>
+              </div>
+              <div class="fw-bolder text-danger fst-italic smaller" id="descriptionError"></div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="btn btn-danger" id="claimFormSubmit"><i class="bi bi-save2-fill"></i> Save</a>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{end}}
+
+{{define "js"}}
+
+<script>
+  const connectedEmail = {{.User.Email}},
+        connectedID = {{.User.EmployeeID}}
+</script>
+
+<script src="/static/js/common/MainHelpers.js"></script>
+
+<script src="/static/js/claim/myclaim/MyClaimHelpers.js"></script>
+<script src="/static/js/claim/myclaim/MyClaimAPI.js"></script>
+<script src="/static/js/claim/myclaim/myClaim.js"></script>
+{{end}}

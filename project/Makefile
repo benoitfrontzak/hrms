@@ -5,6 +5,8 @@ LOGGER_BINARY=loggerApp
 AMQP_BINARY=amqpApp
 MAIL_BINARY=mailerApp
 EMPLOYEE_BINARY=employeeApp
+CLAIM_BINARY=claimApp
+LEAVE_BINARY=leaveApp
 
 ## up: starts all containers in the background without forcing build
 up:
@@ -13,7 +15,7 @@ up:
 	@echo "Docker images started!"
 
 ## up_build: stops docker-compose (if running), builds all projects and starts docker compose
-up_build: build_broker build_auth build_logger build_amqp build_mailer build_employee
+up_build: build_broker build_auth build_logger build_employee build_claim build_leave
 	@echo "Stopping docker images (if running...)"
 	docker-compose down
 	@echo "Building (when required) and starting docker images..."
@@ -44,22 +46,22 @@ build_logger:
 	cd ../logger-service && env GOOS=linux CGO_ENABLED=0 go build -o ${LOGGER_BINARY} ./cmd/api
 	@echo "Done!"
 
-## build_amqp: builds the amqp binary as a linux executable
-build_amqp:
-	@echo "Building amqp binary..."
-	cd ../amqp-service && env GOOS=linux CGO_ENABLED=0 go build -o ${AMQP_BINARY} ./cmd/amqp
-	@echo "Done!"
-
-## build_mailer: builds the mail binary as a linux executable
-build_mailer:
-	@echo "Building mailer binary..."
-	cd ../mailer-service && env GOOS=linux CGO_ENABLED=0 go build -o ${MAIL_BINARY} ./cmd/api
-	@echo "Done!"
-
 ## build_employee: builds the mail binary as a linux executable
 build_employee:
 	@echo "Building employee binary..."
 	cd ../employee-service && env GOOS=linux CGO_ENABLED=0 go build -o ${EMPLOYEE_BINARY} ./cmd/api
+	@echo "Done!"
+
+## build_claim: builds the mail binary as a linux executable
+build_claim:
+	@echo "Building claim binary..."
+	cd ../claim-service && env GOOS=linux CGO_ENABLED=0 go build -o ${CLAIM_BINARY} ./cmd/api
+	@echo "Done!"
+
+## build_leave: builds the mail binary as a linux executable
+build_leave:
+	@echo "Building leave binary..."
+	cd ../leave-service && env GOOS=linux CGO_ENABLED=0 go build -o ${LEAVE_BINARY} ./cmd/api
 	@echo "Done!"
 
 ## build_front: builds the frone end binary

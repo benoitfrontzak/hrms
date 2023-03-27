@@ -2,6 +2,47 @@
   .nav-link{color: #dc3545;}
   .nav-link:hover{color:#dc3546b0;}
 
+  /* bootstrap icons */
+  .largeIcon{
+    font-size: large;
+  }
+  .mediumIcon{
+    font-size: medium;
+  }
+
+  /* bootstrap datepicker */
+  .table-condensed{
+    width: 100%;
+    padding: 11px 13px;
+    margin: 20px;
+  }
+
+  .table-condensed>thead{
+    background-color: #006dcc;
+    color: white;
+  }
+
+  .clear:hover{
+    background-color: white !important; 
+    background: white !important;
+  }
+
+  .datepicker-switch:hover,
+  .prev:hover,
+  .next:hover{
+    background-color: #006dcc !important; 
+    background: #006dcc !important; 
+    background-image: none;
+    font-size: 18px;
+  }
+  .table-condensed>tbody>tr>td:hover{
+    background-color: #006dcc !important; 
+    background: #006dcc !important; 
+    background-image: none;
+  }
+
+ 
+
   /* Custom */
   .space{
     min-height: 2em;
@@ -18,4 +59,7 @@
   }
   .hide{
     display: none;
+  }
+  .myLink{
+    text-decoration: none;
   }
