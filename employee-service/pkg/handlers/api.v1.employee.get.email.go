@@ -11,16 +11,22 @@ func (rep *Repository) GetByEmail(w http.ResponseWriter, r *http.Request) {
 	var email string
 	err := rep.readJSON(w, r, &email)
 	if err != nil {
+		log.Println("err json")
+		log.Println(err)
 		rep.errorJSON(w, err)
 		return
 	}
 
-	all, err := rep.App.Models.Employee.GetAllEmployeeInfoByEmail(email)
+	all, err := rep.App.Models.Employee.GetEmployeeInfoByEmail(email)
 	if err != nil {
-		log.Println("err", err)
+		log.Println("err all")
+		log.Println(err)
 		rep.errorJSON(w, err)
 		return
 	}
+
+	log.Println("all")
+	log.Println(all)
 
 	// response to be sent
 	answer := jsonResponse{

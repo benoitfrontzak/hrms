@@ -11,10 +11,8 @@ func (e *Employee) GetAllActive() ([]*employeeList, error) {
 	// SQL statement which fetch employee summary
 	query := `SELECT 	e.ID,
 						e.employee_code AS code,
-						LOWER(e.firstname),
-						LOWER(e.middlename),
-						UPPER(e.lastname),
-						LOWER(e.givenname)
+						e.fullname,
+						e.nickname
 			  	FROM "EMPLOYEE" e
 				WHERE e.is_active = 1
 				AND e.ID <> 0
@@ -34,9 +32,7 @@ func (e *Employee) GetAllActive() ([]*employeeList, error) {
 		err := rows.Scan(
 			&emp.ID,
 			&emp.Code,
-			&emp.Firstname,
-			&emp.Middlename,
-			&emp.Lastname,
+			&emp.Fullname,
 			&emp.Nickname,
 		)
 		if err != nil {
@@ -85,7 +81,8 @@ func getAllByStatus(active int) ([]*EmployeeSummary, error) {
 	// SQL statement which fetch employee summary
 	query := `SELECT 	e.ID,
 						e.employee_code AS code,
-						CONCAT(UPPER(e.lastname), ' ', LOWER(e.firstname), ' ' , LOWER(e.middlename)) AS fullname,
+						e.fullname,
+						e.nickname,
 						e.primary_email AS email,
 						e.primary_phone AS mobile,
 						e.birthdate,
@@ -112,6 +109,7 @@ func getAllByStatus(active int) ([]*EmployeeSummary, error) {
 			&emp.ID,
 			&emp.Code,
 			&emp.Fullname,
+			&emp.Nickname,
 			&emp.Email,
 			&emp.Mobile,
 			&emp.Birthdate,
@@ -136,7 +134,7 @@ func getAllDeleted() ([]*EmployeeSummary, error) {
 	// SQL statement which fetch employee summary
 	query := `SELECT 	e.ID,
 						e.employee_code AS code,
-						CONCAT(UPPER(e.lastname), ' ', LOWER(e.firstname), ' ' , LOWER(e.middlename)) AS fullname,
+						e.fullname,
 						e.primary_email AS email,
 						e.primary_phone AS mobile,
 						e.birthdate,

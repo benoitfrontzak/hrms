@@ -9,22 +9,18 @@ import (
 // GetAllMyClaim is the handler which receives a payload from the broker
 // and fetch all my claims by employee ID
 func (rep *Repository) GetAllMyClaim(w http.ResponseWriter, r *http.Request) {
-	log.Println("claim hit")
+
 	// extract payload from request
 	var p User
 	err := rep.readJSON(w, r, &p)
 	if err != nil {
-		log.Println("decoded json:", err)
 		rep.errorJSON(w, err)
 		return
 	}
 
-	log.Println("employee requested ID:", p)
-
 	// get all my claims
 	all, err := rep.App.Models.Claim.GetAllMyClaim(p.ID)
 	if err != nil {
-		log.Println("db err:", err)
 		rep.errorJSON(w, err)
 		return
 	}

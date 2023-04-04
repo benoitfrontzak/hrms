@@ -24,6 +24,10 @@ func (e *Employee) GetAllEmployeeInfo(id int) (*EmployeeFull, error) {
 	if err != nil {
 		return nil, err
 	}
+	employmentArchive, err := getEmployeeEmploymentArchiveByID(employee.ID)
+	if err != nil {
+		return nil, err
+	}
 	spouse, err := getEmployeeSpouseByID(employee.ID)
 	if err != nil {
 		return nil, err
@@ -32,21 +36,27 @@ func (e *Employee) GetAllEmployeeInfo(id int) (*EmployeeFull, error) {
 	if err != nil {
 		return nil, err
 	}
+	statutoryArchive, err := getEmployeeStatutoryArchiveByID(employee.ID)
+	if err != nil {
+		return nil, err
+	}
 
 	myEmp := EmployeeFull{
-		Employee:         employee,
-		EmergencyContact: ec,
-		OtherInformation: oi,
-		Spouse:           spouse,
-		Employment:       employment,
-		Statutory:        statutory,
-		Bank:             bank,
+		Employee:          employee,
+		EmergencyContact:  ec,
+		OtherInformation:  oi,
+		Spouse:            spouse,
+		Employment:        employment,
+		EmploymentArchive: employmentArchive,
+		Statutory:         statutory,
+		StatutoryArchive:  statutoryArchive,
+		Bank:              bank,
 	}
 	return &myEmp, nil
 }
 
 // fetch all employee info by email
-func (e *Employee) GetAllEmployeeInfoByEmail(email string) (*EmployeeFull, error) {
+func (e *Employee) GetEmployeeInfoByEmail(email string) (*EmployeeFull, error) {
 	employee, err := getEmployeeFullByEmail(email)
 	if err != nil {
 		return nil, err
@@ -97,7 +107,7 @@ func (e *Employee) GetEmployeeLeaveInfo(id int) (*employeeLeave, error) {
 	// SQL statement which fetch employee summary
 	query := `SELECT e.id,
 					 e.employee_code,
-					 e.firstname, e.middlename, e.lastname, e.givenname,
+					 e.fullname, e.nickname,
 				 	 em.join_date, em.confirm_date
 			FROM public."EMPLOYEE" e, public."EMPLOYMENT" em	
 			WHERE e.id  = $1
@@ -111,7 +121,7 @@ func (e *Employee) GetEmployeeLeaveInfo(id int) (*employeeLeave, error) {
 	err := row.Scan(
 		&el.ID,
 		&el.Code,
-		&el.Firstname, &el.Middlename, &el.Lastname, &el.Nickname,
+		&el.Fullname, &el.Nickname,
 		&el.JoinDate, &el.ConfirmDate,
 	)
 	if err != nil {
@@ -130,7 +140,7 @@ func getEmployeeFullByID(id int) (*Employee, error) {
 	// SQL statement which fetch employee summary
 	query := `SELECT e.id,
 					 e.employee_code,
-					 e.firstname, e.middlename, e.lastname, e.givenname,
+					 e.fullname, e.nickname,
 				 	 e.ic_number,  e.passport_number, e.passport_expiry_at,
 					 e.birthdate,
 					 e.nationality_id, e.residence_country_id,
@@ -154,7 +164,7 @@ func getEmployeeFullByID(id int) (*Employee, error) {
 	err := row.Scan(
 		&e.ID,
 		&e.EmployeeCode,
-		&e.Firstname, &e.Middlename, &e.Familyname, &e.Givenname,
+		&e.Fullname, &e.Nickname,
 		&e.IcNumber, &e.PassportNumber, &e.PassportExpiryAt,
 		&e.Birthdate,
 		&e.Nationality, &e.Residence,
@@ -182,7 +192,7 @@ func getEmployeeFullByEmail(email string) (*Employee, error) {
 	// SQL statement which fetch employee summary
 	query := `SELECT e.id,
 					 e.employee_code,
-					 e.firstname, e.middlename, e.lastname, e.givenname,
+					 e.fullname, e.nickname,
 				 	 e.ic_number,  e.passport_number, e.passport_expiry_at,
 					 e.birthdate,
 					 e.nationality_id, e.residence_country_id,
@@ -206,7 +216,7 @@ func getEmployeeFullByEmail(email string) (*Employee, error) {
 	err := row.Scan(
 		&e.ID,
 		&e.EmployeeCode,
-		&e.Firstname, &e.Middlename, &e.Familyname, &e.Givenname,
+		&e.Fullname, &e.Nickname,
 		&e.IcNumber, &e.PassportNumber, &e.PassportExpiryAt,
 		&e.Birthdate,
 		&e.Nationality, &e.Residence,
@@ -348,6 +358,74 @@ func getEmployeeEmmploymentByID(id int) (*Employment, error) {
 	// return employee full row
 	return &e, nil
 }
+func getEmployeeEmploymentArchiveByID(id int) ([]*EmploymentArchive, error) {
+	// canceling this context releases resources associated with it
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+	// SQL statement which fetch employee summary
+	query := `SELECT e.id,
+					 e.job_title,
+					 ced."name" as department,
+					 e.superior_id,	e.supervisor_id,
+					 cet."name" as employee_type,
+					 cew."name" as wages_type,
+					 e.basic_rate,
+					 cepf."name"  as pay_frequency, cepb."name"  as payment_by, ceb."name"  as bank_payout,
+					 ceg."name"  as group, ceb2."name"  as branch, cep."name" as project,
+					 ceo."name"  as overtime,
+					 e.working_permit_expiry,
+					 e.join_date, e.confirm_date, e.resign_date,
+					 e.created_at, e.created_by
+			  FROM "EMPLOYMENT_ARCHIVE" e, "CONFIG_EMPLOYMENT_DEPARTMENT" ced, "CONFIG_EMPLOYMENT_TYPE" cet, 
+					"CONFIG_EMPLOYMENT_WAGES" cew, "CONFIG_EMPLOYMENT_PAY_FREQUENCY" cepf, "CONFIG_EMPLOYMENT_PAYMENT_BY" cepb, 
+					"CONFIG_EMPLOYMENT_BANK" ceb, "CONFIG_EMPLOYMENT_GROUP" ceg , "CONFIG_EMPLOYMENT_BRANCH" ceb2, "CONFIG_EMPLOYMENT_PROJECT" cep, "CONFIG_EMPLOYMENT_OVERTIME" ceo 
+			  WHERE e.employee_id  = $1
+			  AND e.department_id = ced.id 
+			  AND e.employee_type_id = cet.id 
+			  AND e.wages_type_id = cew.id 
+			  AND e.pay_frequency_id = cepf.id 
+			  AND e.payment_by_id = cepb.id 
+			  AND e.bank_payout_id = ceb.id 
+			  AND e.group_id = ceg.id 
+			  AND e.branch_id = ceb2.id 
+			  AND e.project_id = cep.id 
+			  AND e.overtime_id = ceo.id`
+
+	// executes SQL query
+	rows, err := db.QueryContext(ctx, query, id)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	// populate returned row to employee full struct
+	var all []*EmploymentArchive
+	for rows.Next() {
+		var e EmploymentArchive
+		err := rows.Scan(
+			&e.ID,
+			&e.JobTitle,
+			&e.Department,
+			&e.Superior, &e.Supervisor,
+			&e.EmployeeType,
+			&e.WagesType,
+			&e.BasicRate,
+			&e.PayFrequency, &e.PaymentBy, &e.BankPayout,
+			&e.Group, &e.Branch, &e.Project,
+			&e.Overtime,
+			&e.WorkingPermitExpiry,
+			&e.JoinDate, &e.ConfirmDate, &e.ResignDate,
+			&e.CreatedAt, &e.CreatedBy,
+		)
+		if err != nil {
+			return nil, err
+		}
+		all = append(all, &e)
+	}
+	// return employee full row
+	return all, nil
+}
 func getEmployeeSpouseByID(id int) (*Spouse, error) {
 	// canceling this context releases resources associated with it
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
@@ -437,4 +515,64 @@ func getEmployeeStatutoryByID(id int) (*Statutory, error) {
 	}
 	// return employee full row
 	return &s, nil
+}
+func getEmployeeStatutoryArchiveByID(id int) ([]*StatutoryArchive, error) {
+	// canceling this context releases resources associated with it
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+	// SQL statement which fetch employee summary
+	query := `SELECT s.id,
+					 s.epf_table_id, s.epf_number, s.epf_initial,
+					 s.nk,
+					 s.epf_is_borne,
+					 s.socso_category_id, s.socso_number, s.socso_status_id, s.socso_is_borne,
+					 s.contribute_eis, s.eis_is_borne,
+					 s.tax_status_id, s.tax_number, s.tax_branch_id,
+					 s.ea_serial_number,
+					 s.tax_is_borne,
+					 s.foreign_worker_levy_id,
+					 s.zakat_number, s.zakat_amount,
+					 s.tabung_haji_number, s.tabung_haji_amount,
+					 s.asn_number, s.asn_amount,
+					 s.contribute_hrdf,
+					 s.created_at, s.created_by
+			FROM "STATUTORY_ARCHIVE" s WHERE s.employee_id  = $1`
+
+	// executes SQL query
+	rows, err := db.QueryContext(ctx, query, id)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	// populate returned rows to statutory struct
+	var all []*StatutoryArchive
+	for rows.Next() {
+		var s StatutoryArchive
+		err := rows.Scan(
+			&s.ID,
+			&s.EPFTable, &s.EPFNumber, &s.EPFInitial,
+			&s.NK,
+			&s.EPFBorne,
+			&s.SOCSOCategory, &s.SOCSONumber, &s.SOCSOStatus, &s.SOCSOBorne,
+			&s.ContributeEIS, &s.EISBorne,
+			&s.TaxStatus, &s.TaxNumber, &s.TaxBranch,
+			&s.EASerial,
+			&s.TaxBorne,
+			&s.ForeignWorkerLevy,
+			&s.ZakatNumber, &s.ZakatAmount,
+			&s.TabungHajiNumber, &s.TabungHajiAmount,
+			&s.ASNNumber, &s.ASNAmount,
+			&s.ContributeHRDF,
+			&s.CreatedAt, &s.CreatedBy,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		all = append(all, &s)
+	}
+	// return employee full row
+	return all, nil
 }

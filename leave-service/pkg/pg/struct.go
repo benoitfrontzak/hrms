@@ -28,6 +28,38 @@ type AllLeave struct {
 	Rejected []*Leave
 }
 
+// Structure holding all approved leave summary of today & tomorrow
+type AllCurentLeave struct {
+	Today    []*ApprovedLeave
+	Tomorrow []*ApprovedLeave
+}
+
+// Structure holding one approved leave summary
+type ApprovedLeave struct {
+	Code          string
+	Description   string
+	Reason        string
+	EmployeeID    int
+	RequestedDate string
+	IsHalf        int
+}
+
+// Structure holding one entitled leave (got one per leave definition)
+type EntitledLeave struct {
+	ID                  int     `json:"rowid,string,omitempty"`
+	Entitled            float32 `json:"entitled,string"`
+	Taken               float32 `json:"taken,string"`
+	LeaveDefinitionID   int     `json:"leaveDefinition,string"`
+	LeaveDefinitionCode string  `json:"leaveDefinitionCode"`
+	LeaveDefinitionName string  `json:"leaveDefinitionName"`
+	EmployeeID          int     `json:"employeeid,string"`
+	SoftDelete          int     `json:"softDelete,string"`
+	CreatedAt           string  `json:"createdAt"`
+	CreatedBy           int     `json:"createdBy"`
+	UpdatedAt           string  `json:"updatedAt"`
+	UpdatedBy           int     `json:"updatedBy"`
+}
+
 // Structure holding one leave (application)
 type Leave struct {
 	ID                  int             `json:"rowid,string,omitempty"`
@@ -98,4 +130,11 @@ type LeaveDefinitionDetails struct {
 	CreatedBy         int    `json:"createdBy,string"`
 	UpdatedAt         string `json:"updatedAt"`
 	UpdatedBy         int    `json:"updatedBy,string"`
+}
+
+// Structure holding one leave Definition calculation & entitled
+type LeaveDefinitionEntitled struct {
+	ID            int
+	Entitled      int
+	CalculationID int
 }

@@ -2,34 +2,186 @@
 
 {{define "content"}}
 
-  <div class="container">
-      <div class="row justify-content-md-center">
-          <div class="col-sm-6 mt-3 text-center">
-              <h1 class="text-danger mt-3">Welcome super admin</h1>
-              <hr>
-              <p class="text-start fw-bold">Paseto payload:</p>
-              <div class="row">
-                <div class="col text-start">Uuid</div>
-                <div class="col-10 text-end">{{.ID}}</div>
-              </div>
-              <div class="row">
-                <div class="col text-start">Email</div>
-                <div class="col-10 text-end">{{.Email}}</div>
-              </div>
-              <div class="row">
-                <div class="col text-start">Role</div>
-                <div class="col-10 text-end">{{.Role}}</div>
-              </div>
-              <div class="row">
-                <div class="col text-start">Issued</div>
-                <div class="col-10 text-end">{{.IssuedAt}}</div>
-              </div>
-              <div class="row">
-                <div class="col text-start">Expired</div>
-                <div class="col-10 text-end">{{.ExpiredAt}}</div>
-              </div>
-          </div>
+  <div class="container-fluid">
+
+    <div class="row justify-content-md-center">
+      <div class="col-sm-6 mt-3 text-center">
+        <h1 class="text-danger mt-3">Welcome super admin</h1>
+        <hr>        
       </div>
+    </div>
+
+    <div class="row justify-content-md-center">
+      <div class="col-sm-4"></div>
+      <div class="col-sm-4 text-center"><div id="chart_div" style="width: 400px; height: 120px;"></div></div>
+      <div class="col-sm-4"></div>
+    </div>
+<hr>
+    <div class="row">
+      <div class="col-sm"><div id="chart_div2" style="width: 900px; height: 500px;"></div></div>
+      <div class="col-sm"><div id="piechart" style="width: 900px; height: 500px;"></div></div>
+    </div> 
+
+    <div class="row">
+      <div class="col-sm"><div id="curve_chart" style="width: 900px; height: 500px"></div></div>
+      <div class="col-sm"><div id="piechart_3d" style="width: 900px; height: 500px;"></div></div>
+    </div>
+
+    
+
   </div>
 
+{{end}}
+
+{{define "js"}}
+<script>
+  const connectedEmail = {{.User.Email}},
+        connectedID = {{.User.EmployeeID}}
+</script>
+
+<script src="https://www.gstatic.com/charts/loader.js"></script>
+
+<script type="text/javascript">
+      google.charts.load('current', {'packages':['gauge']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+
+        var data = google.visualization.arrayToDataTable([
+          ['Label', 'Value'],
+          ['Memory', 80],
+          ['CPU', 55],
+          ['Network', 68]
+        ]);
+
+        var options = {
+          width: 400, height: 120,
+          redFrom: 90, redTo: 100,
+          yellowFrom:75, yellowTo: 90,
+          minorTicks: 5
+        };
+
+        var chart = new google.visualization.Gauge(document.getElementById('chart_div'));
+
+        chart.draw(data, options);
+
+        setInterval(function() {
+          data.setValue(0, 1, 40 + Math.round(60 * Math.random()));
+          chart.draw(data, options);
+        }, 13000);
+        setInterval(function() {
+          data.setValue(1, 1, 40 + Math.round(60 * Math.random()));
+          chart.draw(data, options);
+        }, 5000);
+        setInterval(function() {
+          data.setValue(2, 1, 60 + Math.round(20 * Math.random()));
+          chart.draw(data, options);
+        }, 26000);
+      }
+</script>
+
+<script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawVisualization);
+
+      function drawVisualization() {
+        // Some raw data (not necessarily accurate)
+        var data = google.visualization.arrayToDataTable([
+          ['Month',   'Resignation', 'Newly hire', 'Terminated'],
+          ['2023/01',  165,           938,          522],
+          ['2023/02',  135,           1120,         599],
+          ['2023/03',  157,           1167,         587],
+          ['2023/04',  139,           1110,         615],
+          ['2023/05',  136,           691,          629]
+        ]);
+
+        var options = {
+          title : 'Monthly employee turn over',
+          vAxis: {title: 'Employee'},
+          hAxis: {title: 'Month'},
+          seriesType: 'bars',
+          series: {1: {type: 'line'}}
+        };
+
+        var chart = new google.visualization.ComboChart(document.getElementById('chart_div2'));
+        chart.draw(data, options);
+      }
+</script>
+
+<script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+
+        var data = google.visualization.arrayToDataTable([
+          ['Task', 'Hours per Day'],
+          ['Annual',     11],
+          ['Hospitalization',      2],
+          ['Maternity',  2],
+          ['Paternity', 2],
+          ['Medical',    7]
+        ]);
+
+        var options = {
+          title: 'My leaves'
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+        chart.draw(data, options);
+      }
+</script>
+
+<script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Year', 'Sales', 'Expenses'],
+          ['2004',  1000,      400],
+          ['2005',  1170,      460],
+          ['2006',  660,       1120],
+          ['2007',  1030,      540]
+        ]);
+
+        var options = {
+          title: 'Company Performance',
+          curveType: 'function',
+          legend: { position: 'bottom' }
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+
+        chart.draw(data, options);
+      }
+</script>
+
+<script type="text/javascript">
+      google.charts.load("current", {packages:["corechart"]});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Task', 'Hours per Day'],
+          ['Intel',     11],
+          ['Motorola',     10],
+          ['Bosch',  6],
+          ['Proton', 2],
+          ['Other',    1]
+        ]);
+
+        var options = {
+          title: 'My Company Activities',
+          is3D: true,
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
+        chart.draw(data, options);
+      }
+</script>
+
+<script src="/static/js/root/home/HomeAPI.js"></script>
+<script src="/static/js/root/home/HomeHelpers.js"></script>
+<script src="/static/js/root/home/home.js"></script>
 {{end}}

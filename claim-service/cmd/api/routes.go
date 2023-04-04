@@ -22,6 +22,8 @@ func multiplexer() http.Handler {
 
 	// API v1 My Claim
 	mux.HandleFunc("/api/v1/myclaim/get/all", handlers.Repo.GetAllMyClaim)
+	mux.HandleFunc("/api/v1/myclaim/get/thisYear", handlers.Repo.AllMyYearlyClaim)
+	mux.HandleFunc("/api/v1/myclaim/get/thisYearDetails", handlers.Repo.AllMyYearlyClaimDetails)
 	mux.HandleFunc("/api/v1/myclaim/create", handlers.Repo.CreateMyClaim)
 	// mux.HandleFunc("/api/v1/myclaim/update", handlers.Repo.UpdateMyClaim)
 	mux.HandleFunc("/api/v1/myclaim/softDelete", handlers.Repo.SoftDeleteMyClaim)

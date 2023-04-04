@@ -54,42 +54,37 @@
           </div>
           <!-- card body: identity -->
           <div class="card-body" id="identityBodyCard">
-            <!-- identity: 1st row (firstName | middlename | familyname) -->
+            <!-- identity: 1st row (fullname) -->
             <div class="row my-3">
-              <!-- identity:  firstName -->
-              <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="firstName" name="firstName" />
-                <div class="fw-lighter fst-italic smaller mt-1"><i class="bi-shield-fill-exclamation"></i> first name</div>
-                <div class="fw-bolder text-danger fst-italic smaller" id="firstNameError"></div>
+              <!-- identity:  fullName -->
+              <div class="col-sm-8">
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="fullName" name="fullName" />
+                  <label for="fullName"><i class="bi-shield-fill-exclamation"></i> full name</label>
+                </div>
+                <div class="fw-bolder text-danger fst-italic smaller" id="fullNameError"></div>
               </div>
-              <!-- identity:  middleName -->
+              <!-- identity: nickName -->
               <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="middleName" name="middleName" />
-                <div class="fw-lighter fst-italic smaller"><i class="bi-shield-fill-exclamation"></i> middle name</div>
-                <div class="fw-bolder text-danger fst-italic smaller" id="middleNameError"></div>
-              </div>
-              <!-- identity:  familyName -->
-              <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="familyName" name="familyName" />
-                <div class="fw-lighter fst-italic smaller"><i class="bi-shield-fill-exclamation"></i> family name</div>
-                <div class="fw-bolder text-danger fst-italic smaller" id="familyNameError"></div>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="nickName" name="nickName" />
+                  <label for="nickName"><i class="bi-shield-fill-exclamation"></i> nick name</label>
+                </div>
+                <div class="fw-bolder text-danger fst-italic smaller" id="nickNameError"></div>
               </div>
             </div>
             <div class="space"></div>
             <!-- identity: 2nd row (givenname | employee code | gender & marital status) -->
             <div class="row my-3">
-              <!-- identity:  givenName -->
-              <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="givenName" name="givenName" />
-                <div class="fw-lighter fst-italic smaller">given name</div>
-                <div class="fw-bolder text-danger fst-italic smaller" id="givenNameError"></div>
-              </div>
               <!-- identity:  employee code -->
               <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="employeeCode" name="employeeCode" />
-                <div class="fw-lighter fst-italic smaller"><i class="bi-shield-fill-exclamation"></i> employee code</div>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="employeeCode" name="employeeCode" />
+                  <label for="employeeCode"><i class="bi-shield-fill-exclamation"></i> employee code</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="employeeCodeError"></div>
               </div>
+              <div class="col-sm-4"></div>
               <!-- identity:  gender & marital status --> 
               <div class="col-sm-4">
                 <div class="row">
@@ -122,27 +117,48 @@
             <div class="row my-3">
               <!-- identity:  ic number -->
               <div class="col-sm-4">                
-                <input type="text" class="form-control form-control-sm" id="icNumber" name="icNumber" />
-                <div class="fw-lighter fst-italic smaller mt-1">ic number <i class="bi-cloud-upload largeIcon pointer" id="uploadICButton"></i> </div>
-                <div class="d-flex justify-content-between fw-lighter fst-italic smaller mt-1">
-                  <div id="uploadedIC"></div>
-                  <div id="archivedIC"></div>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="icNumber" name="icNumber" />
+                  <label for="icNumber">ic number</label>
+                </div>
+                <!-- identity:  ic files buttons (upload, uploaded, archived) -->
+                <div class="row mt-1">
+                  <div class="col"><i class="bi-upload largeIcon pointer" id="uploadICButton" data-bs-toggle="tooltip" data-bs-placement="top" title="Upload files"></i></div>
+                  <div class="col text-end">
+                    <div class="d-flex justify-content-end">
+                      <span data-bs-toggle="modal" data-bs-target="#uploadedIC"><i class="bi-folder-check largeIcon pointer" data-bs-toggle="tooltip" data-bs-placement="top" title="Latest files"></i></span>
+                      <span>&nbsp;</span>
+                      <span data-bs-toggle="modal" data-bs-target="#archivedIC"><i class="bi-folder-x largeIcon pointer" data-bs-toggle="tooltip" data-bs-placement="top" title="Archive files"></i></span>
+                    </div>                    
+                  </div>
                 </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="icNumberError"></div>
               </div>
               <!-- identity:  passport number -->
               <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="passportNumber" name="passportNumber" />
-                <div class="fw-lighter fst-italic smaller">passport number <i class="bi-cloud-upload largeIcon pointer" id="uploadPassportButton"></i></div>
-                <div class="d-flex justify-content-between fw-lighter fst-italic smaller mt-1">
-                  <div id="uploadedPassport"></div>
-                  <div id="archivedPassport"></div>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="passportNumber" name="passportNumber" />
+                  <label for="passportNumber">passport number</label>
+                </div>
+                <!-- identity:  passport files buttons (upload, uploaded, archived) -->
+                <div class="row mt-1">
+                  <div class="col"><i class="bi-upload largeIcon pointer" id="uploadPassportButton" data-bs-toggle="tooltip" data-bs-placement="top" title="Upload files"></i></div>
+                  <div class="col text-end">
+                    <div class="d-flex justify-content-end">
+                      <span data-bs-toggle="modal" data-bs-target="#uploadedPassport"><i class="bi-folder-check largeIcon pointer" data-bs-toggle="tooltip" data-bs-placement="top" title="Latest files"></i></span>
+                      <span>&nbsp;</span>
+                      <span data-bs-toggle="modal" data-bs-target="#archivedPassport"><i class="bi-folder-x largeIcon pointer" data-bs-toggle="tooltip" data-bs-placement="top" title="Archive files"></i></span>
+                    </div>                    
+                  </div>
                 </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="passportNumberError"></div>
               </div>
               <!-- identity:  passport expiry date -->
               <div class="col-sm-4">
-                <input type="date" class="form-control form-control-sm" id="passportExpiryAt" name="passportExpiryAt" />
+                <div class="form-floating">
+                  <input type="date" class="form-control" value=NULL id="passportExpiryAt" name="passportExpiryAt" />
+                  <label for="passportExpiryAt">passport expiry date</label>
+                </div>
                 <div class="fw-lighter fst-italic smaller">passport expiry date <span class="fw-bolder text-secondary" id="passportExpiryDays"></span></div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="passportExpiryAtError"></div>
               </div>
@@ -153,20 +169,26 @@
             <div class="row my-3">
               <!-- identity: nationality -->
               <div class="col-sm-4">
-                <select class="form-control form-control-sm" id="nationality" name="nationality"></select>
-                <div class="fw-lighter fst-italic smaller mt-1"><i class="bi-shield-fill-exclamation"></i> nationality</div>
+                <div class="form-floating">
+                  <select class="form-select" id="nationality" name="nationality"></select>
+                  <label for="nationality"><i class="bi-shield-fill-exclamation"></i> nationality</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="nationalityError"></div>
               </div>
               <!-- identity: residence country --> 
               <div class="col-sm-4">             
-                <select class="form-control form-control-sm" id="residence" name="residence"></select>
-                <div class="fw-lighter fst-italic smaller mt-1"><i class="bi-shield-fill-exclamation"></i> residence country</div>
+                  <div class="form-floating">
+                    <select class="form-select" id="residence" name="residence"></select>
+                    <label for="residence"><i class="bi-shield-fill-exclamation"></i> residence</label>
+                  </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="residenceError"></div>
               </div>
               <!-- identity: immigration number -->
               <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="immigrationNumber" name="immigrationNumber" />
-                <div class="fw-lighter fst-italic smaller">immigration number</div>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="immigrationNumber" name="immigrationNumber" />
+                  <label for="immigrationNumber">immigration number</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="immigrationNumberError"></div>
               </div>
             </div> 
@@ -176,32 +198,26 @@
             <div class="row my-3">
               <!-- identity: birth date -->
               <div class="col-sm-4">
-                <input type="date" class="form-control form-control-sm" id="birthdate" name="birthdate" />
-                <div class="fw-lighter fst-italic smaller">date of birth <span class="fw-bolder text-secondary" id="age"></span></div>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="birthdate" name="birthdate" />
+                  <label for="birthdate">date of birth <span class="fw-bolder text-secondary" id="age"></span></label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="birthdateError"></div>
               </div>
               <!-- identity:  race -->
               <div class="col-sm-4">
-                <select class="form-control form-control-sm" id="race" name="race">
-                  <option selected hidden value=""></option>                  
-                  <option value=0>malay</option>
-                  <option value=1>chinese</option>
-                  <option value=2>indian</option>
-                  <option value=3>other</option>
-                </select>
-                <div class="fw-lighter fst-italic smaller">race</div>
+                <div class="form-floating">
+                  <select class="form-select" id="race" name="race"></select>
+                  <label for="race">race</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="raceError"></div>
               </div>
               <!-- identity:  religion -->
               <div class="col-sm-4">
-                <select class="form-control form-control-sm" id="religion" name="religion">
-                  <option selected hidden value=""></option>                  
-                  <option value=0>islam</option>
-                  <option value=1>buddhism</option>
-                  <option value=2>hinduism</option>
-                  <option value=3>christianity</option>
-                </select>          
-                <div class="fw-lighter fst-italic smaller">religion</div>
+                <div class="form-floating">
+                  <select class="form-select" id="religion" name="religion"></select>
+                  <label for="religion">religion</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="religionError"></div>
               </div>
             </div>  
@@ -233,12 +249,12 @@
                   <label class="form-check-label" for="role1">user</label>
                 </div>
                 <div class="form-check">
-                  <input class="form-check-input" type="radio" name="role" id="role2" value=2>
-                  <label class="form-check-label" for="role2">admin</label>
+                  <input class="form-check-input" type="radio" name="role" id="role2" value="3">
+                  <label class="form-check-label" for="role2">manager</label>
                 </div>
                 <div class="form-check">
-                  <input class="form-check-input" type="radio" name="role" id="role3" value=3>
-                  <label class="form-check-label" for="role2">manager</label>
+                  <input class="form-check-input" type="radio" name="role" id="role3" value="2">
+                  <label class="form-check-label" for="role3">admin</label>
                 </div>
               </div>
             </div> 
@@ -259,20 +275,26 @@
             <div class="row mb-3">
               <!-- contact: streetAddressLine1 -->
               <div class="col-sm-4">
-                  <input type="text" class="form-control" id="streetAddressLine1" name="streetAddressLine1" />
-                  <div class="fw-lighter fst-italic smaller"><i class="bi-shield-fill-exclamation"></i> street address</div>
+                  <div class="form-floating">
+                    <input type="text" class="form-control" id="streetAddressLine1" name="streetAddressLine1" />
+                    <label for="streetAddressLine1"><i class="bi-shield-fill-exclamation"></i> street address</label>
+                  </div>
                   <div class="fw-bolder text-danger fst-italic smaller" id="streetAddressLine1Error"></div>
               </div>
               <!-- contact: streetAddressLine2 -->
               <div class="col-sm-4">
-                <input type="text" class="form-control" id="streetAddressLine2" name="streetAddressLine2" />
-                <div class="fw-lighter fst-italic smaller"><i class="bi-shield-fill-exclamation"></i> street address line2</div>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="streetAddressLine2" name="streetAddressLine2" />
+                  <label for="streetAddressLine2"><i class="bi-shield-fill-exclamation"></i> street address line2</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="streetAddressLine2Error"></div>
               </div>
               <!-- contact: zip code -->
               <div class="col-sm-4">
-                <input type="text" class="form-control" id="zip" name="zip" />
-                <div class="fw-lighter fst-italic smaller"><i class="bi-shield-fill-exclamation"></i> zip code</div>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="zip" name="zip" />
+                  <label for="zip"><i class="bi-shield-fill-exclamation"></i> zip code</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="zipError"></div>
               </div>      
             </div>
@@ -280,26 +302,26 @@
             <div class="row mb-3">
               <!-- contact: city -->
               <div class="col-sm-4">
-                <input type="text" class="form-control" id="city" name="city" />
-                <div class="fw-lighter fst-italic smaller"><i class="bi-shield-fill-exclamation"></i> city</div>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="city" name="city" />
+                  <label for="city"><i class="bi-shield-fill-exclamation"></i> city</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="cityError"></div>
               </div>              
               <!-- contact: state -->
               <div class="col-sm-4">
-                <input type="text" class="form-control" id="state" name="state" />
-                <div class="fw-lighter fst-italic smaller"><i class="bi-shield-fill-exclamation"></i> state / province</div>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="state" name="state" />
+                  <label for="state"><i class="bi-shield-fill-exclamation"></i> state / province</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="stateError"></div>
               </div>              
               <!-- contact: country -->
               <div class="col-sm-4">
-                <select class="form-control form-control-sm" id="country" name="country">
-                  <option selected hidden value=""></option>                  
-                  <option value=0>Malaysian</option>
-                  <option value=1>Chinese</option>
-                  <option value=2>Indian</option>
-                  <option value=3>other</option>
-                </select>
-                <div class="fw-lighter fst-italic smaller"><i class="bi-shield-fill-exclamation"></i> country</div>
+                <div class="form-floating">
+                  <select class="form-select" id="country" name="country"></select>
+                  <label for="country"><i class="bi-shield-fill-exclamation"></i> country</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="countryError"></div>
               </div>
             </div>
@@ -309,14 +331,18 @@
             <div class="row mb-3">
               <!-- contact: primary phone -->
               <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="primaryPhone" name="primaryPhone" />
-                <div class="fw-lighter fst-italic smaller"><i class="bi-shield-fill-exclamation"></i> primary phone</div>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="primaryPhone" name="primaryPhone" />
+                  <label for="primaryPhone"><i class="bi-shield-fill-exclamation"></i>  primary phone</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="primaryPhoneError"></div>
               </div>
               <!-- contact: secondary phone -->
               <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="secondaryPhone" name="secondaryPhone" />
-                <div class="fw-lighter fst-italic smaller">secondary phone</div>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="secondaryPhone" name="secondaryPhone" />
+                  <label for="secondaryPhone">secondary phone</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="secondaryPhoneError"></div>
               </div>
               <div class="col-sm-4"></div>
@@ -325,14 +351,18 @@
             <div class="row mb-3">
               <!-- contact: primary email -->
               <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="primaryEmail" name="primaryEmail" />
-                <div class="fw-lighter fst-italic smaller mt-1"><i class="bi-shield-fill-exclamation"></i> primary email</div>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="primaryEmail" name="primaryEmail" />
+                  <label for="primaryEmail"><i class="bi-shield-fill-exclamation"></i>  primary email</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="primaryEmailError"></div>
               </div>
               <!-- contact: secondary email -->
               <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="secondaryEmail" name="secondaryEmail" />
-                <div class="fw-lighter fst-italic smaller">secondary email</div>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="secondaryEmail" name="secondaryEmail" />
+                  <label for="secondaryEmail">secondary email</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="secondaryEmailError"></div>
               </div>
               <div class="col-sm-4"></div>
@@ -355,20 +385,26 @@
             <div class="row mb-3">
               <!-- BANK: Bank -->
               <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="bankName" name="bankName" />
-                <div class="fw-lighter fst-italic smaller mt-1">Bank</div>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="bankName" name="bankName" />
+                  <label for="bankName">bank</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="bankNameError"></div>
               </div>
               <!-- BANK: Account number -->
               <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="accountNumber" name="accountNumber" />
-                <div class="fw-lighter fst-italic smaller">Account number</div>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="accountNumber" name="accountNumber" />
+                  <label for="accountNumber">account number</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="accountNumberError"></div>
               </div>
               <!-- BANK: Beneficiary name -->
               <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="accountName" name="accountName" />
-                <div class="fw-lighter fst-italic smaller">Beneficiary name</div>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="accountName" name="accountName" />
+                  <label for="accountName">beneficiary name</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="accountNameError"></div>
               </div>
             </div>     
@@ -389,20 +425,26 @@
             <div class="row mb-3">
               <!-- Emergency Contact: Fullname -->
               <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="fullnameEC" name="fullnameEC" />
-                <div class="fw-lighter fst-italic smaller mt-1">Full name</div>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="fullnameEC" name="fullnameEC" />
+                  <label for="fullnameEC">full name</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="fullnameECError"></div>
               </div>
               <!-- Emergency Contact: Mobile -->
               <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="mobileEC" name="mobileEC" />
-                <div class="fw-lighter fst-italic smaller">Mobile</div>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="mobileEC" name="mobileEC" />
+                  <label for="mobileEC">mobile</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="mobileECError"></div>
               </div>
               <!-- Emergency Contact: Relationship -->
               <div class="col-sm-4">
-                <select class="form-control form-control-sm" id="relationshipEC" name="relationshipEC"></select>
-                <div class="fw-lighter fst-italic smaller">Relationship</div>
+                <div class="form-floating">
+                  <select class="form-select" id="relationshipEC" name="relationshipEC"></select>
+                  <label for="relationshipEC">relationship</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="relationshipECError"></div>
               </div>
             </div>
@@ -423,20 +465,26 @@
             <div class="row mb-3">
               <!-- other information: education -->
               <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="education" name="education" />
-                <div class="fw-lighter fst-italic smaller mt-1">Education</div>
+                <div class="form-floating">
+                  <textarea class="form-control" name="education" id="education" style="height: 200px"></textarea>
+                  <label for="education">education</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="educationError"></div>
               </div>
               <!-- other information: experience -->
               <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="experience" name="experience" />
-                <div class="fw-lighter fst-italic smaller">Experience</div>
+                <div class="form-floating">
+                  <textarea class="form-control" name="experience" id="experience" style="height: 200px"></textarea>
+                  <label for="experience">experience</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="experienceError"></div>
               </div>
               <!-- other information: notes -->
               <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="notes" name="notes"></select>
-                <div class="fw-lighter fst-italic smaller">Notes</div>
+                <div class="form-floating">
+                  <textarea class="form-control" name="notes" id="notes" style="height: 200px"></textarea>
+                  <label for="notes">notes</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="notesError"></div>
               </div>
             </div>
@@ -461,8 +509,10 @@
             <div class="row mb-3">
               <!-- Spouse Identity:  Fullname -->
               <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="spouseFullname" name="spouseFullname" />
-                <div class="fw-lighter fst-italic smaller mt-1">Full name</div>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="spouseFullname" name="spouseFullname" />
+                  <label for="spouseFullname">full name</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="spouseFullnameError"></div>
               </div>
               <div class="col-sm-4"></div>
@@ -479,15 +529,19 @@
             <div class="row mb-3">
               <div class="col-sm-4"></div>
               <!-- Spouse Identity:  IC number -->
-              <div class="col-sm-4">                
-                <input type="text" class="form-control form-control-sm" id="spouseIcNumber" name="spouseIcNumber" />
-                <div class="fw-lighter fst-italic smaller mt-1">IC number</div>
+              <div class="col-sm-4">
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="spouseIcNumber" name="spouseIcNumber" />
+                  <label for="spouseIcNumber">IC number</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="spouseIcNumberError"></div>
               </div>
               <!-- Spouse Identity:  Passport number -->
               <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="spousePassportNumber" name="spousePassportNumber" />
-                <div class="fw-lighter fst-italic smaller">Passport number</div>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="spousePassportNumber" name="spousePassportNumber" />
+                  <label for="spousePassportNumber">passport number</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="spousePassportNumberError"></div>
               </div>
             </div>       
@@ -499,14 +553,18 @@
               <div class="col-sm-4"></div>            
               <!-- Spouse Identity:  Deductible child number -->
               <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="spouseChildNumber" name="spouseChildNumber" />
-                <div class="fw-lighter fst-italic smaller">Deductible child number</div>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="spouseChildNumber" name="spouseChildNumber" />
+                  <label for="spouseChildNumber">deductible child number</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="spouseChildNumberError"></div>
               </div>
               <!-- Spouse Identity:  Deductible child point -->
               <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="spouseChildPoint" name="spouseChildPoint" />          
-                <div class="fw-lighter fst-italic smaller">Deductible child point</div>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="spouseChildPoint" name="spouseChildPoint" />
+                  <label for="spouseChildPoint">deductible child point</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="spouseChildPointError"></div>
               </div>
             </div> 
@@ -536,9 +594,11 @@
               </div>
               <div class="col-sm-4"></div>
               <!-- Spouse Identity:  Tax Number --> 
-              <div class="col-sm-4">             
-                <input type="text" class="form-control form-control-sm" id="spouseTaxNumber" name="spouseTaxNumber" />
-                <div class="fw-lighter fst-italic smaller mt-1">Tax number</div>
+              <div class="col-sm-4"> 
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="spouseTaxNumber" name="spouseTaxNumber" />
+                  <label for="spouseTaxNumber">tax number</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="spouseTaxNumberError"></div>
               </div>
             </div> 
@@ -559,42 +619,54 @@
             <div class="row mb-3">
               <!-- Contact: StreetAddr1 -->
               <div class="col-sm-4">
-                  <input type="text" class="form-control" id="spouseStreetAddr1" name="spouseStreetAddr1"  />
-                  <div class="fw-lighter fst-italic smaller">Street Address</div>
-                  <div class="fw-bolder text-danger fst-italic smaller" id="spouseStreetAddr1Error"></div>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="spouseStreetAddr1" name="spouseStreetAddr1" />
+                  <label for="spouseStreetAddr1">street address</label>
+                </div>
+                <div class="fw-bolder text-danger fst-italic smaller" id="spouseStreetAddr1Error"></div>
               </div>
               <!-- Contact: StreetAddr2 -->
               <div class="col-sm-4">
-                <input type="text" class="form-control" id="spouseStreetAddr2" name="spouseStreetAddr2"  />
-                <div class="fw-lighter fst-italic smaller">Street Address line2</div>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="spouseStreetAddr2" name="spouseStreetAddr2" />
+                  <label for="spouseStreetAddr2">street address line2</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="spouseStreetAddr2Error"></div>
               </div>
               <!-- Contact: Zip code -->
               <div class="col-sm-4">
-                <input type="text" class="form-control" id="spouseZip" name="spouseZip"  />
-                <div class="fw-lighter fst-italic smaller">Zip Code</div>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="spouseZip" name="spouseZip" />
+                  <label for="spouseZip">zip code</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="spouseZipError"></div>
               </div>      
             </div>
             
             <!-- Contact:  2nd row (Address: City | State/Province | Country) -->
             <div class="row mb-3">
-              <!-- Contact: State/Province -->
+              <!-- Contact: City -->
               <div class="col-sm-4">
-                <input type="text" class="form-control" id="spouseCity" name="spouseCity" />
-                <div class="fw-lighter fst-italic smaller">City</div>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="spouseCity" name="spouseCity" />
+                  <label for="spouseCity">city</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="spouseCityError"></div>
               </div>              
-              <!-- Contact: Postal/ZipCode -->
+              <!-- Contact: State/Province -->
               <div class="col-sm-4">
-                <input type="text" class="form-control" id="spouseState" name="spouseState" />
-                <div class="fw-lighter fst-italic smaller">State / Province</div>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="spouseState" name="spouseState" />
+                  <label for="spouseState">state / province</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="spouseStateError"></div>
               </div>              
               <!-- Contact: Country -->
               <div class="col-sm-4">
-                <select class="form-control form-control-sm" id="spouseCountry" name="spouseCountry"></select>
-                <div class="fw-lighter fst-italic smaller">Country</div>
+                <div class="form-floating">
+                  <select class="form-select" id="spouseCountry" name="spouseCountry"></select>
+                  <label for="spouseCountry">country</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="spouseCountryError"></div>
               </div>
             </div>
@@ -605,14 +677,18 @@
             <div class="row mb-3">
               <!-- Contact: Primary phone number -->
               <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="spousePrimaryPhone" name="spousePrimaryPhone" />
-                <div class="fw-lighter fst-italic smaller mt-1">Primary phone number</div>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="spousePrimaryPhone" name="spousePrimaryPhone" />
+                  <label for="spousePrimaryPhone">primary phone number</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="spousePrimaryPhoneError"></div>
               </div>
               <!-- Contact:  Secondary phone number -->
               <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="spouseSecondaryPhone" name="spouseSecondaryPhone" />
-                <div class="fw-lighter fst-italic smaller">Secondary phone number</div>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="spouseSecondaryPhone" name="spouseSecondaryPhone" />
+                  <label for="spouseSecondaryPhone">secondary phone number</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="spouseSecondaryPhoneError"></div>
               </div>
               <div class="col-sm-4"></div>
@@ -628,7 +704,7 @@
           <!-- Card Header: Payroll information  -->
           <div class="card-header bg-dark fw-bolder text-white">
             <div class="d-flex justify-content-between">
-              <div class="flex-grow-1"><i class="bi-person-lines-fill"></i> Payroll information</div>
+              <div class="flex-grow-1"><i class="bi-person-lines-fill"></i> Payroll information <span data-bs-toggle="modal" data-bs-target="#payrollArchived"><i class="bi-clock-history largeIcon pointer" data-bs-toggle="tooltip" data-bs-placement="top" title="History"></i></span></div>
               <div class="flex-shrink-1"><span class="fw-bolder fst-italic"><small><i class="bi-x-circle-fill" id="payrollInfoHide"></i><i class="bi-fullscreen hide" id="payrollInfoShow"></i></small></span></div>
             </div>    
           </div>
@@ -638,14 +714,18 @@
             <div class="row mb-3">
               <!-- Payroll information:  Job Title -->
               <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="jobTitle" name="jobTitle" />
-                <div class="fw-lighter fst-italic smaller mt-1">Job Title</div>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="jobTitle" name="jobTitle" />
+                  <label for="jobTitle">job title</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="jobTitleError"></div>
               </div>
               <!-- Payroll information:  Department -->
               <div class="col-sm-4">
-                <select class="form-control form-control-sm" id="department" name="department"></select>
-                <div class="fw-lighter fst-italic smaller">Department</div>
+                <div class="form-floating">
+                  <select class="form-select" id="department" name="department"></select>
+                  <label for="department">department</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="departmentError"></div>
               </div>
               <div class="col-sm-4"></div>
@@ -654,14 +734,18 @@
             <div class="row mb-3">
               <!-- Payroll information: Supervisor -->
               <div class="col-sm-4">
-                <select class="form-control form-control-sm" id="supervisor" name="supervisor"></select>
-                <div class="fw-lighter fst-italic smaller mt-1">Supervisor</div>
+                <div class="form-floating">
+                  <select class="form-select" id="supervisor" name="supervisor"></select>
+                  <label for="supervisor">supervisor</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="supervisorError"></div>
               </div>
               <!-- Payroll information: Superior -->
               <div class="col-sm-4">
-                <select class="form-control form-control-sm" id="superior" name="superior"></select>
-                <div class="fw-lighter fst-italic smaller">Superior</div>
+                <div class="form-floating">
+                  <select class="form-select" id="superior" name="superior"></select>
+                  <label for="superior">superior</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="superiorError"></div>
               </div>
               <div class="col-sm-4"></div>
@@ -670,21 +754,27 @@
             <!-- Payroll information:  3rd row (Employee type | Wages type | Basic rate) -->
             <div class="row mb-3">
               <!-- Payroll information: Employee type --> 
-              <div class="col-sm-4">             
-                <select class="form-control form-control-sm" id="employeeType" name="employeeType"></select>
-                <div class="fw-lighter fst-italic smaller mt-1">Employee type</div>
+              <div class="col-sm-4">
+                <div class="form-floating">
+                  <select class="form-select" id="employeeType" name="employeeType"></select>
+                  <label for="employeeType">employee type</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="employeeTypeError"></div>
               </div>
               <!-- Payroll information: Wages type -->
               <div class="col-sm-4">
-                <select class="form-control form-control-sm" id="wagesType" name="wagesType"></select>
-                <div class="fw-lighter fst-italic smaller">Wages type</div>
+                <div class="form-floating">
+                  <select class="form-select" id="wagesType" name="wagesType"></select>
+                  <label for="wagesType">wages type</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="wagesTypeError"></div>
               </div>
               <!-- Payroll information: Basic rate -->
               <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="basicRate" name="basicRate" />         
-                <div class="fw-lighter fst-italic smaller">Basic rate</div>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="basicRate" name="basicRate" />
+                  <label for="basicRate">basic rate</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="basicRateError"></div>
               </div>
             </div> 
@@ -693,20 +783,26 @@
             <div class="row mb-3">
               <!-- Payroll information: Pay frequency -->
               <div class="col-sm-4">
-                <select class="form-control form-control-sm" id="payFrequency" name="payFrequency"></select>
-                <div class="fw-lighter fst-italic smaller mt-1">Pay frequency</div>
+                <div class="form-floating">
+                  <select class="form-select" id="payFrequency" name="payFrequency"></select>
+                  <label for="payFrequency">pay frequency</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="payFrequencyError"></div>
               </div>
               <!-- Payroll information: Payment by -->
               <div class="col-sm-4">
-                <select class="form-control form-control-sm" id="paymentBy" name="paymentBy"></select>
-                <div class="fw-lighter fst-italic smaller">Payment by</div>
+                <div class="form-floating">
+                  <select class="form-select" id="paymentBy" name="paymentBy"></select>
+                  <label for="paymentBy">payment by</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="paymentByError"></div>
               </div>
               <!-- Payroll information: Bank payout -->
               <div class="col-sm-4">
-                <select class="form-control form-control-sm" id="bankPayout" name="bankPayout"></select>
-                <div class="fw-lighter fst-italic smaller">Bank payout</div>
+                <div class="form-floating">
+                  <select class="form-select" id="bankPayout" name="bankPayout"></select>
+                  <label for="bankPayout">bank payout</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="bankPayoutError"></div>
               </div>
             </div>  
@@ -717,7 +813,7 @@
           <!-- Card Header: Employment information  -->
           <div class="card-header bg-dark fw-bolder text-white">
             <div class="d-flex justify-content-between">
-              <div class="flex-grow-1"><i class="bi-person-lines-fill"></i> Employment information</div>
+              <div class="flex-grow-1"><i class="bi-person-lines-fill"></i> Employment information <span data-bs-toggle="modal" data-bs-target="#employmentArchived"><i class="bi-clock-history largeIcon pointer" data-bs-toggle="tooltip" data-bs-placement="top" title="History"></i></span></div>
               <div class="flex-shrink-1"><span class="fw-bolder fst-italic"><small><i class="bi-x-circle-fill" id="employmentInfoHide"></i><i class="bi-fullscreen hide" id="employmentInfoShow"></i></small></span></div>
             </div>    
           </div>
@@ -727,20 +823,26 @@
             <div class="row mb-3">
               <!-- Employment information: Employee group -->
               <div class="col-sm-4">
-                <select class="form-control form-control-sm" id="group" name="group"></select>
-                <div class="fw-lighter fst-italic smaller mt-1">Employee group</div>
+                <div class="form-floating">
+                  <select class="form-select" id="group" name="group"></select>
+                  <label for="group">employee group</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="groupError"></div>
               </div>
               <!-- Employment information: Project -->
               <div class="col-sm-4">
-                <select class="form-control form-control-sm" id="project" name="project"></select>
-                <div class="fw-lighter fst-italic smaller">Project</div>
+                <div class="form-floating">
+                  <select class="form-select" id="project" name="project"></select>
+                  <label for="project">project</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="projectError"></div>
               </div>
               <!-- Employment information: Branch -->
               <div class="col-sm-4">
-                <select class="form-control form-control-sm" id="branch" name="branch"></select>
-                <div class="fw-lighter fst-italic smaller">Branch</div>
+                <div class="form-floating">
+                  <select class="form-select" id="branch" name="branch"></select>
+                  <label for="branch">branch</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="branchError"></div>
               </div>
             </div> 
@@ -748,14 +850,18 @@
             <div class="row mb-3">
               <!-- Employment information: Overtime -->
               <div class="col-sm-4">
-                <select class="form-control form-control-sm" id="overtime" name="overtime"></select>
-                <div class="fw-lighter fst-italic smaller mt-1">Overtime</div>
+                <div class="form-floating">
+                  <select class="form-select" id="overtime" name="overtime"></select>
+                  <label for="overtime">overtime</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="overtimeError"></div>
               </div>
               <!-- Employment information: Working permit expiry date -->
               <div class="col-sm-4">
-                <input type="date" class="form-control form-control-sm" id="visaExpiryAt" name="visaExpiryAt" />
-                <div class="fw-lighter fst-italic smaller">Working permit expiry date <span class="fw-bolder text-secondary" id="visaDays"></span></div>
+                <div class="form-floating">
+                  <input type="date" class="form-control" id="visaExpiryAt" name="visaExpiryAt" />
+                  <label for="visaExpiryAt">working permit expiry date <span class="fw-bolder text-secondary" id="visaDays"></span></label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="visaExpiryAtError"></div>
               </div>
               <div class="col-sm-4"></div>
@@ -764,20 +870,26 @@
             <div class="row mb-3">
               <!-- Employment information: Join date -->
               <div class="col-sm-4">
-                <input type="date" class="form-control form-control-sm" id="joinDate" name="joinDate" />
-                <div class="fw-lighter fst-italic smaller mt-1">Join date <span class="fw-bolder text-secondary" id="joinDays"></span></div>
+                <div class="form-floating">
+                  <input type="date" class="form-control" id="joinDate" name="joinDate" />
+                  <label for="joinDate">join date <span class="fw-bolder text-secondary" id="joinDays"></span></label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="joinDateError"></div>
               </div>
               <!-- Employment information: Confirm date -->
               <div class="col-sm-4">
-                <input type="date" class="form-control form-control-sm" id="confirmDate" name="confirmDate" />
-                <div class="fw-lighter fst-italic smaller">Confirm date <span class="fw-bolder text-secondary" id="confirmDays"></span></div>
+                <div class="form-floating">
+                  <input type="date" class="form-control" id="confirmDate" name="confirmDate" />
+                  <label for="confirmDate">confirm date <span class="fw-bolder text-secondary" id="confirmDays"></span></label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="confirmDateError"></div>
               </div>
               <!-- Employment information: Resign date -->
               <div class="col-sm-4">
-                <input type="date" class="form-control form-control-sm" id="resignDate" name="resignDate" />
-                <div class="fw-lighter fst-italic smaller">Resign date <span class="fw-bolder text-secondary" id="resignDays"></span></div>
+                <div class="form-floating">
+                  <input type="date" class="form-control" id="resignDate" name="resignDate" />
+                  <label for="resignDate">resign date <span class="fw-bolder text-secondary" id="resignDays"></span></label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="resignDateError"></div>
               </div>
             </div>
@@ -792,7 +904,7 @@
           <!-- Card Header: EPF  -->
           <div class="card-header bg-dark fw-bolder text-white">
             <div class="d-flex justify-content-between">
-              <div class="flex-grow-1"><i class="bi-person-lines-fill"></i> EPF</div>
+              <div class="flex-grow-1"><i class="bi-person-lines-fill"></i> EPF <span data-bs-toggle="modal" data-bs-target="#epfArchived"><i class="bi-clock-history largeIcon pointer" data-bs-toggle="tooltip" data-bs-placement="top" title="History"></i></span></div>
               <div class="flex-shrink-1"><span class="fw-bolder fst-italic"><small><i class="bi-x-circle-fill" id="epfHide"></i><i class="bi-fullscreen hide" id="epfShow"></i></small></span></div>
             </div>    
           </div>
@@ -802,20 +914,26 @@
             <div class="row mb-3">
               <!-- EPF: EPF table -->
               <div class="col-sm-4">
-                <select class="form-control form-control-sm" id="epfTable" name="epfTable"></select>
-                <div class="fw-lighter fst-italic smaller mt-1">EPF table</div>
+                <div class="form-floating">
+                  <select class="form-select" id="epfTable" name="epfTable"></select>
+                  <label for="epfTable">epf table</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="epfTableError"></div>
               </div>
               <!-- EPF: EPF number -->
               <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="epfNumber" name="epfNumber" />
-                <div class="fw-lighter fst-italic smaller">EPF number</div>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="epfNumber" name="epfNumber" />
+                  <label for="epfNumber">epf number</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="epfNumberError"></div>
               </div>
               <!-- EPF: EPF initial -->
               <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="epfInitial" name="epfInitial" />
-                <div class="fw-lighter fst-italic smaller">EPF initial</div>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="epfInitial" name="epfInitial" />
+                  <label for="epfInitial">epf initial</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="epfInitialError"></div>
               </div>
             </div> 
@@ -823,12 +941,13 @@
             <div class="row mb-3">
               <!-- EPF: NK -->
               <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="nk" name="nk" />
-                <div class="fw-lighter fst-italic smaller mt-1">NK</div>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="nk" name="nk" />
+                  <label for="nk">nk</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="nkError"></div>
               </div>
-              <div class="col-sm-4"></div>
-              <div class="col-sm-4"></div>
+              <div class="col-sm-8"></div>
             </div>
             <!-- EPF:  3rd row (EPF borne by employer) -->
             <div class="row mb-3">
@@ -839,8 +958,7 @@
                   <label class="form-check-label fw-lighter fst-italic smaller" for="epfBorne">EPF borne by employer</label>
                 </div>
               </div>
-              <div class="col-sm-4"></div>
-              <div class="col-sm-4"></div>
+              <div class="col-sm-8"></div>
             </div>   
           </div>
         </div>
@@ -849,7 +967,7 @@
           <!-- Card Header: SOCSO  -->
           <div class="card-header bg-dark fw-bolder text-white">
             <div class="d-flex justify-content-between">
-              <div class="flex-grow-1"><i class="bi-person-lines-fill"></i> SOCSO</div>
+              <div class="flex-grow-1"><i class="bi-person-lines-fill"></i> SOCSO <span data-bs-toggle="modal" data-bs-target="#socsoArchived"><i class="bi-clock-history largeIcon pointer" data-bs-toggle="tooltip" data-bs-placement="top" title="History"></i></span></div>
               <div class="flex-shrink-1"><span class="fw-bolder fst-italic"><small><i class="bi-x-circle-fill" id="socsoHide"></i><i class="bi-fullscreen hide" id="socsoShow"></i></small></span></div>
             </div>    
           </div>
@@ -859,20 +977,26 @@
             <div class="row mb-3">
               <!-- SOCSO: SOCSO category -->
               <div class="col-sm-4">
-                <select class="form-control form-control-sm" id="socsoCategory" name="socsoCategory"></select>
-                <div class="fw-lighter fst-italic smaller mt-1">SOCSO category</div>
+                <div class="form-floating">
+                  <select class="form-select" id="socsoCategory" name="socsoCategory"></select>
+                  <label for="socsoCategory">socso category</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="socsoCategoryError"></div>
               </div>
               <!-- SOCSO: SOCSO number -->
               <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="socsoNumber" name="socsoNumber" />
-                <div class="fw-lighter fst-italic smaller">SOCSO number</div>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="socsoNumber" name="socsoNumber" />
+                  <label for="socsoNumber">socso number</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="socsoNumberError"></div>
               </div>
               <!-- SOCSO: SOCSO employment status -->
               <div class="col-sm-4">
-                <select class="form-control form-control-sm" id="socsoStatus" name="socsoStatus"></select>
-                <div class="fw-lighter fst-italic smaller">SOCSO employment status</div>
+                <div class="form-floating">
+                  <select class="form-select" id="socsoStatus" name="socsoStatus"></select>
+                  <label for="socsoStatus">socso employment status</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="socsoStatusError"></div>
               </div>
             </div> 
@@ -885,8 +1009,7 @@
                   <label class="form-check-label fw-lighter fst-italic smaller" for="socsoBorne">SOCSO borne by employer</label>
                 </div>
               </div>
-              <div class="col-sm-4"></div>
-              <div class="col-sm-4"></div>
+              <div class="col-sm-8"></div>
             </div>
              <!-- SOCSO:  3rd row (contribute EIS) -->
             <div class="row mb-3">
@@ -897,8 +1020,7 @@
                   <label class="form-check-label fw-lighter fst-italic smaller" for="contributeEIS">contribute EIS</label>
                 </div>
               </div>
-              <div class="col-sm-4"></div>
-              <div class="col-sm-4"></div>
+              <div class="col-sm-8"></div>
             </div>
             <!-- SOCSO:  4th row (EIS borne by employer) -->
             <div class="row mb-3">
@@ -909,8 +1031,7 @@
                   <label class="form-check-label fw-lighter fst-italic smaller" for="eisBorne">EIS borne by employer</label>
                 </div>
               </div>
-              <div class="col-sm-4"></div>
-              <div class="col-sm-4"></div>
+              <div class="col-sm-8"></div>
             </div>
           </div>
         </div>
@@ -919,7 +1040,7 @@
           <!-- Card Header: Income Tax  -->
           <div class="card-header bg-dark fw-bolder text-white">
             <div class="d-flex justify-content-between">
-              <div class="flex-grow-1"><i class="bi-person-lines-fill"></i> Income Tax</div>
+              <div class="flex-grow-1"><i class="bi-person-lines-fill"></i> Income Tax <span data-bs-toggle="modal" data-bs-target="#taxArchived"><i class="bi-clock-history largeIcon pointer" data-bs-toggle="tooltip" data-bs-placement="top" title="History"></i></span></div>
               <div class="flex-shrink-1"><span class="fw-bolder fst-italic"><small><i class="bi-x-circle-fill" id="incomeTaxHide"></i><i class="bi-fullscreen hide" id="incomeTaxShow"></i></small></span></div>
             </div>    
           </div>
@@ -929,20 +1050,26 @@
             <div class="row mb-3">
               <!-- Income Tax: Tax status -->
               <div class="col-sm-4">
-                <select class="form-control form-control-sm" id="taxStatus" name="taxStatus"></select>
-                <div class="fw-lighter fst-italic smaller mt-1">Tax status</div>
+                <div class="form-floating">
+                  <select class="form-select" id="taxStatus" name="taxStatus"></select>
+                  <label for="taxStatus">tax status</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="taxStatusError"></div>
               </div>
               <!-- Income Tax: Tax number -->
               <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="taxNumber" name="taxNumber" />
-                <div class="fw-lighter fst-italic smaller">Tax number</div>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="taxNumber" name="taxNumber" />
+                  <label for="taxNumber">tax number</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="taxNumberError"></div>
               </div>
               <!-- Income Tax: Tax branch -->
               <div class="col-sm-4">
-                <select class="form-control form-control-sm" id="taxBranch" name="taxBranch"></select>
-                <div class="fw-lighter fst-italic smaller">Tax branch</div>
+                <div class="form-floating">
+                  <select class="form-select" id="taxBranch" name="taxBranch"></select>
+                  <label for="taxBranch">tax branch</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="taxBranchError"></div>
               </div>
             </div> 
@@ -950,9 +1077,11 @@
             <div class="row mb-3">
               <!-- Income Tax: EA serial number --> 
               <div class="col-sm-12">
-                  <input type="text" class="form-control form-control-sm" id="eaSerialNumber" name="eaSerialNumber" />
-                  <div class="fw-lighter fst-italic smaller">EA serial number</div>
-                  <div class="fw-bolder text-danger fst-italic smaller" id="eaSerialNumberError"></div>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="eaSerialNumber" name="eaSerialNumber" />
+                  <label for="eaSerialNumber">EA serial number</label>
+                </div>
+                <div class="fw-bolder text-danger fst-italic smaller" id="eaSerialNumberError"></div>
               </div>
             </div>
             <!-- Income Tax:  3rd row (Tax borne by employer) -->
@@ -964,8 +1093,7 @@
                   <label class="form-check-label fw-lighter fst-italic smaller" for="taxBorne">tax borne by employer</label>
                 </div>
               </div>
-              <div class="col-sm-4"></div>
-              <div class="col-sm-4"></div>
+              <div class="col-sm-8"></div>
             </div>
           </div>
         </div>
@@ -974,7 +1102,7 @@
           <!-- Card Header: Others  -->
           <div class="card-header bg-dark fw-bolder text-white">
             <div class="d-flex justify-content-between">
-              <div class="flex-grow-1"><i class="bi-person-lines-fill"></i> Others</div>
+              <div class="flex-grow-1"><i class="bi-person-lines-fill"></i> Others <span data-bs-toggle="modal" data-bs-target="#othersArchived"><i class="bi-clock-history largeIcon pointer" data-bs-toggle="tooltip" data-bs-placement="top" title="History"></i></span></div>
               <div class="flex-shrink-1"><span class="fw-bolder fst-italic"><small><i class="bi-x-circle-fill" id="othersHide"></i><i class="bi-fullscreen hide" id="othersShow"></i></small></span></div>
             </div>    
           </div>
@@ -984,8 +1112,10 @@
             <div class="row mb-3">
               <!-- Others Tax: Foreign worker levy -->
               <div class="col-sm-12">
-                <select class="form-control form-control-sm" id="foreignWorkerLevy" name="foreignWorkerLevy"></select>
-                <div class="fw-lighter fst-italic smaller mt-1">Foreign worker levy</div>
+                <div class="form-floating">
+                  <select class="form-select" id="foreignWorkerLevy" name="foreignWorkerLevy"></select>
+                  <label for="foreignWorkerLevy">foreign worker levy</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="foreignWorkerLevyError"></div>
               </div>
             </div> 
@@ -993,15 +1123,19 @@
             <div class="row mb-3">
               <!-- Others: Zakat number --> 
               <div class="col-sm-4">
-                  <input type="text" class="form-control form-control-sm" id="zakatNumber" name="zakatNumber" />
-                  <div class="fw-lighter fst-italic smaller">Zakat number</div>
-                  <div class="fw-bolder text-danger fst-italic smaller" id="zakatNumberError"></div>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="zakatNumber" name="zakatNumber" />
+                  <label for="zakatNumber">zakat number</label>
+                </div>
+                <div class="fw-bolder text-danger fst-italic smaller" id="zakatNumberError"></div>
               </div>
                <!-- Others: Zakat amount --> 
               <div class="col-sm-4">
-                  <input type="text" class="form-control form-control-sm" id="zakatAmount" name="zakatAmount" />
-                  <div class="fw-lighter fst-italic smaller">Zakat amount</div>
-                  <div class="fw-bolder text-danger fst-italic smaller" id="zakatAmountError"></div>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="zakatAmount" name="zakatAmount" />
+                  <label for="zakatAmount">zakat amount</label>
+                </div>
+                <div class="fw-bolder text-danger fst-italic smaller" id="zakatAmountError"></div>
               </div>
               <div class="col-sm-4"></div>
             </div>
@@ -1009,14 +1143,18 @@
             <div class="row mb-3">
               <!-- Others: Tabung haji number --> 
               <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="tabungHajiNumber" name="tabungHajiNumber" />
-                <div class="fw-lighter fst-italic smaller">Tabung haji number</div>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="tabungHajiNumber" name="tabungHajiNumber" />
+                  <label for="tabungHajiNumber">tabung haji number</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="tabungHajiNumberError"></div>
               </div>
               <!-- Others: Tabung haji amount --> 
               <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="tabungHajiAmount" name="tabungHajiAmount" />
-                <div class="fw-lighter fst-italic smaller">Tabung haji amount</div>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="tabungHajiAmount" name="tabungHajiAmount" />
+                  <label for="tabungHajiAmount">tabung haji amount</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="tabungHajiAmountError"></div>
               </div>
               <div class="col-sm-4"></div>
@@ -1025,14 +1163,18 @@
             <div class="row mb-3">
               <!-- Others: ASN number --> 
               <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="asnNumber" name="asnNumber" />
-                <div class="fw-lighter fst-italic smaller">ASN number</div>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="asnNumber" name="asnNumber" />
+                  <label for="asnNumber">ASN number</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="asnNumberError"></div>
               </div>
               <!-- Others: ASN amount --> 
               <div class="col-sm-4">
-                <input type="text" class="form-control form-control-sm" id="asnAmount" name="asnAmount" />
-                <div class="fw-lighter fst-italic smaller">ASN amount</div>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="asnAmount" name="asnAmount" />
+                  <label for="asnAmount">ASN amount</label>
+                </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="asnAmountError"></div>
               </div>
               <div class="col-sm-4"></div>
@@ -1086,6 +1228,269 @@
   </div>
 </form>
 
+<!-- MODAL UPLOADED IC FILES -->
+<div class="modal fade" id="uploadedIC" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="uploadedICLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="uploadedICLabel">Current uploaded IC files</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="uploadedICBody"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ARCHIVED IC FILES -->
+<div class="modal fade" id="archivedIC" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="archivedICLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="archivedICLabel">Archived IC files</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="archivedICBody">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL UPLOADED PASSPORT FILES -->
+<div class="modal fade" id="uploadedPassport" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="uploadedPassportLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="uploadedPassportLabel">Current uploaded passport files</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="uploadedPassportBody"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ARCHIVED PASSPORT FILES -->
+<div class="modal fade" id="archivedPassport" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="archivedPassportLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="archivedPassportLabel">Archived passport files</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="archivedPassportBody">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ARCHIVED PAYROLL  -->
+<div class="modal fade" id="payrollArchived" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="payrollArchivedLabel" aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="payrollArchivedLabel">Archived payroll</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <table id="payrollArchivedDT" class="display stripe" style="width:100%">
+          <thead>
+              <tr>
+                <th>Job</th>
+                <th>Department</th>
+                <th>Supervisor</th>
+                <th>Superior</th>
+                <th>Employee type</th>
+                <th>Wages type</th>
+                <th>Basic rate</th>
+                <th>Frequency</th>
+                <th>Payment</th>
+                <th>Bank</th>
+                <th>Date</th>
+                <th>By</th>
+              </tr>
+          </thead>
+          <tbody id="payrollArchivedBody"></tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ARCHIVED EMPLOYMENT -->
+<div class="modal fade" id="employmentArchived" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="employmentArchivedLabel" aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="employmentArchivedLabel">Archived employment</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <table id="employmentArchivedDT" class="display stripe" style="width:100%">
+          <thead>
+              <tr>
+                <th>Group</th>
+                <th>Project</th>
+                <th>Branch</th>
+                <th>Overtime</th>
+                <th>Permit validity</th>
+                <th>Join date</th>
+                <th>Confirm date</th>
+                <th>Resign date</th>
+                <th>Date</th>
+                <th>By</th>
+              </tr>
+          </thead>
+          <tbody id="employmentArchivedBody"></tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ARCHIVED EPF -->
+<div class="modal fade" id="epfArchived" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="epfArchivedLabel" aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="epfArchivedLabel">Archived epf</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <table id="epfArchivedDT" class="display stripe" style="width:100%">
+          <thead>
+              <tr>
+                <th>table</th>
+                <th>number</th>
+                <th>initial</th>
+                <th>nk</th>
+                <th>borne by employer</th>
+                <th>Date</th>
+                <th>By</th>
+              </tr>
+          </thead>
+          <tbody id="epfArchivedBody"></tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ARCHIVED SOCSO -->
+<div class="modal fade" id="socsoArchived" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="socsoArchivedLabel" aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="socsoArchivedLabel">Archived socso</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <table id="socsoArchivedDT" class="display stripe" style="width:100%">
+          <thead>
+              <tr>
+                <th>category</th>
+                <th>number</th>
+                <th>status</th>
+                <th>borne by employer</th>
+                <th>contribute eis</th>
+                <th>eis borne by employer</th>
+                <th>Date</th>
+                <th>By</th>
+              </tr>
+          </thead>
+          <tbody id="socsoArchivedBody"></tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ARCHIVED TAX -->
+<div class="modal fade" id="taxArchived" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="taxArchivedLabel" aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="taxArchivedLabel">Archived income tax</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <table id="taxArchivedDT" class="display stripe" style="width:100%">
+          <thead>
+              <tr>
+                <th>status</th>
+                <th>number</th>
+                <th>branch</th>
+                <th>ea serial number</th>
+                <th>borne by employer</th>
+                <th>Date</th>
+                <th>By</th>
+              </tr>
+          </thead>
+          <tbody id="taxArchivedBody"></tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ARCHIVED OTHERS -->
+<div class="modal fade" id="othersArchived" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="othersArchivedLabel" aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="othersArchivedLabel">Archived others statutory</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <table id="othersArchivedDT" class="display stripe" style="width:100%">
+          <thead>
+              <tr>
+                <th>foreign worker levy</th>
+                <th>zakat number</th>
+                <th>zakat amount</th>
+                <th>tabung haji number</th>
+                <th>tabung haji amount</th>
+                <th>asn number</th>
+                <th>asn amount</th>
+                <th>contribute hrdf</th>
+                <th>Date</th>
+                <th>By</th>
+              </tr>
+          </thead>
+          <tbody id="othersArchivedBody"></tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 {{end}}
 
 {{define "js"}}

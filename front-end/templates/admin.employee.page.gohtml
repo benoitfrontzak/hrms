@@ -5,8 +5,8 @@
   <div class="container-fluid">
     <!-- ACTION BUTTON -->
     <div class="d-flex flex-row-reverse mt-3">
-      <div class="p-2 bd-highlight"><a href="#" class="btn btn-danger" id="openCreateEmployee" data-bs-toggle="modal" data-bs-target="#createEmployee"><i class="bi bi-plus-circle-fill"></i> add</a></div>
       <div class="p-2 bd-highlight"><a href="#" class="btn btn-danger" id="deleteAllEmployee"><i class="bi-dash-circle"></i> delete</a></div>
+      <div class="p-2 bd-highlight"><a href="#" class="btn btn-danger" id="openCreateEmployee" data-bs-toggle="modal" data-bs-target="#createEmployee"><i class="bi bi-plus-circle-fill"></i> add</a></div>
       <div class="p-2 bd-highlight">
         <div class="dropdown">
           <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">View</button>
@@ -47,6 +47,7 @@
      </table>
 
   </div>
+
 <!-- modal: Confirm employee deletion -->
 <div class="modal fade" id="confirmDelete" tabindex="-1">
   <div class="modal-dialog">
@@ -98,42 +99,37 @@
             </div>
             <!-- card body: identity -->
             <div class="card-body" id="identityBodyCard">
-              <!-- identity: 1st row (firstName | middlename | familyname) -->
+              <!-- identity: 1st row (fullname | nickname) -->
               <div class="row my-3">
-                <!-- identity:  firstName -->
-                <div class="col-sm-4">
-                  <input type="text" class="form-control form-control-sm" id="firstName" name="firstName" />
-                  <div class="fw-lighter fst-italic smaller mt-1"><i class="bi-shield-fill-exclamation"></i> first name</div>
-                  <div class="fw-bolder text-danger fst-italic smaller" id="firstNameError"></div>
+                <!-- identity: fullname -->
+                <div class="col-sm-8">
+                  <div class="form-floating">
+                    <input type="text" class="form-control" id="fullName" name="fullName" />
+                    <label for="fullName"><i class="bi-shield-fill-exclamation"></i> full name</label>
+                  </div>
+                  <div class="fw-bolder text-danger fst-italic smaller" id="fullNameError"></div>
                 </div>
-                <!-- identity:  middleName -->
+                <!-- identity:  nickname -->
                 <div class="col-sm-4">
-                  <input type="text" class="form-control form-control-sm" id="middleName" name="middleName" />
-                  <div class="fw-lighter fst-italic smaller"><i class="bi-shield-fill-exclamation"></i> middle name</div>
-                  <div class="fw-bolder text-danger fst-italic smaller" id="middleNameError"></div>
-                </div>
-                <!-- identity:  familyName -->
-                <div class="col-sm-4">
-                  <input type="text" class="form-control form-control-sm" id="familyName" name="familyName" />
-                  <div class="fw-lighter fst-italic smaller"><i class="bi-shield-fill-exclamation"></i> family name</div>
-                  <div class="fw-bolder text-danger fst-italic smaller" id="familyNameError"></div>
+                  <div class="form-floating">
+                    <input type="text" class="form-control" id="nickName" name="nickName" />
+                    <label for="nickName">nick name</label>
+                  </div>
+                  <div class="fw-bolder text-danger fst-italic smaller" id="nickNameError"></div>
                 </div>
               </div>
               <div class="space"></div>
-              <!-- identity: 2nd row (givenname | employee code | gender & marital status) -->
-              <div class="row my-3">
-                <!-- identity:  givenName -->
-                <div class="col-sm-4">
-                  <input type="text" class="form-control form-control-sm" id="givenName" name="givenName" />
-                  <div class="fw-lighter fst-italic smaller">given name</div>
-                  <div class="fw-bolder text-danger fst-italic smaller" id="givenNameError"></div>
-                </div>
+              <!-- identity: 2nd row (employee code | gender & marital status) -->
+              <div class="row my-3">                
                 <!-- identity:  employee code -->
                 <div class="col-sm-4">
-                  <input type="text" class="form-control form-control-sm" id="employeeCode" name="employeeCode" />
-                  <div class="fw-lighter fst-italic smaller"><i class="bi-shield-fill-exclamation"></i> employee code</div>
+                  <div class="form-floating">
+                    <input type="text" class="form-control" id="employeeCode" name="employeeCode" />
+                    <label for="employeeCode"><i class="bi-shield-fill-exclamation"></i> employee code</label>
+                  </div>
                   <div class="fw-bolder text-danger fst-italic smaller" id="employeeCodeError"></div>
                 </div>
+                <div class="col-sm-4"></div>
                 <!-- identity:  gender & marital status --> 
                 <div class="col-sm-4">
                   <div class="row">
@@ -165,21 +161,27 @@
               <!-- identity: 3rd row (ic number | passport number | passport expiry date) -->
               <div class="row my-3">
                 <!-- identity:  ic number -->
-                <div class="col-sm-4">                
-                  <input type="text" class="form-control form-control-sm" id="icNumber" name="icNumber" />
-                  <div class="fw-lighter fst-italic smaller mt-1">ic number</div>
+                <div class="col-sm-4">
+                  <div class="form-floating">
+                    <input type="text" class="form-control" id="icNumber" name="icNumber" />
+                    <label for="icNumber">ic number</label>
+                  </div>
                   <div class="fw-bolder text-danger fst-italic smaller" id="icNumberError"></div>
                 </div>
                 <!-- identity:  passport number -->
                 <div class="col-sm-4">
-                  <input type="text" class="form-control form-control-sm" id="passportNumber" name="passportNumber" />
-                  <div class="fw-lighter fst-italic smaller">passport number</div>
+                  <div class="form-floating">
+                    <input type="text" class="form-control" id="passportNumber" name="passportNumber" />
+                    <label for="passportNumber">passport number</label>
+                  </div>
                   <div class="fw-bolder text-danger fst-italic smaller" id="passportNumberError"></div>
                 </div>
                 <!-- identity:  passport expiry date -->
                 <div class="col-sm-4">
-                  <input type="date" class="form-control form-control-sm" value=NULL id="passportExpiryAt" name="passportExpiryAt" />
-                  <div class="fw-lighter fst-italic smaller">passport expiry date</div>
+                  <div class="form-floating">
+                    <input type="date" class="form-control" value=NULL id="passportExpiryAt" name="passportExpiryAt" />
+                    <label for="passportExpiryAt">passport expiry date</label>
+                  </div>
                   <div class="fw-bolder text-danger fst-italic smaller" id="passportExpiryAtError"></div>
                 </div>
               </div>
@@ -189,20 +191,26 @@
               <div class="row my-3">
                 <!-- identity: nationality -->
                 <div class="col-sm-4">
-                  <select class="form-control form-control-sm" id="nationality" name="nationality"></select>
-                  <div class="fw-lighter fst-italic smaller mt-1"><i class="bi-shield-fill-exclamation"></i> nationality</div>
+                  <div class="form-floating">
+                    <select class="form-select" id="nationality" name="nationality"></select>
+                    <label for="nationality"><i class="bi-shield-fill-exclamation"></i> nationality</label>
+                  </div>
                   <div class="fw-bolder text-danger fst-italic smaller" id="nationalityError"></div>
                 </div>
                 <!-- identity: residence country --> 
-                <div class="col-sm-4">             
-                  <select class="form-control form-control-sm" id="residence" name="residence"></select>
-                  <div class="fw-lighter fst-italic smaller mt-1"><i class="bi-shield-fill-exclamation"></i> residence country</div>
+                <div class="col-sm-4">
+                  <div class="form-floating">
+                    <select class="form-select" id="residence" name="residence"></select>
+                    <label for="residence"><i class="bi-shield-fill-exclamation"></i> residence</label>
+                  </div>
                   <div class="fw-bolder text-danger fst-italic smaller" id="residenceError"></div>
                 </div>
                 <!-- identity: immigration number -->
                 <div class="col-sm-4">
-                  <input type="text" class="form-control form-control-sm" id="immigrationNumber" name="immigrationNumber" />
-                  <div class="fw-lighter fst-italic smaller">immigration number</div>
+                  <div class="form-floating">
+                    <input type="text" class="form-control" id="immigrationNumber" name="immigrationNumber" />
+                    <label for="immigrationNumber">immigration number</label>
+                  </div>
                   <div class="fw-bolder text-danger fst-italic smaller" id="immigrationNumberError"></div>
                 </div>
               </div> 
@@ -212,20 +220,26 @@
               <div class="row my-3">
                 <!-- identity: birth date -->
                 <div class="col-sm-4">
-                  <input type="date" class="form-control form-control-sm" value=NULL id="birthdate" name="birthdate" />
-                  <div class="fw-lighter fst-italic smaller">date of birth</div>
+                  <div class="form-floating">
+                    <input type="date" class="form-control" value=NULL id="birthdate" name="birthdate" />
+                    <label for="birthdate">date of birth</label>
+                  </div>
                   <div class="fw-bolder text-danger fst-italic smaller" id="birthdateError"></div>
                 </div>
                 <!-- identity:  race -->
                 <div class="col-sm-4">
-                  <select class="form-control form-control-sm" id="race" name="race"></select>
-                  <div class="fw-lighter fst-italic smaller">race</div>
+                  <div class="form-floating">
+                    <select class="form-select" id="race" name="race"></select>
+                    <label for="race">race</label>
+                  </div>
                   <div class="fw-bolder text-danger fst-italic smaller" id="raceError"></div>
                 </div>
                 <!-- identity:  religion -->
                 <div class="col-sm-4">
-                  <select class="form-control form-control-sm" id="religion" name="religion"></select>          
-                  <div class="fw-lighter fst-italic smaller">religion</div>
+                  <div class="form-floating">
+                    <select class="form-select" id="religion" name="religion"></select>
+                    <label for="religion">religion</label>
+                  </div>
                   <div class="fw-bolder text-danger fst-italic smaller" id="religionError"></div>
                 </div>
               </div>  
@@ -264,10 +278,9 @@
             </div>
             <!-- card body: access -->
             <div class="card-body" id="accessBodyCard">
-              <!-- access:  1st row (has e-claim & has e-leave | user role) -->
+              <!-- access:  1st row (user role) -->
               <div class="row mb-3">
-                <div class="col-sm-4"></div>
-                <div class="col-sm-4"></div>
+                <div class="col-sm-8"></div>
                 <!-- access: user role -->
                 <!-- from authentication: superAdmin = 1 | admin = 2 | manager = 3 | user = 4 -->
                 <div class="col-sm-4">
@@ -276,8 +289,12 @@
                     <label class="form-check-label" for="role1">user</label>
                   </div>
                   <div class="form-check">
-                    <input class="form-check-input" type="radio" name="role" id="role2" value="2">
-                    <label class="form-check-label" for="role2">admin</label>
+                    <input class="form-check-input" type="radio" name="role" id="role2" value="3">
+                    <label class="form-check-label" for="role2">manager</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="role" id="role3" value="2">
+                    <label class="form-check-label" for="role3">admin</label>
                   </div>
                 </div>      
               </div>        
@@ -299,20 +316,26 @@
               <div class="row mb-3">
                 <!-- contact: streetaddr1 -->
                 <div class="col-sm-4">
+                  <div class="form-floating">
                     <input type="text" class="form-control" id="streetaddr1" name="streetaddr1" />
-                    <div class="fw-lighter fst-italic smaller"><i class="bi-shield-fill-exclamation"></i> street address</div>
-                    <div class="fw-bolder text-danger fst-italic smaller" id="streetaddr1Error"></div>
+                    <label for="streetaddr1"><i class="bi-shield-fill-exclamation"></i> street address</label>
+                  </div>
+                  <div class="fw-bolder text-danger fst-italic smaller" id="streetaddr1Error"></div>
                 </div>
                 <!-- contact: streetaddr2 -->
                 <div class="col-sm-4">
-                  <input type="text" class="form-control" id="streetaddr2" name="streetaddr2" />
-                  <div class="fw-lighter fst-italic smaller"><i class="bi-shield-fill-exclamation"></i> street address line2</div>
+                  <div class="form-floating">
+                    <input type="text" class="form-control" id="streetaddr2" name="streetaddr2" />
+                    <label for="streetaddr2"><i class="bi-shield-fill-exclamation"></i> street address line2</label>
+                  </div>
                   <div class="fw-bolder text-danger fst-italic smaller" id="streetaddr2Error"></div>
                 </div>
                 <!-- contact: zip code -->
                 <div class="col-sm-4">
-                  <input type="text" class="form-control" id="zip" name="zip" />
-                  <div class="fw-lighter fst-italic smaller"><i class="bi-shield-fill-exclamation"></i> zip code</div>
+                  <div class="form-floating">
+                    <input type="text" class="form-control" id="zip" name="zip" />
+                    <label for="zip"><i class="bi-shield-fill-exclamation"></i> zip code</label>
+                  </div>
                   <div class="fw-bolder text-danger fst-italic smaller" id="zipError"></div>
                 </div>      
               </div>
@@ -320,26 +343,26 @@
               <div class="row mb-3">
                 <!-- contact: city -->
                 <div class="col-sm-4">
-                  <input type="text" class="form-control" id="city" name="city" />
-                  <div class="fw-lighter fst-italic smaller"><i class="bi-shield-fill-exclamation"></i> city</div>
+                  <div class="form-floating">
+                    <input type="text" class="form-control" id="city" name="city" />
+                    <label for="city"><i class="bi-shield-fill-exclamation"></i> city</label>
+                  </div>
                   <div class="fw-bolder text-danger fst-italic smaller" id="cityError"></div>
                 </div>              
                 <!-- contact: state -->
                 <div class="col-sm-4">
-                  <input type="text" class="form-control" id="state" name="state" />
-                  <div class="fw-lighter fst-italic smaller"><i class="bi-shield-fill-exclamation"></i> state / province</div>
+                  <div class="form-floating">
+                    <input type="text" class="form-control" id="state" name="state" />
+                    <label for="state"><i class="bi-shield-fill-exclamation"></i> state / province</label>
+                  </div>
                   <div class="fw-bolder text-danger fst-italic smaller" id="stateError"></div>
                 </div>              
                 <!-- contact: country -->
                 <div class="col-sm-4">
-                  <select class="form-control form-control-sm" id="country" name="country">
-                    <option selected hidden value=""></option>                  
-                    <option value=0>Malaysian</option>
-                    <option value=1>Chinese</option>
-                    <option value=2>Indian</option>
-                    <option value=3>other</option>
-                  </select>
-                  <div class="fw-lighter fst-italic smaller"><i class="bi-shield-fill-exclamation"></i> country</div>
+                  <div class="form-floating">
+                    <select class="form-select" id="country" name="country"></select>
+                    <label for="country"><i class="bi-shield-fill-exclamation"></i> country</label>
+                  </div>
                   <div class="fw-bolder text-danger fst-italic smaller" id="countryError"></div>
                 </div>
               </div>
@@ -349,14 +372,18 @@
               <div class="row mb-3">
                 <!-- contact: primary phone -->
                 <div class="col-sm-4">
-                  <input type="text" class="form-control form-control-sm" id="primaryPhone" name="primaryPhone" />
-                  <div class="fw-lighter fst-italic smaller"><i class="bi-shield-fill-exclamation"></i> primary phone</div>
+                  <div class="form-floating">
+                    <input type="text" class="form-control" id="primaryPhone" name="primaryPhone" />
+                    <label for="primaryPhone"><i class="bi-shield-fill-exclamation"></i>  primary phone</label>
+                  </div>
                   <div class="fw-bolder text-danger fst-italic smaller" id="primaryPhoneError"></div>
                 </div>
                 <!-- contact: secondary phone -->
                 <div class="col-sm-4">
-                  <input type="text" class="form-control form-control-sm" id="secondaryPhone" name="secondaryPhone" />
-                  <div class="fw-lighter fst-italic smaller">secondary phone</div>
+                  <div class="form-floating">
+                    <input type="text" class="form-control" id="secondaryPhone" name="secondaryPhone" />
+                    <label for="secondaryPhone">secondary phone</label>
+                  </div>
                   <div class="fw-bolder text-danger fst-italic smaller" id="secondaryPhoneError"></div>
                 </div>
                 <div class="col-sm-4"></div>
@@ -365,14 +392,18 @@
               <div class="row mb-3">
                 <!-- contact: primary email -->
                 <div class="col-sm-4">
-                  <input type="text" class="form-control form-control-sm" id="primaryEmail" name="primaryEmail" />
-                  <div class="fw-lighter fst-italic smaller mt-1"><i class="bi-shield-fill-exclamation"></i> primary email</div>
+                  <div class="form-floating">
+                    <input type="text" class="form-control" id="primaryEmail" name="primaryEmail" />
+                    <label for="primaryEmail"><i class="bi-shield-fill-exclamation"></i>  primary email</label>
+                  </div>
                   <div class="fw-bolder text-danger fst-italic smaller" id="primaryEmailError"></div>
                 </div>
                 <!-- contact: secondary email -->
                 <div class="col-sm-4">
-                  <input type="text" class="form-control form-control-sm" id="secondaryEmail" name="secondaryEmail" />
-                  <div class="fw-lighter fst-italic smaller">secondary email</div>
+                  <div class="form-floating">
+                    <input type="text" class="form-control" id="secondaryEmail" name="secondaryEmail" />
+                    <label for="secondaryEmail">secondary email</label>
+                  </div>
                   <div class="fw-bolder text-danger fst-italic smaller" id="secondaryEmailError"></div>
                 </div>
                 <div class="col-sm-4"></div>

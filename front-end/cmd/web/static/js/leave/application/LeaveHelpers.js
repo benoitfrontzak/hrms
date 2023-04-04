@@ -42,7 +42,7 @@ class LeaveHelpers {
 
         return details
     }
-    
+        
     // insert to datatable one row per element of data
     insertRows(id, data, action) {
         const target = document.querySelector('#' + id)

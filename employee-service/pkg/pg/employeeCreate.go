@@ -10,18 +10,18 @@ func (e *Employee) Insert() (int, error) {
 
 	// SQL statement which insert a new employee
 	stmt := `INSERT INTO public."EMPLOYEE"
-	(employee_code, firstname, middlename, lastname, givenname, ic_number, passport_number, passport_expiry_at, birthdate, nationality_id, residence_country_id, marital_status_id, gender_id, address_street1, address_street2, address_city, address_state, address_zip, address_country_id, primary_phone, secondary_phone, primary_email, secondary_email, is_foreigner, immigration_number, is_disabled, is_active, race_id, religion_id, user_role_id, created_by, updated_by)
-	VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32) returning id;`
+	(employee_code, fullname, nickname, ic_number, passport_number, passport_expiry_at, birthdate, nationality_id, 
+		residence_country_id, marital_status_id, gender_id, address_street1, address_street2, address_city, address_state, address_zip, address_country_id, primary_phone, 
+		secondary_phone, primary_email, secondary_email, is_foreigner, immigration_number, is_disabled, is_active, race_id, religion_id, user_role_id, created_by, updated_by)
+	VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30) returning id;`
 
 	// executes SQL query (set SQL parameters and cacth rowID)
 	var newID int
 
 	err := db.QueryRowContext(ctx, stmt,
 		e.EmployeeCode,
-		e.Firstname,
-		e.Middlename,
-		e.Familyname,
-		e.Givenname,
+		e.Fullname,
+		e.Nickname,
 		e.IcNumber,
 		e.PassportNumber,
 		e.PassportExpiryAt,

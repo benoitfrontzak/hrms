@@ -66,9 +66,7 @@ class MyClaimHelpers {
     // add user information to connectedUser
     updateUserInformation(data){
         connectedUser.code          = data.Code
-        connectedUser.firstname     = data.Firstname
-        connectedUser.middlename    = data.Middlename
-        connectedUser.lastname      = data.Lastname
+        connectedUser.fullname     = data.Fullname
         connectedUser.nickname      = data.Nickname
         connectedUser.joinDate      = data.JoinDate
         connectedUser.confirmDate   = data.ConfirmDate

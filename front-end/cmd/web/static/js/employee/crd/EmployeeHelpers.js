@@ -7,7 +7,11 @@ class EmployeeReadHelpers{
         this.insertOptions('race', ct.Race)
         this.insertOptions('religion', ct.Religion)
         this.insertOptions('country', ct.Country)
+        // set Malaysia as default value
+        $('#residence option[value=135]').attr('selected','selected');
+        $('#country option[value=135]').attr('selected','selected');
     }
+    
     // Insert to selectID one option per element of data
     insertNationalityOptions(id, data){
         const target = document.querySelector('#'+id)
@@ -19,10 +23,11 @@ class EmployeeReadHelpers{
             target.appendChild(opt)
         })
     }
+
     // Insert to selectID one option per element of data
     insertOptions(id, data){
         const target = document.querySelector('#'+id)
-        target.innerHTML = '<option selected hidden value="0"></option>'
+        target.innerHTML = '<option selected hidden value=""></option>'
         data.forEach(element => {
             let opt = document.createElement('option')
             opt.value = element.ID
@@ -119,10 +124,8 @@ class EmployeeReadHelpers{
         const myjson        = {}
 
         myjson['EmployeeCode']        = data.get('employeeCode')
-        myjson['Firstname']           = data.get('firstName')
-        myjson['Middlename']          = data.get('middleName')
-        myjson['Familyname']          = data.get('familyName')
-        myjson['Givenname']           = data.get('givenName')
+        myjson['Fullname']            = data.get('fullName')
+        myjson['Nickname']            = data.get('nickName')
         myjson['IcNumber']            = data.get('icNumber')
         myjson['PassportNumber']      = data.get('passportNumber')
         myjson['PassportExpiryAt']    = (data.get('passportExpiryAt') == '') ? '0001-01-01' : data.get('passportExpiryAt')
@@ -156,4 +159,5 @@ class EmployeeReadHelpers{
         
         return JSON.stringify(myjson, function replacer(key, value) { return value})
     }
+
 }

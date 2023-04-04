@@ -35,8 +35,7 @@ type Models struct {
 type User struct {
 	ID         int    `json:"id"`
 	Email      string `json:"email"`
-	Firstname  string `json:"firstname,omitempty"`
-	Lastname   string `json:"lastname,omitempty"`
+	Fullname   string `json:"fullname,omitempty"`
 	Nickname   string `json:"nickname,omitempty"`
 	Password   string `json:"password,omitempty"`
 	Active     int    `json:"active"`
@@ -44,12 +43,12 @@ type User struct {
 	EmployeeID int    `json:"employeeID"`
 }
 
-// GetAll returns a slice of all users, sorted by last name
+// GetAll returns a slice of all users, sorted by id
 func (u *User) GetAll() ([]*User, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
-	query := `select id, email, firstname, lastname, nickname, password, active, role, employee_id from "USERS" order by lastname`
+	query := `select id, email, fullname, nickname, password, active, role, employee_id from "USERS" order by id`
 
 	rows, err := db.QueryContext(ctx, query)
 	if err != nil {
@@ -64,8 +63,7 @@ func (u *User) GetAll() ([]*User, error) {
 		err := rows.Scan(
 			&user.ID,
 			&user.Email,
-			&user.Firstname,
-			&user.Lastname,
+			&user.Fullname,
 			&user.Nickname,
 			&user.Password,
 			&user.Active,
@@ -88,7 +86,7 @@ func (u *User) GetByEmail(email string) (*User, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
-	query := `select id, email, firstname, lastname, nickname, password, active, role, employee_id from "USERS" where email = $1 AND active = 1`
+	query := `select id, email, fullname, nickname, password, active, role, employee_id from "USERS" where email = $1 AND active = 1`
 
 	var user User
 	row := db.QueryRowContext(ctx, query, email)
@@ -96,8 +94,7 @@ func (u *User) GetByEmail(email string) (*User, error) {
 	err := row.Scan(
 		&user.ID,
 		&user.Email,
-		&user.Firstname,
-		&user.Lastname,
+		&user.Fullname,
 		&user.Nickname,
 		&user.Password,
 		&user.Active,
@@ -117,7 +114,7 @@ func (u *User) GetOne(id int) (*User, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
-	query := `select id, email, firstname, lastname, nickname, password, active, role, employee_id from "USERS" where id = $1`
+	query := `select id, email, fullname, nickname, password, active, role, employee_id from "USERS" where id = $1`
 
 	var user User
 	row := db.QueryRowContext(ctx, query, id)
@@ -125,8 +122,7 @@ func (u *User) GetOne(id int) (*User, error) {
 	err := row.Scan(
 		&user.ID,
 		&user.Email,
-		&user.Firstname,
-		&user.Lastname,
+		&user.Fullname,
 		&user.Nickname,
 		&user.Password,
 		&user.Active,
@@ -150,17 +146,15 @@ func (u *User) Update(user User) error {
 	stmt := `UPDATE "USERS" 
 			 SET
 				email = $1,
-				firstname = $2,
-				lastname = $3,
-				nickname = $4,
-				active = $5,
-				role = $6
-			 WHERE employee_id = $7`
+				fullname = $2,
+				nickname = $3,
+				active = $4,
+				role = $5
+			 WHERE employee_id = $6`
 
 	_, err := db.ExecContext(ctx, stmt,
 		user.Email,
-		user.Firstname,
-		user.Lastname,
+		user.Fullname,
 		user.Nickname,
 		user.Active,
 		user.Role,
@@ -200,13 +194,12 @@ func (u *User) Insert(user User) (int, error) {
 	}
 
 	var newID int
-	stmt := `insert into "USERS" (email, firstname, lastname, nickname, password, active, role, employee_id)
+	stmt := `insert into "USERS" (email, fullname, nickname, password, active, role, employee_id)
 		values ($1, $2, $3, $4, $5, $6, $7, $8) returning id`
 
 	err = db.QueryRowContext(ctx, stmt,
 		user.Email,
-		user.Firstname,
-		user.Lastname,
+		user.Fullname,
 		user.Nickname,
 		hashedPassword,
 		user.Active,

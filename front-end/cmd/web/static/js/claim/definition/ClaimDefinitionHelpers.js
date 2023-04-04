@@ -52,9 +52,9 @@ class ClaimDefinitionHelpers {
         const target = document.querySelector('#' + id)
         target.innerHTML = ''
         data.forEach(element => { 
-            let opt = document.createElement('tr')
-            opt.id = 'CD' + element.rowid
-            opt.innerHTML = `<td class="row-data">${element.name}</td>
+            let row = document.createElement('tr')
+            row.id = 'CD' + element.rowid
+            row.innerHTML = `<td class="row-data">${element.name}</td>
                              <td class="row-data">${element.description}</td>
                              <td class="row-data">${element.category}</td>
                              <td class="row-data">${this.myBooleanIcons(element.confirmation)}</td>
@@ -62,17 +62,21 @@ class ClaimDefinitionHelpers {
                              <td class="row-data">${element.limitation}</td>
                              <td class="row-data">${this.myBooleanIcons(element.docRequired)}</td>
                              <td>
-                                <div class="d-flex justify-content-center">
+                             <div class="row">
+                                <div class="col">
+                                    <div class="form-check">
+                                        <label class="form-check-label fw-lighter fst-italic smaller"><i class="bi-pencil-fill largeIcon pointer editClaim" data-id=${element.rowid}></i></label>
+                                    </div>
+                                </div>
+                                <div class="col">
                                     <div class="form-check">
                                         <input class="form-check-input deleteCheckboxes"  type="checkbox" value="${element.rowid}" name="softDelete">
                                         <label class="form-check-label fw-lighter fst-italic smaller" for="softDelete"><i class="bi-trash2-fill largeIcon pointer deleteClaim"></i></label>
                                     </div>
-                                    <div class="form-check">
-                                        <label class="form-check-label fw-lighter fst-italic smaller"><i class="bi-pencil-fill largeIcon pointer editClaim" data-id=${element.rowid}></i></label>
-                                    </div>
-                                </div>                                                            
+                                </div>
+                             </div>                                                           
                             </td>`
-            target.appendChild(opt)
+            target.appendChild(row)
         })
     } 
     // trigger datatable and row click event

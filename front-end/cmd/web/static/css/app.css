@@ -1,6 +1,6 @@
 /* Bootstrap customization */
-  .nav-link{color: #dc3545;}
-  .nav-link:hover{color:#dc3546b0;}
+  .nav-link{color: #DC3545;}
+  .nav-link:hover{color:#DC0015;}
 
   /* bootstrap icons */
   .largeIcon{
@@ -18,7 +18,7 @@
   }
 
   .table-condensed>thead{
-    background-color: #006dcc;
+    background-color: #3544DC;
     color: white;
   }
 
@@ -30,14 +30,14 @@
   .datepicker-switch:hover,
   .prev:hover,
   .next:hover{
-    background-color: #006dcc !important; 
-    background: #006dcc !important; 
+    background-color: #3544DC !important; 
+    background: #3544DC !important; 
     background-image: none;
     font-size: 18px;
   }
   .table-condensed>tbody>tr>td:hover{
-    background-color: #006dcc !important; 
-    background: #006dcc !important; 
+    background-color: #3544DC !important; 
+    background: #3544DC !important; 
     background-image: none;
   }
 
@@ -51,7 +51,7 @@
     cursor: pointer;
   }
   .pointer:hover{
-    color: #dc3545;
+    color: #DC0015;
     font-weight: bold;
   }
   .smaller{
@@ -62,4 +62,47 @@
   }
   .myLink{
     text-decoration: none;
+  }
+
+  .myPicture{
+    width: auto;
+    height: 300px;
+  }
+
+  /* Theme colors */
+  .myMainBG{
+    background-color: #DC3545;
+  }
+
+  .myBaseBG{
+    background-color: #E7717C;
+  }
+
+  .myTint1BG{
+    background-color: #E1515F;
+  }
+  .myTint2BG{
+    background-color: #E66E7A;
+  }
+  .myTint3BG{
+    background-color: #EB8B94;
+  }
+  .myTint4BG{
+    background-color: #F0A8AF;
+  }
+  .myTint5BG{
+    background-color: #F5C5C9;
+  }
+  .myTint6BG{
+    background-color: #FAE2E4;
+  }
+
+  .myHarmonyBlue{
+    background-color: #3544DC;
+  }
+  .myHarmonyGreen{
+    background-color: #45DC35;
+  }
+  .myHarmonyTurquoise{
+    background-color: #35DCCC;
   }

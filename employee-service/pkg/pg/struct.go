@@ -49,8 +49,8 @@ type Employment struct {
 	ID                  int    `json:"id,string,omitempty"`
 	JobTitle            string `json:"jobTitle"`
 	Department          int    `json:"department,string"`
-	Superior            int    `json:"superior,string,omitempty"`
-	Supervisor          int    `json:"supervisor,string,omitempty"`
+	Superior            int    `json:"superior,string"`
+	Supervisor          int    `json:"supervisor,string"`
 	EmployeeType        int    `json:"employeeType,string"`
 	WagesType           int    `json:"wagesType,string"`
 	BasicRate           string `json:"basicRate"`
@@ -70,6 +70,31 @@ type Employment struct {
 	CreatedBy           int    `json:"createdBy,string,omitempty"`
 	UpdatedAt           string `json:"updatedAt,omitempty"`
 	UpdatedBy           int    `json:"updatedBy,string,omitempty"`
+}
+
+// EmploymentArchive is the structure which holds one employee's employment archive details
+type EmploymentArchive struct {
+	ID                  int
+	JobTitle            string
+	Department          string
+	Superior            int
+	Supervisor          int
+	EmployeeType        string
+	WagesType           string
+	BasicRate           string
+	PayFrequency        string
+	PaymentBy           string
+	BankPayout          string
+	Group               string
+	Branch              string
+	Project             string
+	Overtime            string
+	WorkingPermitExpiry string
+	JoinDate            string
+	ConfirmDate         string
+	ResignDate          string
+	CreatedAt           string
+	CreatedBy           int
 }
 
 // Spouse is the structure which holds one employee's spouse details
@@ -130,14 +155,45 @@ type Statutory struct {
 	UpdatedBy         int     `json:"updatedBy,string,omitempty"`
 }
 
+// StatutoryArchive is the structure which holds one employee's statutory archive details
+type StatutoryArchive struct {
+	ID                int
+	EPFTable          string
+	EPFNumber         string
+	EPFInitial        string
+	NK                string
+	EPFBorne          int
+	SOCSOCategory     string
+	SOCSONumber       string
+	SOCSOStatus       string
+	SOCSOBorne        int
+	ContributeEIS     int
+	EISBorne          int
+	TaxStatus         string
+	TaxNumber         string
+	TaxBranch         string
+	EASerial          string
+	TaxBorne          int
+	ForeignWorkerLevy string
+	ZakatNumber       string
+	ZakatAmount       float32
+	TabungHajiNumber  string
+	TabungHajiAmount  float32
+	ASNNumber         string
+	ASNAmount         float32
+	ContributeHRDF    int
+	CreatedAt         string
+	CreatedBy         int
+	UpdatedAt         string
+	UpdatedBy         int
+}
+
 // Employee is the structure which holds one employee full details
 type Employee struct {
 	ID                int    `json:"id,string,omitempty"`
 	EmployeeCode      string `json:"employeeCode"`
-	Firstname         string `json:"firstname"`
-	Middlename        string `json:"middlename"`
-	Familyname        string `json:"familyname"`
-	Givenname         string `json:"givenname"`
+	Fullname          string `json:"fullname"`
+	Nickname          string `json:"nickname"`
 	IcNumber          string `json:"icNumber"`
 	PassportNumber    string `json:"passportNumber"`
 	PassportExpiryAt  string `json:"passportExpiryAt"`
@@ -172,13 +228,15 @@ type Employee struct {
 
 // Employee is the structure which holds one employee full details
 type EmployeeFull struct {
-	Employee         *Employee         `json:"Employee"`
-	EmergencyContact *EmergencyContact `json:"EmergencyContact"`
-	OtherInformation *OtherInformation `json:"OtherInformation"`
-	Spouse           *Spouse           `json:"Spouse"`
-	Employment       *Employment       `json:"Employment"`
-	Statutory        *Statutory        `json:"Statutory"`
-	Bank             *Bank             `json:"Bank"`
+	Employee          *Employee            `json:"Employee"`
+	EmergencyContact  *EmergencyContact    `json:"EmergencyContact"`
+	OtherInformation  *OtherInformation    `json:"OtherInformation"`
+	Spouse            *Spouse              `json:"Spouse"`
+	Employment        *Employment          `json:"Employment"`
+	EmploymentArchive []*EmploymentArchive `json:"EmploymentArchive"`
+	Statutory         *Statutory           `json:"Statutory"`
+	StatutoryArchive  []*StatutoryArchive  `json:"StatutoryArchive"`
+	Bank              *Bank                `json:"Bank"`
 }
 
 // EmployeeSummary is the structure which holds one employee summary
@@ -186,6 +244,7 @@ type EmployeeSummary struct {
 	ID        int
 	Code      string
 	Fullname  string
+	Nickname  string
 	Email     string
 	Mobile    string
 	Birthdate string
@@ -242,21 +301,17 @@ type configC struct {
 
 // employeeList holds the name of one employee
 type employeeList struct {
-	ID         int
-	Code       string
-	Firstname  string
-	Middlename string
-	Lastname   string
-	Nickname   string
+	ID       int
+	Code     string
+	Fullname string
+	Nickname string
 }
 
 // employeeLeave holds the information required for leave application
 type employeeLeave struct {
 	ID          int
 	Code        string
-	Firstname   string
-	Middlename  string
-	Lastname    string
+	Fullname    string
 	Nickname    string
 	JoinDate    string
 	ConfirmDate string

@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 )
 
@@ -21,6 +22,7 @@ func AllEmployees(w http.ResponseWriter, r *http.Request) {
 	dec := json.NewDecoder(resp.Body)
 	err = dec.Decode(&answer)
 	if err != nil {
+		log.Println("err with broker is", err)
 		errorJSON(w, err)
 		return
 	}

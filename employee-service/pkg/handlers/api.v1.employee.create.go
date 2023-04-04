@@ -76,9 +76,8 @@ func convertToUser(p pg.Employee, eid int) authPayload {
 	return authPayload{
 		Email:      p.PrimaryEmail,
 		Password:   "Thundersoft@123",
-		Firstname:  p.Firstname,
-		Lastname:   p.Familyname,
-		Nickname:   p.Givenname,
+		Fullname:   p.Fullname,
+		Nickname:   p.Nickname,
 		Active:     p.IsActive,
 		Role:       p.Role,
 		EmployeeID: eid,

@@ -1,0 +1,81 @@
+{{template "base.superAdmin" . }}
+
+{{define "content"}}
+
+  <div class="container-fluid">
+    <!-- ACTION BUTTON -->
+    <div class="d-flex flex-row-reverse mt-3">
+      <div class="p-2 bd-highlight"><a href="#" class="btn btn-danger" id="deleteAllEmployee"><i class="bi-dash-circle"></i> delete</a></div>
+      <div class="p-2 bd-highlight"><a href="#" class="btn btn-danger" id="openCreateEmployee" data-bs-toggle="modal" data-bs-target="#createEmployee"><i class="bi bi-plus-circle-fill"></i> add</a></div>
+      <div class="p-2 bd-highlight">
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">View</button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            <li><a class="dropdown-item" href="#" id="activeBtn">Active</a></li>
+            <li><a class="dropdown-item" href="#" id="inactiveBtn">Inactive</a></li>
+            <li><a class="dropdown-item" href="#" id="deletedBtn">Deleted</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- WARNING DELETE MESSAGE -->
+    <div class="alert alert-warning mt-3 hide" role="alert" id="deleteWarningMessageDiv">
+      <div class="d-flex justify-content-between">
+        <div class="flex-grow-1"><h4 class="alert-heading"><i class="bi-exclamation-diamond-fill"></i> Warning!</h4></div>
+        <div class="flex-shrink-1"><i class="bi-x-circle-fill pointer" id="hidedeleteWarningMessage"></i></div>
+      </div>      
+      <p>You must select at least one entry before deleting...</p>
+      <hr>
+      <p class="mb-0 smaller">Please check in on some of those fields below...</p>
+    </div>
+    <hr />
+
+    <table id="employeeSummary" class="display stripe" style="width:100%">
+      <thead>
+          <tr>
+              <th>Code</th>
+              <th>Fullname</th>
+              <th>Email</th>
+              <th>Mobile</th>
+              <th>Birthdate</th>
+              <th>Race</th>
+              <th>Gender</th>
+              <th></th>
+          </tr>
+      </thead>
+      <tbody id="employeeSummaryBody"></tbody>
+     </table>
+
+  </div>
+<!-- modal: Confirm employee deletion -->
+<div class="modal fade" id="confirmDelete" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirm delete</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p id="confirmDeleteBody"></p>
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="btn btn-danger" id="confirmDeleteSubmit"><i class="bi bi-save2-fill"></i> Confirm</a>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{end}}
+
+{{define "js"}}
+<script>
+  const connectedEmail = {{.User.Email}},
+        connectedID = {{.User.EmployeeID}}
+</script>
+
+
+<script src="/static/js/root/InfoAPI.js"></script>
+<script src="/static/js/root/InfoHelpers.js"></script>
+<script src="/static/js/root/info.js"></script>
+{{end}}

@@ -40,6 +40,8 @@ func (e *Employee) UpdateAllEmployeeInformation(emp EmployeeFull) error {
 	}
 
 	uEm := emp.Employment.updateEmployment(eid, uid)
+	log.Println("eid, uid")
+	log.Println(eid, uid)
 	if uEm != nil {
 		log.Println("uEm err: ", uEm)
 		return uEm
@@ -71,25 +73,25 @@ func (e *Employee) updateEmployee() error {
 	// SQL statement which update an employee
 	stmt := `UPDATE public."EMPLOYEE"
 			 SET employee_code=$1, 
-			 	 firstname=$2,  middlename=$3, lastname=$4, givenname=$5, 
-				 ic_number=$6, passport_number=$7, passport_expiry_at=$8, 
-				 birthdate=$9, 
-				 nationality_id=$10, residence_country_id=$11, 
-				 marital_status_id=$12, gender_id=$13, race_id=$14, religion_id=$15, 
-				 address_street1=$16, address_street2=$17, address_city=$18, address_state=$19, address_zip=$20, address_country_id=$21, 
-				 primary_phone=$22, secondary_phone=$23, 
-				 primary_email=$24, secondary_email=$25, 
-				 is_foreigner=$26, immigration_number=$27, 
-				 is_disabled=$28, is_active=$29, 
-				 user_role_id=$30,
-				 updated_at=$31,
-				 updated_by=$32
-			 WHERE id=$33;`
+			 	 fullname=$2, nickname=$3, 
+				 ic_number=$4, passport_number=$5, passport_expiry_at=$6, 
+				 birthdate=$7, 
+				 nationality_id=$8, residence_country_id=$9, 
+				 marital_status_id=$10, gender_id=$11, race_id=$12, religion_id=$13, 
+				 address_street1=$14, address_street2=$15, address_city=$16, address_state=$17, address_zip=$18, address_country_id=$19, 
+				 primary_phone=$20, secondary_phone=$21, 
+				 primary_email=$22, secondary_email=$23, 
+				 is_foreigner=$24, immigration_number=$25, 
+				 is_disabled=$26, is_active=$27, 
+				 user_role_id=$28,
+				 updated_at=$29,
+				 updated_by=$30
+			 WHERE id=$31;`
 
 	// executes SQL query
 	_, err := db.ExecContext(ctx, stmt,
 		e.EmployeeCode,
-		e.Firstname, e.Middlename, e.Familyname, e.Givenname,
+		e.Fullname, e.Nickname,
 		e.IcNumber, e.PassportNumber, e.PassportExpiryAt,
 		e.Birthdate,
 		e.Nationality, e.Residence,

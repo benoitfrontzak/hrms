@@ -27,7 +27,6 @@ func (rep *Repository) CreateLeaveDefinition(w http.ResponseWriter, r *http.Requ
 		rep.errorJSON(w, err)
 		return
 	}
-	// p.RowID = rowID
 
 	// response to be sent
 	answer := jsonResponse{

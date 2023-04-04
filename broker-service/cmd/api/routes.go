@@ -26,8 +26,10 @@ func multiplexer() http.Handler {
 	mux.HandleFunc("/route/employee/configTable/softDelete", handlers.SoftDeleteEmployeeCT) // delete list of config table entries
 
 	// claim-service routes
-	mux.HandleFunc("/route/myclaim/get/all", handlers.AllMyClaim)   // return all my claims
-	mux.HandleFunc("/route/myclaim/create", handlers.CreateMyClaim) // create my claim
+	mux.HandleFunc("/route/myclaim/get/all", handlers.AllMyClaim)                          // return all my claims
+	mux.HandleFunc("/route/myclaim/get/thisYear", handlers.AllMyYearlyClaim)               // return all my claims of the year (total)
+	mux.HandleFunc("/route/myclaim/get/thisYearDetails", handlers.AllMyYearlyClaimDetails) // return all my claims of the year (details)
+	mux.HandleFunc("/route/myclaim/create", handlers.CreateMyClaim)                        // create my claim
 	// mux.HandleFunc("/route/myclaim/update", handlers.UpdateMyClaim)         // update my claim
 	mux.HandleFunc("/route/myclaim/softDelete", handlers.SoftDeleteMyClaim) // delete my claim
 
@@ -46,14 +48,16 @@ func multiplexer() http.Handler {
 	mux.HandleFunc("/route/claim/configTable/softDelete", handlers.ClaimConfigTableSoftDelete) // delete list of config table entries
 
 	// leave-service routes
-	mux.HandleFunc("/route/myleave/get/all", handlers.AllMyLeave)   // return all my leaves
-	mux.HandleFunc("/route/myleave/create", handlers.CreateMyLeave) // create my leave
+	mux.HandleFunc("/route/myleave/get/all", handlers.AllMyLeave)        // return all my leaves
+	mux.HandleFunc("/route/myleave/get/today", handlers.AllMyLeaveToday) // return all my leaves of the year (details)
+	mux.HandleFunc("/route/myleave/create", handlers.CreateMyLeave)      // create my leave
 	// mux.HandleFunc("/route/myleave/update", handlers.UpdateMyLeave)         // update my leave
 	mux.HandleFunc("/route/myleave/softDelete", handlers.SoftDeleteMyLeave) // delete my leave
 
-	mux.HandleFunc("/route/leave/get/all", handlers.AllLeave)     // return all leaves
-	mux.HandleFunc("/route/leave/approve", handlers.ApproveLeave) // approve all leaves
-	mux.HandleFunc("/route/leave/reject", handlers.RejectLeave)   // reject all leaves
+	mux.HandleFunc("/route/leave/get/all", handlers.AllLeave)        // return all leaves
+	mux.HandleFunc("/route/leave/get/today", handlers.AllLeaveToday) // return all leaves of today & tomorrow
+	mux.HandleFunc("/route/leave/approve", handlers.ApproveLeave)    // approve all leaves
+	mux.HandleFunc("/route/leave/reject", handlers.RejectLeave)      // reject all leaves
 
 	mux.HandleFunc("/route/leave/definition/get/all", handlers.AllLeaveDefinition)           // return all leave definitions
 	mux.HandleFunc("/route/leave/definition/create", handlers.CreateLeaveDefinition)         // create new leave definition

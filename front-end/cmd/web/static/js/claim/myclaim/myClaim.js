@@ -11,33 +11,21 @@ const connectedUser = {
     id            : connectedID,
     email         : connectedEmail,
     code          : '', 
-    firstname     : '', 
-    middlename    : '', 
-    lastname      : '', 
+    fullname     : '',  
     nickname      : '', 
     joinDate      : '', 
     confirmDate   : '' 
 }
 // store all employee by id
-const allEmployees = new Map()
+let allEmployees = new Map()
 allEmployees.set(0, 'not defined')
 
 // when DOM is loaded
 window.addEventListener('DOMContentLoaded', () => {
     // fetch all employee information
     API.getAllEmployees().then(resp => {
-        // update allEmployee active
-        resp.data.Active.forEach(element => {
-            allEmployees.set(element.ID, element.Fullname)
-        })
-        // update allEmployee inactive
-        resp.data.Inactive.forEach(element => {
-            allEmployees.set(element.ID, element.Fullname)
-        })
-        // update allEmployee deleted
-        resp.data.Deleted.forEach(element => {
-            allEmployees.set(element.ID, element.Fullname)
-        })
+        allEmployees = Common.updateEmployeeList(resp.data, allEmployees)
+        
         // fetch all 'my claims' & update DOM (data table)
         API.getAllMyClaim(connectedID, connectedEmail).then(resp => {
             Helpers.checkData(resp.data)

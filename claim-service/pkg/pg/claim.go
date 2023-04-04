@@ -2,6 +2,7 @@ package pg
 
 import (
 	"context"
+	"log"
 	"strconv"
 	"time"
 )
@@ -154,7 +155,7 @@ func (c *Claim) Delete(id int) error {
 	return nil
 }
 
-// get all claim (active, inactive, deleted)
+// get all my claims (all years)
 func (c *Claim) GetAllMyClaim(eid int) ([]*Claim, error) {
 	// canceling this context releases resources associated with it
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
@@ -229,6 +230,78 @@ func (c *Claim) GetAllMyClaim(eid int) ([]*Claim, error) {
 	return all, nil
 }
 
+// get all my claims by status (actual year total)
+func (c *Claim) GetAllMyYearlyClaim(eid int) (*MyClaims, error) {
+
+	// status id
+	// 0	not defined
+	// 1	draft
+	// 2	pending
+	// 3	rejected
+	// 4	approved
+
+	var all MyClaims
+
+	approved, err := getMyYearlyClaimByStatus(4, eid)
+	if err != nil {
+		return nil, err
+	}
+	pending, err := getMyYearlyClaimByStatus(2, eid)
+	if err != nil {
+		return nil, err
+	}
+	rejected, err := getMyYearlyClaimByStatus(3, eid)
+	if err != nil {
+		return nil, err
+	}
+
+	log.Println("approved: ", approved)
+	log.Println("pending: ", pending)
+	log.Println("rejected: ", rejected)
+
+	all.Approved = approved
+	all.Pending = pending
+	all.Rejected = rejected
+
+	return &all, nil
+}
+
+// get all my claim by status (actual year details)
+func (c *Claim) GetAllMyYearlyClaimDetails(eid int) (*AllClaim, error) {
+
+	// status id
+	// 0	not defined
+	// 1	draft
+	// 2	pending
+	// 3	rejected
+	// 4	approved
+
+	var all AllClaim
+
+	approved, err := getAllMyClaimByStatus(4, eid)
+	if err != nil {
+		return nil, err
+	}
+	pending, err := getAllMyClaimByStatus(2, eid)
+	if err != nil {
+		return nil, err
+	}
+	rejected, err := getAllMyClaimByStatus(3, eid)
+	if err != nil {
+		return nil, err
+	}
+
+	log.Println("approved: ", approved)
+	log.Println("pending: ", pending)
+	log.Println("rejected: ", rejected)
+
+	all.Approved = approved
+	all.Pending = pending
+	all.Rejected = rejected
+
+	return &all, nil
+}
+
 // get all claim by status
 func (c *Claim) GetAllClaim() (*AllClaim, error) {
 
@@ -261,7 +334,7 @@ func (c *Claim) GetAllClaim() (*AllClaim, error) {
 	return &all, nil
 }
 
-// helpers
+// helpers returning all claims by status (all employees, all years)
 func getAllClaimByStatus(status int) ([]*Claim, error) {
 	// canceling this context releases resources associated with it
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
@@ -335,4 +408,113 @@ func getAllClaimByStatus(status int) ([]*Claim, error) {
 
 	// return all employee summary rows
 	return all, nil
+}
+
+// helpers returning one employee's claims by status (current year)
+func getAllMyClaimByStatus(status, eid int) ([]*Claim, error) {
+	// canceling this context releases resources associated with it
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+	// SQL statement which fetch employee summary
+	query := `SELECT c.id, 
+					 c.claim_definition_id,
+					 cd.name as claim_definition,
+					 c."name", 
+					 c.description, 
+					 c.amount, 
+					 c.category_id, 
+					 ccc.name as category, 
+					 c.status_id, 
+					 ccs.name as status, 
+					 c.approved_at, 
+					 c.approved_by, 
+					 c.approved_amount, 
+					 c.approved_reason, 
+					 c.employee_id,
+					 c.created_at,
+					 c.created_by,
+					 c.updated_at,
+					 c.updated_by
+			  FROM public."CLAIM" c, public."CLAIM_DEFINITION" cd, public."CONFIG_CATEGORY" ccc, public."CONFIG_STATUS" ccs
+			  WHERE c.status_id = $1
+			  AND c.employee_id  = $2
+			  AND c.claim_definition_id = cd.id
+			  AND c.category_id = ccc.id
+			  AND c.status_id = ccs.id
+			  AND date_part('year', c.created_at) = date_part('year', CURRENT_DATE)
+			  ORDER BY c.id;`
+
+	// executes SQL query
+	rows, err := db.QueryContext(ctx, query, status, eid)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	// populate returned rows to employee summary struct
+	var all []*Claim
+	for rows.Next() {
+		var myClaims Claim
+		err := rows.Scan(
+			&myClaims.ID,
+			&myClaims.ClaimDefinitionID,
+			&myClaims.ClaimDefinition,
+			&myClaims.Name,
+			&myClaims.Description,
+			&myClaims.Amount,
+			&myClaims.CategoryID,
+			&myClaims.Category,
+			&myClaims.StatusID,
+			&myClaims.Status,
+			&myClaims.ApprovedAt,
+			&myClaims.ApprovedBy,
+			&myClaims.ApprovedAmount,
+			&myClaims.ApprovedReason,
+			&myClaims.EmployeeID,
+			&myClaims.CreatedAt,
+			&myClaims.CreatedBy,
+			&myClaims.UpdatedAt,
+			&myClaims.UpdatedBy,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		all = append(all, &myClaims)
+	}
+
+	// return all employee summary rows
+	return all, nil
+}
+
+// helpers returning one employee's claims by status (total current year)
+func getMyYearlyClaimByStatus(status, eid int) (float32, error) {
+	// canceling this context releases resources associated with it
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+	// SQL statement which fetch employee summary
+	query := `SELECT COALESCE(SUM(amount),0) as total
+			  FROM public."CLAIM" c
+			  WHERE c.status_id = $1
+			  AND c.employee_id  = $2
+			  AND date_part('year', c.created_at) = date_part('year', CURRENT_DATE)`
+
+	// executes SQL query
+	row := db.QueryRowContext(ctx, query, status, eid)
+
+	var total float32
+
+	// populate returned row to total
+	err := row.Scan(
+		&total,
+	)
+
+	if err != nil {
+		return 0, err
+	}
+
+	// return all employee summary rows
+	return total, nil
 }

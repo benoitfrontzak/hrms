@@ -6,7 +6,7 @@ const Common  = new MainHelpers(),
 const myRIF = ['leaveDefinition', 'description', 'requestedDates']
 
 // store all employee by id
-const allEmployees = new Map()
+let allEmployees = new Map()
 allEmployees.set(0, 'not defined')
 
 // store all requested dates
@@ -16,21 +16,10 @@ const myRequestedDates = []
 window.addEventListener('DOMContentLoaded', () => {
     // fetch all employee information
     API.getAllEmployees().then(resp => {
-        // update allEmployee active
-        resp.data.Active.forEach(element => {
-            allEmployees.set(element.ID, element.Fullname)
-        })
-        // update allEmployee inactive
-        resp.data.Inactive.forEach(element => {
-            allEmployees.set(element.ID, element.Fullname)
-        })
-        // update allEmployee deleted
-        resp.data.Deleted.forEach(element => {
-            allEmployees.set(element.ID, element.Fullname)
-        })
+        allEmployees = Common.updateEmployeeList(resp.data, allEmployees)
+
         // fetch all 'my leaves' & update DOM (data table)
         API.getAllMyLeave(connectedID, connectedEmail).then(resp => {
-            console.log(resp.data);
             Helpers.generateDT(resp.data)
             // when edit icon is clicked
             // Helpers.makeEditable()

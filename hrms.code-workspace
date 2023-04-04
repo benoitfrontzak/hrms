@@ -23,6 +23,9 @@
 		},
 		{
 			"path": "leave-service"
+		},
+		{
+			"path": "information-service"
 		}
 	],
 	"settings": {}

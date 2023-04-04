@@ -4,8 +4,7 @@ package handlers
 type authPayload struct {
 	Email      string `json:"email"`
 	Password   string `json:"password"`
-	Firstname  string `json:"firstname"`
-	Lastname   string `json:"lastname"`
+	Fullname   string `json:"fullname"`
 	Nickname   string `json:"nickname"`
 	Active     int    `json:"active"`
 	Role       int    `json:"role"`

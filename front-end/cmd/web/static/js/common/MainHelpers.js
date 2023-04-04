@@ -51,7 +51,9 @@ class MainHelpers{
         const mySelectBox = document.querySelector(`#${selectBoxID}`)
         for (let opt of mySelectBox.options) {
             if (opt.value == '') opt.remove()
-            if (opt.value == value) opt.selected = true
+            if (opt.value == value) {
+                opt.selected = true
+            }
         }
     }
 
@@ -139,4 +141,27 @@ class MainHelpers{
         this.displayWarningMessage(notValid)
     }
 
+    // updateEmployeeList
+    updateEmployeeList(data, allEmployees){
+        // update allEmployee active
+        if (data.Active !== null){
+            data.Active.forEach(element => {
+                allEmployees.set(element.ID, element.Fullname)
+            })
+        } 
+        // update allEmployee inactive
+        if (data.Inactive !== null) {
+            data.Inactive.forEach(element => {
+                allEmployees.set(element.ID, element.Fullname)
+            })
+        } 
+        // update allEmployee deleted
+        if (data.Deleted !== null) {
+            data.Deleted.forEach(element => {
+                allEmployees.set(element.ID, element.Fullname)
+            })
+        } 
+
+        return allEmployees
+    }
 }

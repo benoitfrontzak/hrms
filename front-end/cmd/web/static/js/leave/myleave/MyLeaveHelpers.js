@@ -41,7 +41,7 @@ class MyLeaveHelpers {
         })
     }
 
-    // convert birthdate (remove timestamp)
+    // convert timestamp (remove timestamp)
     formatDate(t){
         let b
         // get only the 10 first characters of the string

@@ -6,7 +6,7 @@ const Common  = new MainHelpers(),
 const myRIF = [ 'name', 'description', 'category']
 
 // store all employees (active, inactive & deleted) 
-const allEmployees = new Map()
+let allEmployees = new Map()
 allEmployees.set(0, 'not defined')
 
 // store empty row for claims with no data (approved, rejected or pending)
@@ -33,21 +33,10 @@ window.addEventListener('DOMContentLoaded', () => {
     const noAction = false
      // fetch all employee information
      API.getAllEmployees().then(resp => {
-        // update allEmployee active
-        resp.data.Active.forEach(element => {
-            allEmployees.set(element.ID, element.Fullname)
-        })
-        // update allEmployee inactive
-        resp.data.Inactive.forEach(element => {
-            allEmployees.set(element.ID, element.Fullname)
-        })
-        // update allEmployee deleted
-        resp.data.Deleted.forEach(element => {
-            allEmployees.set(element.ID, element.Fullname)
-        })
+        allEmployees = Common.updateEmployeeList(resp.data, allEmployees)
+        
         // fetch all claims & update DOM (data table)
         API.getAllClaims().then(resp => {
-            console.log(resp);
             // display by default pending request
             if (resp.data.Pending !== null && typeof resp.data.Pending !== undefined) Helpers.generateDT(resp.data.Pending)
             if (resp.data.Pending === null || typeof resp.data.Pending === undefined) Helpers.generateDT(noData)

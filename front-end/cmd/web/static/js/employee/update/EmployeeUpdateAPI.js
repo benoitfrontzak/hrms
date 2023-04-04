@@ -12,6 +12,14 @@ class EmployeeUpdateAPI{
     return result
   }
 
+  // fetch all employees
+  async getAllEmployees() {
+    const url = broker + 'route/employee/get/all'
+    const response = await fetch(url);
+    const result = await response.json();
+    return result;
+  }
+  
   // update employee   
   async updateEmployee(stringifiedJSON) {
     const url = broker + 'route/employee/update'

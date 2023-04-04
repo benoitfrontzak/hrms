@@ -21,6 +21,13 @@ type configT struct {
 	Name string
 }
 
+// Structure holding all my yearly claims total
+type MyClaims struct {
+	Approved float32
+	Pending  float32
+	Rejected float32
+}
+
 // Structure holding all status claims
 type AllClaim struct {
 	Approved []*Claim

@@ -32,6 +32,8 @@ type listID struct {
 
 // User holds the connected user information (id, email)
 type User struct {
-	ID    int    `json:"id,omitempty"`
-	Email string `json:"email,omitempty"`
+	ID            int    `json:"id,omitempty"`
+	Email         string `json:"email,omitempty"`
+	ConnectedUser string `json:"connectedUser,omitempty"`
+	UserID        int    `json:"userID,string,omitempty"`
 }

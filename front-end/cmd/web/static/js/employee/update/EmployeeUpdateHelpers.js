@@ -30,9 +30,6 @@ class EmployeeUpdateHelpers{
         this.insertOptions('taxStatus', ct.StatutoryTaxStatus)
         this.insertOptions('taxBranch', ct.StatutoryTaxBranch)
         this.insertOptions('foreignWorkerLevy', ct.StatutoryForeignLevy)
-        
-        
-        
     }
     // Insert to selectID one option per element of data.Nationality
     insertNationalityOptions(id, data){
@@ -60,11 +57,11 @@ class EmployeeUpdateHelpers{
     // Insert to superior, supervisor employee list
     insertEmployee(id, data){
         const target = document.querySelector('#'+id)
-        target.innerHTML = '<option selected hidden value=""></option>'
+        target.innerHTML = '<option selected hidden value="0">Not defined</option>'
         data.forEach(element => {
             let opt = document.createElement('option')
             opt.value = element.ID
-            opt.innerHTML = element.Lastname + ' ' + element.Firstname + ' ' + element.Middlename
+            opt.innerHTML = element.Fullname
             target.appendChild(opt)
         })
     }
@@ -103,6 +100,9 @@ class EmployeeUpdateHelpers{
         if (now < myDate){
             timeDiff = myDate.getTime() - now.getTime()
             daysDiff = timeDiff / (1000 * 3600 * 24)
+        }else{
+            timeDiff = now.getTime() - myDate.getTime()
+            daysDiff = timeDiff / (1000 * 3600 * 24)
         }
         
         return Math.round(daysDiff)
@@ -118,16 +118,13 @@ class EmployeeUpdateHelpers{
 
     // Populate form data
     populateFormData(data, eid){
-        console.log('data received', data);
         // update title page
-        Common.insertHTML('Employee: ' + data.Employee.employeeCode.toUpperCase(), 'pageTitle')
-        Common.insertHTML(data.Employee.givenname, 'pageSubtitle')
+        Common.insertHTML(data.Employee.fullname, 'pageTitle')
+        Common.insertHTML(data.Employee.nickname, 'pageSubtitle')
 
         // update identity card
-        Common.insertInputValue(data.Employee.firstname, 'firstName')
-        Common.insertInputValue(data.Employee.middlename, 'middleName')
-        Common.insertInputValue(data.Employee.familyname, 'familyName')
-        Common.insertInputValue(data.Employee.givenname, 'givenName')
+        Common.insertInputValue(data.Employee.fullname, 'fullName')
+        Common.insertInputValue(data.Employee.nickname, 'nickName')
         Common.insertInputValue(data.Employee.employeeCode, 'employeeCode')
         Common.checkRadio(data.Employee.gender, 'gender')
         Common.checkRadio(data.Employee.maritalstatus, 'maritalstatus')
@@ -206,9 +203,18 @@ class EmployeeUpdateHelpers{
         Common.insertInputValue(visaExpiryDate, 'visaExpiryAt')
         // insert visa expiry days
         if (visaExpiryDate != '') Common.insertHTML('( in ' + visaExpiryDays + ' days)', 'visaDays')
+
         Common.insertInputValue(this.convertToDate(data.Employment.joinDate), 'joinDate')
+        // insert join date days
+        if (this.convertToDate(data.Employment.joinDate) != '') Common.insertHTML('( in ' + this.daysDifferenceNow(this.convertToDate(data.Employment.joinDate)) + ' days)', 'joinDays')
+        
         Common.insertInputValue(this.convertToDate(data.Employment.confirmDate), 'confirmDate')
+        // insert confirm date days
+        if (this.convertToDate(data.Employment.confirmDate) != '') Common.insertHTML('( in ' + this.daysDifferenceNow(this.convertToDate(data.Employment.confirmDate)) + ' days)', 'confirmDays')
+
         Common.insertInputValue(this.convertToDate(data.Employment.resignDate), 'resignDate')
+        // insert confirm date days
+        if (this.convertToDate(data.Employment.resignDate) != '') Common.insertHTML('( in ' + this.daysDifferenceNow(this.convertToDate(data.Employment.resignDate)) + ' days)', 'resignDays')
 
         // update statutory information
         Common.selectBoxOptionSelected(data.Statutory.epfTable, 'epfTable')
@@ -251,17 +257,158 @@ class EmployeeUpdateHelpers{
         Common.insertInputValue(eid, 'employeeID')
     }
 
+    // insert payroll rows
+    insertPayroll(employment){
+        const target = document.querySelector('#payrollArchivedBody')
+        target.innerHTML = ''
+        employment.forEach(element => {
+            let row = document.createElement('tr')
+            row.innerHTML = `<td>${element.JobTitle}</td>
+                             <td>${element.Department}</td>
+                             <td>${allEmployees.get(Number(element.Superior))}</td>
+                             <td>${allEmployees.get(Number(element.Supervisor))}</td>
+                             <td>${element.EmployeeType}</td>
+                             <td>${element.WagesType}</td>
+                             <td>${element.BasicRate}</td>
+                             <td>${element.PayFrequency}</td>
+                             <td>${element.PaymentBy}</td>
+                             <td>${element.BankPayout}</td>
+                             <td>${this.formatDate(element.CreatedAt)}</td>
+                             <td>${allEmployees.get(Number(element.CreatedBy))}</td>`
+            target.appendChild(row)
+        })
+    }
+
+    // insert employment rows
+    insertEmployment(employment){
+        const target = document.querySelector('#employmentArchivedBody')
+        target.innerHTML = ''
+        employment.forEach(element => {
+            let row = document.createElement('tr')
+            row.innerHTML = `<td>${element.Group}</td>
+                             <td>${element.Project}</td>
+                             <td>${element.Branch}</td>
+                             <td>${element.Overtime}</td>
+                             <td>${this.formatDate(element.WorkingPermitExpiry)}</td>
+                             <td>${this.formatDate(element.JoinDate)}</td>
+                             <td>${this.formatDate(element.ConfirmDate)}</td>
+                             <td>${this.formatDate(element.ResignDate)}</td>
+                             <td>${this.formatDate(element.CreatedAt)}</td>
+                             <td>${allEmployees.get(Number(element.CreatedBy))}</td>`
+            target.appendChild(row)
+        })
+    }
+
+    // insert EPF rows
+    insertEPF(statutory){
+        const target = document.querySelector('#epfArchivedBody')
+        target.innerHTML = ''
+        statutory.forEach(element => {
+            let row = document.createElement('tr')
+            row.innerHTML = `<td>${element.EPFTable}</td>
+                             <td>${element.EPFNumber}</td>
+                             <td>${element.EPFInitial}</td>
+                             <td>${element.NK}</td>
+                             <td>${this.myBooleanIcons(element.EPFBorne)}</td>
+                             <td>${this.formatDate(element.CreatedAt)}</td>
+                             <td>${allEmployees.get(Number(element.CreatedBy))}</td>`
+            target.appendChild(row)
+        })
+    }
+
+    // insert SOCSO rows
+    insertSOCSO(statutory){
+        const target = document.querySelector('#socsoArchivedBody')
+        target.innerHTML = ''
+        statutory.forEach(element => {
+            let row = document.createElement('tr')
+            row.innerHTML = `<td>${element.SOCSOCategory}</td>
+                             <td>${element.SOCSONumber}</td>
+                             <td>${element.SOCSOStatus}</td>
+                             <td>${this.myBooleanIcons(element.SOCSOBorne)}</td>
+                             <td>${this.myBooleanIcons(element.ContributeEIS)}</td>
+                             <td>${this.myBooleanIcons(element.EISBorne)}</td>
+                             <td>${this.formatDate(element.CreatedAt)}</td>
+                             <td>${allEmployees.get(Number(element.CreatedBy))}</td>`
+            target.appendChild(row)
+        })
+    }
+
+    // insert tax rows
+    insertTax(statutory){
+        const target = document.querySelector('#taxArchivedBody')
+        target.innerHTML = ''
+        statutory.forEach(element => {
+            let row = document.createElement('tr')
+            row.innerHTML = `<td>${element.TaxStatus}</td>
+                             <td>${element.TaxNumber}</td>
+                             <td>${element.TaxBranch}</td>
+                             <td>${element.EASerial}</td>
+                             <td>${this.myBooleanIcons(element.TaxBorne)}</td>
+                             <td>${this.formatDate(element.CreatedAt)}</td>
+                             <td>${allEmployees.get(Number(element.CreatedBy))}</td>`
+            target.appendChild(row)
+        })
+    }
+
+    // insert others rows
+    insertOthers(statutory){
+        const target = document.querySelector('#othersArchivedBody')
+        target.innerHTML = ''
+        statutory.forEach(element => {
+            let row = document.createElement('tr')
+            row.innerHTML = `<td>${element.ForeignWorkerLevy}</td>
+                             <td>${element.ZakatNumber}</td>
+                             <td>${element.ZakatAmount}</td>
+                             <td>${element.TabungHajiAmount}</td>
+                             <td>${element.TabungHajiNumber}</td>
+                             <td>${element.ASNNumber}</td>
+                             <td>${element.ASNAmount}</td>
+                             <td>${this.myBooleanIcons(element.ContributeHRDF)}</td>
+                             <td>${this.formatDate(element.CreatedAt)}</td>
+                             <td>${allEmployees.get(Number(element.CreatedBy))}</td>`
+            target.appendChild(row)
+        })
+    }
+
+    // populate Archives DT
+    populateArchivesDT(employment, statutory){
+        if (employment != null){
+            this.insertPayroll(employment)
+            this.triggerDT('payrollArchivedDT')
+            this.insertEmployment(employment)
+            this.triggerDT('employmentArchivedDT')
+        }
+        
+        if (statutory != null){
+            console.log('go fucking inside');
+            this.insertEPF(statutory)
+            this.triggerDT('epfArchivedDT')
+            this.insertSOCSO(statutory)
+            this.triggerDT('socsoArchivedDT')
+            this.insertTax(statutory)
+            this.triggerDT('taxArchivedDT')
+            this.insertOthers(statutory)
+            this.triggerDT('othersArchivedDT')
+        }
+    }
+
+    // trigger datatable and row click event
+    triggerDT(dt) {
+        const table = $('#' + dt).DataTable()
+    }
+
     // populate upload files
     populateUploadFiles(wanted){
         switch (wanted) {
             case 'ic':
-                Common.insertHTML('IC', myModalTitle)
-                Common.insertInputValue('ic', uploadedFilename)
+                Common.insertHTML('IC', 'uploadedFilesTitle')
+                Common.insertInputValue('ic', 'uploadedFilename')
                 break;
             
             case 'passport':
-                Common.insertHTML('Passport', myModalTitle)
-                Common.insertInputValue('passport', uploadedFilename)
+                Common.insertHTML('Passport', 'uploadedFilesTitle')
+                Common.insertInputValue('passport', 'uploadedFilename')
                 break;
             
             default:
@@ -272,40 +419,49 @@ class EmployeeUpdateHelpers{
     // populate uploaded files
     populateUploadedFiles(data, email){
         if (data.Files.ic != null && data.Files.ic.length > 0){
-            this.insertAttachments(data.Files.ic, email, 'uploadedIC', 'ic')
+            this.insertAttachments(data.Files.ic, email, 'uploadedICBody', 'ic')
         }
-        if (data.Archive.ic != null && data.Archive.ic.length > 0){
-            this.insertArchiveAttachments(data.Archive.ic, email, 'archivedIC', 'archive/ic')
-        }
-        if (data.Archive.passport != null && data.Archive.passport.length > 0){
-            this.insertArchiveAttachments(data.Archive.passport, email, 'archivedPassport', 'archive/passport')
+        if (data.Archive.ic != null && Object.keys(data.Archive.ic).length > 0){
+            this.insertArchiveAttachments(data.Archive.ic, email, 'archivedICBody', 'archive/ic')
         }
         if (data.Files.passport != null && data.Files.passport.length > 0){
-            this.insertAttachments(data.Files.passport, email, 'uploadedPassport', 'passport')
+            this.insertAttachments(data.Files.passport, email, 'uploadedPassportBody', 'passport')
+        }
+        if (data.Archive.passport != null && Object.keys(data.Archive.passport).length > 0){
+            this.insertArchiveAttachments(data.Archive.passport, email, 'archivedPassportBody', 'archive/passport')
         }
     }
     // create attachment download link
     insertAttachments(data, email, id, category){
         const target = document.querySelector('#'+id)
-        target.innerHTML = 'Latest <br />'
+        target.innerHTML = ''
+
         data.forEach(element => {
-            let link = document.createElement('a')
-            link.href = `/upload/${email}/${category}/${element}`
-            link.classList = 'myLink'
-            link.download = element
-            link.innerHTML = '<i class="bi-download pointer"></i> ' + element + '<br />'
-            target.appendChild(link)
+            let row = document.createElement('div')
+            row.classList = 'd-flex justify-content-center mb-3'
+            row.innerHTML = `<div>
+                                <div><img class="myPicture" src="/upload/${email}/${category}/${element}" /></div>
+                                <div class="text-end"><a href="/upload/${email}/${category}/${element}" class="myLink" download="${element}"><i class="bi-download pointer"></i> download</a></div>
+                             </div>`
+            target.appendChild(row)
         })
+
     }
     // create archive attachment download link
     insertArchiveAttachments(data, email, id, category){
         const target = document.querySelector('#'+id)
-        target.innerHTML = 'Archive'
+        target.innerHTML = ''
+
         for (const key in data) {            
             let row = document.createElement('div')
-            row.innerHTML = this.formatTimestamp(key) + ':<br />'
+            row.classList = 'row'
+            const title = 'Archived at ' + this.formatTimestamp(key)
+            row.innerHTML = `<div class="fw-bolder">${title}</div>`
             data[key].forEach(element => {
-                row.innerHTML += `<a class="myLink" href="/upload/${email}/${category}/${key}/${element}" download="${element}"><i class="bi-download pointer"></i> ${element}</a><br />`
+                row.innerHTML += `<div class="row mb-3">
+                                    <div><img class="myPicture" src="/upload/${email}/${category}/${key}/${element}" /></div>
+                                    <div class="text-end"><a href="/upload/${email}/${category}/${key}/${element}" class="myLink" download="${element}"><i class="bi-download pointer"></i> download</a></div>
+                                  </div>`
             })
             target.appendChild(row)
         }
@@ -315,7 +471,18 @@ class EmployeeUpdateHelpers{
         const tmp = ts.split('_')
         return tmp[0] + ' ' + tmp[1].replace(/-/g, ':')
     }
-
+    // convert timestamp (remove timestamp)
+    formatDate(t){
+        let b
+        // get only the 10 first characters of the string
+        const d = t.substring(0,10)
+        // the zero value of a date is 0001-01-01
+        return (d == '0001-01-01') ? b = '' : b = d
+    }
+    // customize boolean (0|1) with icons
+    myBooleanIcons(value){
+        return (value == 1) ? '<i class="bi-check2-square"></i> true' : '<i class="bi-x-square"></i> false'
+    }
     // get all information from the form
     getForm(formID, eid, connectedEmail, connectedID){
         const form = document.querySelector(`#${formID}`),
@@ -347,10 +514,8 @@ class EmployeeUpdateHelpers{
 
         employee['ID']                  = eid
         employee['EmployeeCode']        = data.get('employeeCode')
-        employee['Firstname']           = data.get('firstName')
-        employee['Middlename']          = data.get('middleName')
-        employee['Familyname']          = data.get('familyName')
-        employee['Givenname']           = data.get('givenName')
+        employee['Fullname']            = data.get('fullName')
+        employee['Nickname']            = data.get('nickName')
         employee['IcNumber']            = data.get('icNumber')
         employee['PassportNumber']      = data.get('passportNumber')
         employee['PassportExpiryAt']    = (data.get('passportExpiryAt') == '') ? '0001-01-01' : data.get('passportExpiryAt')

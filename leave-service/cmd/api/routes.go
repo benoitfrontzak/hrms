@@ -22,12 +22,15 @@ func multiplexer() http.Handler {
 
 	// API v1 My Leave
 	mux.HandleFunc("/api/v1/myleave/get/all", handlers.Repo.GetAllMyLeave)
+	mux.HandleFunc("/api/v1/myleave/get/today", handlers.Repo.GetAllMyLeaveToday)
+	mux.HandleFunc("/api/v1/myleave/create/entitled", handlers.Repo.CreateMyEntitledLeave)
 	mux.HandleFunc("/api/v1/myleave/create", handlers.Repo.CreateMyLeave)
 	// mux.HandleFunc("/api/v1/myleave/update", handlers.Repo.UpdateMyLeave)
 	mux.HandleFunc("/api/v1/myleave/softDelete", handlers.Repo.SoftDeleteMyLeave)
 
 	// API v1 leave
 	mux.HandleFunc("/api/v1/leave/get/all", handlers.Repo.GetAllLeave)
+	mux.HandleFunc("/api/v1/leave/get/today", handlers.Repo.GetAllLeaveToday)
 	mux.HandleFunc("/api/v1/leave/approve", handlers.Repo.ApproveLeave)
 	mux.HandleFunc("/api/v1/leave/reject", handlers.Repo.RejectLeave)
 

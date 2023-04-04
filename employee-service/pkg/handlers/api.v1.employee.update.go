@@ -41,9 +41,8 @@ func (rep *Repository) Update(w http.ResponseWriter, r *http.Request) {
 	// update user information
 	user := authPayload{
 		Email:      p.Employee.PrimaryEmail,
-		Firstname:  p.Employee.Firstname,
-		Lastname:   p.Employee.Familyname,
-		Nickname:   p.Employee.Givenname,
+		Fullname:   p.Employee.Fullname,
+		Nickname:   p.Employee.Nickname,
 		Active:     p.Employee.IsActive,
 		Role:       p.Employee.Role,
 		EmployeeID: p.Employee.ID,

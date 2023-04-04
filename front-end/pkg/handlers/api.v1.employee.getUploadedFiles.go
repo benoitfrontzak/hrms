@@ -45,6 +45,7 @@ func myUploadedFiles(email string) (*uploadedFiles, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	// collect archive IC files (per timestamp directory)
 	myArchiveDirIC, err := filesInDirectory(filepath.Join(path, email, "archive", "ic"))
 	if err != nil {
@@ -59,6 +60,7 @@ func myUploadedFiles(email string) (*uploadedFiles, error) {
 			}
 		}
 	}
+
 	// collect archive passport files (per timestamp directory)
 	myArchiveDirPassport, err := filesInDirectory(filepath.Join(path, email, "archive", "passport"))
 	if err != nil {
@@ -66,8 +68,8 @@ func myUploadedFiles(email string) (*uploadedFiles, error) {
 	}
 	myArchivePassportFiles := map[string][]string{}
 	if len(myArchiveDirPassport) > 0 {
-		for _, dir := range myArchiveDirIC {
-			myArchivePassportFiles[dir], err = filesInDirectory(filepath.Join(path, email, "archive", "ic", dir))
+		for _, dir := range myArchiveDirPassport {
+			myArchivePassportFiles[dir], err = filesInDirectory(filepath.Join(path, email, "archive", "passport", dir))
 			if err != nil {
 				return nil, err
 			}

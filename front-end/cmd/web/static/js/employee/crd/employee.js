@@ -3,15 +3,10 @@ const Common  = new MainHelpers(),
       API     = new EmployeeReadAPI()
       
 // set form's parameters (Required Input Fields...)
-const myRIF = [ 'firstName', 'middleName', 'familyName', 'employeeCode', 
+const myRIF = [ 'fullName', 'employeeCode', 
                 'streetaddr1','streetaddr2', 'zip', 'city', 'state', 'country', 
                 'nationality', 'residence',
-                'primaryPhone', 'primaryEmail'],
-      myForm         = 'createEmployeeForm',
-      myFormSubmit   = 'employeeAddSubmit',
-      openFormModal  = 'openCreateEmployee',
-      myWarningClose = 'hideWarningMessage',
-      myWarning      = 'warningMessageDiv'
+                'primaryPhone', 'primaryEmail']
 
 // set card's parameters to enable show|hide function
 const showCard = true,
@@ -21,59 +16,40 @@ const showCard = true,
 // page redirection when form is successfully inserted
 const sPage = "http://localhost/employee/update/"
 
-// set data table parameters
-const dt = 'employeeSummary',
-      dtBody = 'employeeSummaryBody'
-
-// set delete all employee parameter
-const dAll = 'deleteAllEmployee',
-      myDeleteWarningClose = 'hidedeleteWarningMessage',
-      myDeleteWarning = 'deleteWarningMessageDiv',
-      confirmDelete = 'confirmDelete',
-      confirmDeleteBody = 'confirmDeleteBody',
-      confirmDeleteSubmit = 'confirmDeleteSubmit',
-      deleteCheckboxes = 'deleteCheckboxes',
-      iconDeleteClass = 'deleteEmployee'
-
-// set data view
-const active = 'activeBtn',
-      inactive = 'inactiveBtn',
-      deleted = 'deletedBtn'
-
 // When DOM is loaded
 window.addEventListener('DOMContentLoaded', () => {
      // fetch all employees & update DOM & set delete by icon event
      API.getAllEmployees().then(resp => { 
         // display by default active employees
-        Helpers.insertRows(dtBody, resp.data.Active, sPage)
-        Helpers.triggerDT(dt, dtBody, sPage)
+        Helpers.insertRows('employeeSummaryBody', resp.data.Active, sPage)
+        Helpers.triggerDT('employeeSummary', 'employeeSummaryBody', sPage)
 
         // when active employees is requested
-        document.querySelector('#'+active).addEventListener('click', () => {
-            Helpers.insertRows(dtBody, resp.data.Active, sPage)
-            Helpers.triggerDT(dt, dtBody, sPage)
+        document.querySelector('#activeBtn').addEventListener('click', () => {
+            Helpers.insertRows('employeeSummaryBody', resp.data.Active, sPage)
+            Helpers.triggerDT('employeeSummary', 'employeeSummaryBody', sPage)
         })
 
         // when inactive employees is requested
-        document.querySelector('#'+inactive).addEventListener('click', () => {
-            Helpers.insertRows(dtBody, resp.data.Inactive, sPage)
-            Helpers.triggerDT(dt, dtBody, sPage)
+        document.querySelector('#inactiveBtn').addEventListener('click', () => {
+            Helpers.insertRows('employeeSummaryBody', resp.data.Inactive, sPage)
+            Helpers.triggerDT('employeeSummary', 'employeeSummaryBody', sPage)
         })
 
         // when deleted employee is requested
-        document.querySelector('#'+deleted).addEventListener('click', () => {
-            Helpers.insertRows(dtBody, resp.data.Deleted, sPage)
-            Helpers.triggerDT(dt, dtBody, sPage)
+        document.querySelector('#deletedBtn').addEventListener('click', () => {
+            Helpers.insertRows('employeeSummaryBody', resp.data.Deleted, sPage)
+            Helpers.triggerDT('employeeSummary', 'employeeSummaryBody', sPage)
         })
 
         // When one delete icon is clicked
-        const myDelete = document.querySelectorAll('.'+iconDeleteClass)
+        const myDelete = document.querySelectorAll('.deleteEmployee')
 
         myDelete.forEach(element => {
             element.addEventListener('click', () => {
                 const myCheckbox = element.parentNode.parentNode.firstElementChild
                 myCheckbox.checked = true
-                Helpers.populateConfirmDelete(confirmDeleteBody, '1')
+                Helpers.populateConfirmDelete('confirmDeleteBody', '1')
                 myConfirm.show()
             })
         })
@@ -86,22 +62,21 @@ window.addEventListener('DOMContentLoaded', () => {
     })  
 
     // when open form (add button) is clicked (clear warning message & field's values)
-    const myModal = document.querySelector('#'+openFormModal)
+    const myModal = document.querySelector('#openCreateEmployee')
 
     myModal.addEventListener('click', () =>{ 
-        Common.clearForm(myForm, myRIF) 
+        Common.clearForm('createEmployeeForm', myRIF) 
     })
 
     // When form is submitted (save button)
-    const mySubmit = document.querySelector('#'+myFormSubmit)
+    const mySubmit = document.querySelector('#employeeAddSubmit')
     mySubmit.addEventListener('click', () => {
         const error = Common.validateRequiredFields(myRIF)
 
         if (error == '0'){
-            myData = Helpers.getForm(myForm)
+            myData = Helpers.getForm('createEmployeeForm')
             
-            API.createEmployee(myData).then(resp => { 
-                console.log(resp);
+            API.createEmployee(myData).then(resp => {
                 if (! resp.error) window.location.href = sPage+resp.data.id 
             })            
         }
@@ -109,13 +84,13 @@ window.addEventListener('DOMContentLoaded', () => {
     })
     
     // initiate delete confirm modal
-    const myConfirm = new bootstrap.Modal(document.getElementById(confirmDelete), { 
+    const myConfirm = new bootstrap.Modal(document.getElementById('confirmDelete'), { 
         keyboard: false 
     })
 
     // cleaned checked checkboxes when modal is close
-    document.getElementById(confirmDelete).addEventListener('hidden.bs.modal', function (event) {
-        const myDeleteCheckboxes = document.querySelectorAll('.'+deleteCheckboxes)
+    document.getElementById('confirmDelete').addEventListener('hidden.bs.modal', function (event) {
+        const myDeleteCheckboxes = document.querySelectorAll('.deleteCheckboxes')
 
         myDeleteCheckboxes.forEach(element => {
             element.checked = false
@@ -124,23 +99,23 @@ window.addEventListener('DOMContentLoaded', () => {
     })
 
     // When delete all is clicked
-    const myDeleteAll = document.querySelector('#'+dAll)
+    const myDeleteAll = document.querySelector('#deleteAllEmployee')
 
     myDeleteAll.addEventListener('click', () => { 
-        const checked = Helpers.selectedEmployee(myDeleteWarning)
+        const checked = Helpers.selectedEmployee('deleteWarningMessageDiv')
        
         if (typeof checked != 'undefined' && checked.length > 0){
-            Helpers.populateConfirmDelete(confirmDeleteBody, checked.length)
+            Helpers.populateConfirmDelete('confirmDeleteBody', checked.length)
             myConfirm.show()
         }
 
     })
 
     // When confirm delete all is clicked
-    const confirmedDelete = document.querySelector('#'+confirmDeleteSubmit)
+    const confirmedDelete = document.querySelector('#confirmDeleteSubmit')
 
     confirmedDelete.addEventListener('click', () => {
-        const checked = Helpers.selectedEmployee(myDeleteWarning)
+        const checked = Helpers.selectedEmployee('deleteWarningMessageDiv')
 
         API.softDeleteEmployeeByID(checked, connectedEmail).then(resp => {
             if (!resp.error){
@@ -165,14 +140,16 @@ window.addEventListener('DOMContentLoaded', () => {
     })
 
     // close warning message
-    const myWarningMessage = document.querySelector('#'+myWarningClose)
+    const myWarningMessage = document.querySelector('#hideWarningMessage')
     myWarningMessage.addEventListener('click', () => {
-        Common.hideDivByID(myWarning)
+        Common.hideDivByID('warningMessageDiv')
     })
 
      // close delete warning message
-     const myDeleteWarningMessage = document.querySelector('#'+myDeleteWarningClose)
+     const myDeleteWarningMessage = document.querySelector('#hidedeleteWarningMessage')
      myDeleteWarningMessage.addEventListener('click', () => {
-         Common.hideDivByID(myDeleteWarning)
+         Common.hideDivByID('deleteWarningMessageDiv')
      })
+
+     
 })
