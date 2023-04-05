@@ -2,7 +2,7 @@ package handlers
 
 // http service
 const (
-	frontEnd = "http://localhost"
+	frontEnd = "http://localhost/"
 )
 
 // rpc service
