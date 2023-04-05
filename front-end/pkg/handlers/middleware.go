@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	unauthorized = "http://localhost:8484/unauthorized"
+	unauthorized = "http://localhost/unauthorized"
 	authorize    = "http://localhost:8081/api/v1/authentication/verifyCookie"
 )
 
