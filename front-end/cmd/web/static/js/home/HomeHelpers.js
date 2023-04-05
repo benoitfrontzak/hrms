@@ -163,11 +163,11 @@ class HomeHelpers{
         target.innerHTML = ''
 
         data.forEach(element => {
-            const balance = Number(element.entitled) - Number(element.taken)
+            const balance = Number(this.cleanDecimal(element.entitled)) - Number(element.taken)
             let row = document.createElement('div')
             row.classList = 'row'
             row.innerHTML = `<div class="col text-start">${element.leaveDefinitionCode} - ${element.leaveDefinitionName}</div>
-                             <div class="col text-start">${element.entitled}</div>
+                             <div class="col text-start">${this.cleanDecimal(element.entitled)}</div>
                              <div class="col text-start">${element.taken}</div>
                              <div class="col text-start">${balance}</div>`
 
@@ -222,13 +222,28 @@ class HomeHelpers{
         return Math.round(daysDiff)
     }
 
+    // clean decimal value to follow rule: only .5 is allowed
+    cleanDecimal(v){
+        let cleaned = v
+        // check if string contains decimal value (ie got a .)
+        if (v.includes(".")){
+            const n = Number(v),
+                  int = Number(v.split('.')[0]),
+                  fract = n%1
+                  
+            let cFract = 0
+            if (fract.toFixed(4) >= 0.5) cFract = 0.5
+            cleaned = int + cFract
+        }
+        return cleaned.toString()
+    }
     // build leaves chart data
     buildLeavesChartData(data){
         const myData = [['Leave',   'Entitled', 'Taken', 'Balance']]
         
         data.forEach(element => {
           const leave = element.leaveDefinitionCode+' - '+element.leaveDefinitionName,
-                entitled = Number(element.entitled),
+                entitled = Number(this.cleanDecimal(element.entitled)),
                 taken = Number(element.taken),
                 balance = entitled - taken,
                 myAr = [leave, entitled, taken, balance]
