@@ -2,13 +2,17 @@ const Helpers = new PwdHelpers(),
   API = new PwdAPI(),
   Common = new MainHelpers()
 
+  // set form's parameters (Required Input Fields...)
+const myRIF = ['oldPassword', 'newPassword', 'confirmPassword']
+
 // When DOM is loaded
 window.addEventListener('DOMContentLoaded', () => {
 
   //get data from form
   let form = document.getElementById('updatePasswordForm')
-  form.addEventListener('submit', (e) => {
-    e.preventDefault()
+  document.querySelector('#submitPwdBtn').addEventListener('click', () => {
+    const error = Common.validateRequiredFields(myRIF)
+
     let dataStringified = Common.getForm("updatePasswordForm",connectedID)
     let data = JSON.parse(dataStringified);
 
