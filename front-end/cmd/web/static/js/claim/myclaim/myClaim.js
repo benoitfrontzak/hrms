@@ -65,7 +65,7 @@ window.addEventListener('DOMContentLoaded', () => {
     
     // when form is submitted (save button)
     document.querySelector('#claimFormSubmit').addEventListener('click', () => {
-        const error = Common.validateRequiredFields(myRIF)
+        // const error = Common.validateRequiredFields(myRIF)
         myData = Common.getForm('claimForm', connectedID)
         console.log(myData);
         if (error == '0'){
