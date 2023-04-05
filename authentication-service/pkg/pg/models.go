@@ -43,6 +43,12 @@ type User struct {
 	EmployeeID int    `json:"employeeID"`
 }
 
+type Pwd struct {
+	ID          int    `json:"id"`
+	OldPassword string `json:"oldPassword"`
+	NewPassword string `json:"newPassword"`
+}
+
 // GetAll returns a slice of all users, sorted by id
 func (u *User) GetAll() ([]*User, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
@@ -224,7 +230,7 @@ func (u *User) ResetPassword(password string) error {
 		return err
 	}
 
-	stmt := `update users set password = $1 where id = $2`
+	stmt := `update "USERS" set password = $1 where employee_id = $2`
 	_, err = db.ExecContext(ctx, stmt, hashedPassword, u.ID)
 	if err != nil {
 		return err
@@ -237,6 +243,7 @@ func (u *User) ResetPassword(password string) error {
 // with the hash we have stored for a given user in the database. If the password
 // and hash match, we return true; otherwise, we return false.
 func (u *User) PasswordMatches(plainText string) (bool, error) {
+	log.Println("PasswordMatches", plainText, "\n HashPass", u.Password)
 	err := bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(plainText))
 	if err != nil {
 		switch {
@@ -249,4 +256,23 @@ func (u *User) PasswordMatches(plainText string) (bool, error) {
 	}
 
 	return true, nil
+}
+
+// Get user password for compare
+func (u *User) GetPassword(id int) (string, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+	log.Println("employeeID is ", id)
+
+	stmt := `SELECT password FROM "USERS" WHERE employee_id = $1`
+	row := db.QueryRowContext(ctx, stmt, id)
+
+	var pwd string
+	err := row.Scan(&pwd)
+	if err != nil {
+		return "", err
+	}
+
+	return pwd, nil
 }

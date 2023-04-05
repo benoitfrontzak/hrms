@@ -17,7 +17,7 @@ const showCard = true,
                   'epf', 'socso', 'incomeTax', 'others']
    
 // page redirection when form is successfully updated
-const sPage = "http://localhost/employee/update/"
+const sPage = "http://localhost:8484/employee/update/"
 
 // store all employees (active, inactive & deleted) 
 let allEmployees = new Map()

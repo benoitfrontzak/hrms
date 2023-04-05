@@ -9,6 +9,9 @@ import (
 func multiplexer() http.Handler {
 	mux := http.NewServeMux()
 
+	//authentication-service routes
+	mux.HandleFunc("/route/authentication/update/pwd/eid", handlers.UpdatePassword) //update connected user's password by eid
+
 	// employee-service routes
 	mux.HandleFunc("/route/employee/get/all", handlers.AllEmployees)        // return all employee by status (active, inactive, deleted)
 	mux.HandleFunc("/route/employee/get/active", handlers.AllActive)        // return list of all active employees

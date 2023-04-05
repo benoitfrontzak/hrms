@@ -14,7 +14,7 @@ const showCard = true,
       myCards  = ['identity', 'access', 'contact']
    
 // page redirection when form is successfully inserted
-const sPage = "http://localhost/employee/update/"
+const sPage = "http://localhost:8484/employee/update/"
 
 // When DOM is loaded
 window.addEventListener('DOMContentLoaded', () => {

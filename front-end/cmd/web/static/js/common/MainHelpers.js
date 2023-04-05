@@ -1,6 +1,15 @@
 class MainHelpers{
     // hide | show div by ID
-    hideDivByID(id){ document.querySelector('#'+id).style.display = 'none' }
+    // hideDivByID(id){ document.querySelector('#'+id).style.display = 'none' }
+    hideDivByID(id){
+        let element = document.querySelector(`#${id}`);
+        if (element) {
+            element.style.display = 'none';
+        } else {
+            console.error(`Element with ID ${id} not found!`);
+        }
+    }
+    
     showDivByID(id){ document.querySelector('#'+id).style.display = 'block' }
 
     // hide card by ID

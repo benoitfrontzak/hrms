@@ -1,6 +1,6 @@
 // EmployeeRead_API handle all API call to be sent to the broker & the file server
 const broker = 'http://localhost:8088/',
-      fileServer = 'http://localhost/'
+      fileServer = 'http://localhost:8484/'
 
 class EmployeeUpdateAPI{
 

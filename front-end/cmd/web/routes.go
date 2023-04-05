@@ -25,6 +25,9 @@ func multiplexer() http.Handler {
 	mux.HandleFunc("/unauthorized", handlers.Repo.Unauthorized)
 	mux.HandleFunc("/logout", handlers.Repo.Logout)
 
+	//Temporary place here as it's a public page but requires authentication TBD
+	mux.Handle("/changepwd", handlers.Middleware(http.HandlerFunc(handlers.Repo.ChangePassword)))
+
 	// Home
 	mux.Handle("/home", handlers.Middleware(http.HandlerFunc(handlers.Repo.Home))) // Dashboard
 
