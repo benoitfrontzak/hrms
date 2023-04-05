@@ -2,10 +2,11 @@ package handlers
 
 // http service
 const (
-	frontEnd        = "http://localhost/"
+	frontEnd        = "http://localhost:8484/"
 	leaveService    = "http://leave-service:8881/"
 	employeeService = "http://employee-service:8882/"
 	claimService    = "http://claim-service:8883/"
+	authService     = "http://authentication-service:8081/"
 )
 
 // rpc service

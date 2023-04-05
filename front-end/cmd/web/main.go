@@ -11,7 +11,7 @@ import (
 	_ "time/tzdata"
 )
 
-const webPort = "80"
+const webPort = "8484"
 
 func main() {
 	// app holds our application configuration

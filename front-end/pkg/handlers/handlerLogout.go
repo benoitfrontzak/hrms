@@ -8,7 +8,7 @@ import (
 // Logout is the handler func which log out the user and clear the cookie
 func (rep *Repository) Logout(w http.ResponseWriter, r *http.Request) {
 	clearCookie(w)
-	http.Redirect(w, r, "http://localhost", http.StatusSeeOther)
+	http.Redirect(w, r, "http://localhost:8484", http.StatusSeeOther)
 }
 
 // Clear the cookie
