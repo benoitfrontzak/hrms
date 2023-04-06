@@ -21,7 +21,7 @@ func (rep *Repository) Information(w http.ResponseWriter, r *http.Request) {
 	// If unauthorized request or unexpected request method
 	if !myc.Auth || r.Method != "GET" {
 		var empty any
-		render.RenderTemplate(w, "unauthorized.page.gohtml", empty)
+		render.RenderTemplate(w, "public.unauthorized.page.gohtml", empty)
 		return
 	}
 
@@ -45,6 +45,6 @@ func (rep *Repository) Information(w http.ResponseWriter, r *http.Request) {
 		}
 	} else {
 		var empty any
-		render.RenderTemplate(w, "unauthorized.page.gohtml", empty)
+		render.RenderTemplate(w, "public.unauthorized.page.gohtml", empty)
 	}
 }

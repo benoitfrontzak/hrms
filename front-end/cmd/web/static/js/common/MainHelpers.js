@@ -1,6 +1,6 @@
 class MainHelpers{
     // hide | show div by ID
-    hideDivByID(id){ document.querySelector('#'+id).style.display = 'none' }
+    hideDivByID(id){ document.querySelector('#'+id).style.display = 'none' }    
     showDivByID(id){ document.querySelector('#'+id).style.display = 'block' }
 
     // hide card by ID

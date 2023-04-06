@@ -1,0 +1,155 @@
+{{template "base.user" . }}
+
+{{define "content"}}
+
+<div class="container-fluid" style="width:100%">
+    <!-- ACTION BUTTON -->
+    <div class="d-flex flex-row-reverse mt-3">
+      <div class="p-2 bd-highlight"><a href="#" class="btn btn-danger" id="deleteAllMyLeave"><i class="bi-dash-circle"></i> delete</a></div>
+      <div class="p-2 bd-highlight"><a href="#" class="btn btn-danger" id="openCreateMyLeave" data-bs-toggle="modal" data-bs-target="#myLeave"><i class="bi bi-plus-circle-fill"></i> add</a></div>
+    </div>
+    <!-- WARNING DELETE MESSAGE -->
+    <div class="alert alert-warning mt-3 hide" role="alert" id="deleteWarningMessageDiv">
+      <div class="d-flex justify-content-between">
+        <div class="flex-grow-1"><h4 class="alert-heading"><i class="bi-exclamation-diamond-fill"></i> Warning!</h4></div>
+        <div class="flex-shrink-1"><i class="bi-x-circle-fill pointer" id="hidedeleteWarningMessage"></i></div>
+      </div>      
+      <p>You must select at least one entry before deleting...</p>
+      <hr>
+      <p class="mb-0 smaller">Please check in on some of those fields below...</p>
+    </div>
+    
+    <hr />
+    <!-- TABLE -->
+    <table id="myLeaveTable" class="display stripe" style="width:100%">
+        <thead>
+            <tr>
+              <th>Leave</th>
+              <th>Description</th>
+              <th>Status</th>
+              <th>Approved at</th>
+              <th>Approved by</th>
+              <th>Reason</th>
+              <th>Requested dates</th>
+            <th></th>
+            </tr>
+        </thead>
+        <tbody id="myLeaveBody"></tbody>
+    </table>
+
+</div>
+
+<!-- modal: Confirm employee deletion -->
+<div class="modal fade" id="confirmDelete" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirm delete</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p id="confirmDeleteBody"></p>
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="btn btn-danger" id="confirmDeleteSubmit"><i class="bi bi-save2-fill"></i> Confirm</a>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: myLeave -->
+<div class="modal fade" id="myLeave" tabindex="-1" aria-labelledby="myLeaveLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="myLeaveLabel">New Leave</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- WARNING MESSAGE -->
+        <div class="alert alert-warning mt-3 hide" role="alert" id="warningMessageDiv">
+          <div class="d-flex justify-content-between">
+            <div class="flex-grow-1"><h4 class="alert-heading"><i class="bi-exclamation-diamond-fill"></i> Warning!</h4></div>
+            <div class="flex-shrink-1"><i class="bi-x-circle-fill pointer" id="hideWarningMessage"></i></div>
+          </div>      
+          <p id="warningMessageBody">Please you must fill those fields</p>
+          <hr>
+          <p class="mb-0 smaller">Please check in on some of those fields below...</p>
+        </div>
+
+        <div class="space"></div>
+       
+        <form id="leaveForm" name="leaveForm">
+          <!-- Hidden fields -->
+          <input type="hidden" name="employeeid" id="employeeid"   value="{{.User.EmployeeID}}" />
+
+          <!-- 1st row (Leave definition | description) -->
+          <div class="row mb-3">
+            <!-- Leave definition -->
+            <div class="col-sm-4">
+              <div class="form-floating">
+                  <select class="form-select" id="leaveDefinition" name="leaveDefinition" aria-label="Select one leave definition"></select>
+                  <label for="leaveDefinition"><i class="bi-shield-fill-exclamation"></i> leave definition</label>
+              </div>
+              <div class="fw-bolder text-danger fst-italic smaller" id="leaveDefinitionError"></div>
+            </div>         
+            <!-- Leave description -->
+            <div class="col-sm-8">
+               <div class="form-floating">
+                <textarea class="form-control" name="description" id="description" style="height: 100px"></textarea>
+                <label for="description"><i class="bi-shield-fill-exclamation"></i> description</label>
+              </div>
+              <div class="fw-bolder text-danger fst-italic smaller" id="descriptionError"></div>       
+            </div>          
+          </div>
+
+           <div class="text-secondary hide" id="myAuthorizationDiv"></div>
+
+          <br />
+          <hr>
+
+          <!-- 2n row (calendar) -->
+          <div class="row mb-3">            
+            <!-- Leave details: datepicker -->
+            <div class="col-sm-4">
+              <h6 class="text-warning">select requested dates</h6>
+              <div id="datepicker" ></div>
+              <input type="hidden" id="requestedDates" name="requestedDates" />
+              <div class="fw-bolder text-danger fst-italic smaller" id="requestedDatesError"></div>
+            </div>
+            <div class="col-sm-4"></div>
+            <!-- Leave details: selected dates -->
+            <div class="col-sm-4">
+              <div class="row">
+                <div class="col"><h6 class="text-warning">dates</h6></div>
+                <div class="col">half day</div>
+              </div>              
+              <div id="selectedDatesDiv"></div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" id="leaveFormSubmit"><i class="bi bi-save2-fill"></i> Save</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{end}}
+
+{{define "js"}}
+
+<script>
+  const connectedEmail = {{.User.Email}},
+        connectedID = {{.User.EmployeeID}}
+</script>
+
+<script src="/static/js/common/MainHelpers.js"></script>
+
+<script src="/static/js/leave/myleave/MyLeaveHelpers.js"></script>
+<script src="/static/js/leave/myleave/MyLeaveAPI.js"></script>
+<script src="/static/js/leave/myleave/myLeave.js"></script>
+{{end}}
