@@ -48,13 +48,13 @@ func (r *httpContextStruct) authorization(w http.ResponseWriter) {
 		default:
 			var empty any
 			// Render unauthorized page
-			render.RenderTemplate(w, "unauthorized.page.gohtml", empty)
+			render.RenderTemplate(w, "public.unauthorized.page.gohtml", empty)
 		}
 
 	} else {
 		var empty any
 		// Render unauthorized page
-		render.RenderTemplate(w, "unauthorized.page.gohtml", empty)
+		render.RenderTemplate(w, "public.unauthorized.page.gohtml", empty)
 	}
 
 }

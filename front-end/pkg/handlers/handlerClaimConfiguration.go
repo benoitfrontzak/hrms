@@ -20,7 +20,7 @@ func (rep *Repository) ClaimConfiguration(w http.ResponseWriter, r *http.Request
 	// If unauthorized request or unexpected request method
 	if !myc.Auth || r.Method != "GET" {
 		var empty any
-		render.RenderTemplate(w, "unauthorized.page.gohtml", empty)
+		render.RenderTemplate(w, "public.unauthorized.page.gohtml", empty)
 		return
 	}
 
@@ -35,7 +35,7 @@ func (rep *Repository) ClaimConfiguration(w http.ResponseWriter, r *http.Request
 		render.RenderTemplate(w, "admin.claimCT.page.gohtml", td)
 	} else {
 		var empty any
-		render.RenderTemplate(w, "unauthorized.page.gohtml", empty)
+		render.RenderTemplate(w, "public.unauthorized.page.gohtml", empty)
 	}
 
 }
