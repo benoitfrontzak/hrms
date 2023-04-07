@@ -96,8 +96,8 @@ func (e *Employee) InsertChilds(eid, user int) error {
 
 	// insert EMPLOYMENT
 	stmt = `INSERT INTO public."EMPLOYMENT"
-			(job_title, department_id, superior_id, supervisor_id, employee_type_id, wages_type_id, basic_rate, pay_frequency_id, payment_by_id, bank_payout_id, default_rule_id, group_id, branch_id, project_id, overtime_id, working_permit_expiry, join_date, confirm_date, resign_date, employee_id, created_by, updated_by)
-			VALUES('', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '0001-01-01', '0001-01-01', '0001-01-01', '0001-01-01', $1, $2, $3);`
+			(job_title, department_id, superior_id, supervisor_id, employee_type_id, wages_type_id, basic_rate, pay_frequency_id, payment_by_id, bank_payout_id, group_id, branch_id, project_id, overtime_id, working_permit_expiry, join_date, confirm_date, resign_date, employee_id, created_by, updated_by)
+			VALUES('', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '0001-01-01', '0001-01-01', '0001-01-01', '0001-01-01', $1, $2, $3);`
 	_, err = db.ExecContext(ctx, stmt, eid, user, user)
 	if err != nil {
 		return err

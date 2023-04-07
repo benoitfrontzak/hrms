@@ -32,14 +32,13 @@ func UpdatePassword(w http.ResponseWriter, r *http.Request) {
 	// 	return
 	// }
 
-	// log to employee-service collection
+	// log to authentication service log on changing password
 	l := rpcPayload{
 		Collection: "authentication",
 		Name:       "change password",
-		// Data:       fmt.Sprintf("new entry successfully created for table %s with id %d", ct.Table, ct.RowID),
-		Data:      fmt.Sprintf("new entry successfully created for table with id"),
-		CreatedAt: answer.CreatedAt,
-		CreatedBy: answer.CreatedBy,
+		Data:       fmt.Sprintf("new entry successfully created for table with id"),
+		CreatedAt:  answer.CreatedAt,
+		CreatedBy:  answer.CreatedBy,
 	}
 	LogItemViaRPC(l)
 

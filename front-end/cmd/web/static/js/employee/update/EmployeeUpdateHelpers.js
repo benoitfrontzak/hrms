@@ -607,7 +607,6 @@ class EmployeeUpdateHelpers{
         employment['PayFrequency']          = data.get('payFrequency')
         employment['PaymentBy']             = data.get('paymentBy') 
         employment['BankPayout']            = data.get('bankPayout')
-        employment['DefaultRule']           = data.get('defaultRule')
         employment['Group']                 = data.get('group')
         employment['Branch']                = data.get('branch')
         employment['Project']               = data.get('project')

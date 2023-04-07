@@ -57,7 +57,6 @@ type Employment struct {
 	PayFrequency        int    `json:"payFrequency,string"`
 	PaymentBy           int    `json:"paymentBy,string"`
 	BankPayout          int    `json:"bankPayout,string"`
-	DefaultRule         int    `json:"defaultRule,string"`
 	Group               int    `json:"group,string"`
 	Branch              int    `json:"branch,string"`
 	Project             int    `json:"project,string"`
