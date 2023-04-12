@@ -12,17 +12,12 @@ func (l *Leave) CreateEntitled(eid, uid, genderid int) error {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
-	log.Println("user gender is: ", genderid)
-
 	// check which gender to skip: if male then skip female...
 	skipGender := 1 // skip male by default
 	if genderid == 1 {
 		skipGender = 0 // if employee is male, then skip female
-	} else {
-		skipGender = 1
 	}
 
-	log.Println("gender to skip  is: ", skipGender)
 	// SQL statement which fetch all available leave definition
 	// since employee is new we only care about the lowest seniority
 	stmt := `SELECT ldd.leave_definition_id  ,
@@ -61,10 +56,6 @@ func (l *Leave) CreateEntitled(eid, uid, genderid int) error {
 	// if calculation is 1 (not earned) entitled is straight
 	// if calculation is 2 (earned) entitled 0
 	for _, entry := range all {
-		log.Println("")
-		log.Println("entry.ID", entry.ID)
-		log.Println("entry.CalculationID", entry.CalculationID)
-		log.Println("entry.Entitled", entry.Entitled)
 		var entitled int
 		switch entry.CalculationID {
 		case 1:
@@ -104,7 +95,6 @@ func InsertEntitled(definitionID, entitled, eid, uid int) (int, error) {
 		uid,
 	).Scan(&newID)
 	if err != nil {
-		log.Println("err while insert to db entitled: ", err)
 		return 0, err
 	}
 

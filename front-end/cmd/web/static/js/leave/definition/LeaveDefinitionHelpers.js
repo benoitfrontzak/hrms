@@ -291,21 +291,28 @@ class LeaveDefinitionHelpers {
     }
     
     // create rows leave definition details (modal)
-    createRowsLDD(entries){
+    createSeniorityRows(entries){
         let details =``
 
         if (entries.length > 1){
             entries.forEach(e => {
-                details += `<div class="d-flex justify-content-between">
-                            <div>From year ${e.seniority}</div>
-                            <div>${e.entitled} days</div>
-                         </div>`
+                details += `<div>From year ${e.seniority}</div>`
             })
         }else{
-            details = `<div class="d-flex justify-content-between">
-                        <div>No condition</div>
-                        <div>${entries[0].entitled} days</div>
-                    </div>`
+            details = `<div>N/A</div>`
+        }
+
+        return details
+    }
+    createEntitledRows(entries){
+        let details =``
+
+        if (entries.length > 1){
+            entries.forEach(e => {
+                details += `<div>${e.entitled} days</div>`
+            })
+        }else{
+            details = `<div>${entries[0].entitled} days</div>`
         }
 
         return details
@@ -315,7 +322,8 @@ class LeaveDefinitionHelpers {
         const target = document.querySelector('#' + id)
         target.innerHTML = ''
         data.forEach(element => {
-            let details = this.createRowsLDD(element.details)
+            let seniority = this.createSeniorityRows(element.details),
+                entitled = this.createEntitledRows(element.details)
             let row = document.createElement('tr')
             row.id = 'LD' + element.rowid
             row.innerHTML = `<td class="row-data">${element.code}</td>
@@ -326,7 +334,9 @@ class LeaveDefinitionHelpers {
                              <td class="row-data" data-id=${element.expiry}>${this.myMonth(element.expiry)}</td>
                              <td class="row-data" data-id=${element.genderid}>${element.gender}</td>
                              <td class="row-data" data-id=${element.limitationid}>${element.limitation}</td>
-                             <td class="row-data pointer" data-id=${element.calculationid} data-entries=${JSON.stringify(element.details, function replacer(key, value) { return value})} data-bs-toggle="modal" data-bs-target="#details${element.rowid}">${element.calculation}</td>
+                             <td class="row-data" data-id=${element.calculationid}>${element.calculation}</td>
+                             <td class="row-data">${seniority}</td>
+                             <td class="row-data">${entitled}</td>
                              <td>
                                 <div class="row">
                                     <div class="col">
@@ -341,23 +351,7 @@ class LeaveDefinitionHelpers {
                                         </div> 
                                     </div>
                                 </div>                                                 
-                            </td>
-                            <div class="modal fade" id="details${element.rowid}" tabindex="-1">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title">Leave definition details ${element.code}</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        ${details}
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">close</button>
-                                    </div>
-                                    </div>
-                                </div>
-                            </div>`
+                            </td>`
             target.appendChild(row)
         })
     } 
