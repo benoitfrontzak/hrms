@@ -12,11 +12,15 @@ func (e *Employee) GetAllActive() ([]*employeeList, error) {
 	query := `SELECT 	e.ID,
 						e.employee_code AS code,
 						e.fullname,
-						e.nickname
-			  	FROM "EMPLOYEE" e
+						e.nickname,
+						e.gender_id ,
+						date_part('year', age(e2.join_date))as joined
+			  	FROM "EMPLOYEE" e, "EMPLOYMENT" e2
 				WHERE e.is_active = 1
 				AND e.ID <> 0
-				AND e.soft_delete = 0`
+				AND e.soft_delete = 0
+				AND e2.employee_id = e.id
+				ORDER BY e.id`
 
 	// executes SQL query
 	rows, err := db.QueryContext(ctx, query)
@@ -34,6 +38,8 @@ func (e *Employee) GetAllActive() ([]*employeeList, error) {
 			&emp.Code,
 			&emp.Fullname,
 			&emp.Nickname,
+			&emp.GenderID,
+			&emp.Seniority,
 		)
 		if err != nil {
 			return nil, err

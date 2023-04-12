@@ -14,6 +14,7 @@ func multiplexer() http.Handler {
 	mux.HandleFunc("/api/v1/authentication/allUsers", handlers.Repo.AllUsers)
 	mux.HandleFunc("/api/v1/authentication/createUser", handlers.Repo.CreateUser)
 	mux.HandleFunc("/api/v1/authentication/updateUser", handlers.Repo.UpdateUser)
+	mux.HandleFunc("/api/v1/authentication/update/password", handlers.Repo.UpdatePassword)
 
 	return mux
 }

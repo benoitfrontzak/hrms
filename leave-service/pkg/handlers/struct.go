@@ -34,6 +34,7 @@ type listID struct {
 type User struct {
 	ID            int    `json:"id,omitempty"`
 	Email         string `json:"email,omitempty"`
+	GenderID      int    `json:"genderID,omitempty"`
 	ConnectedUser string `json:"connectedUser,omitempty"`
 	UserID        int    `json:"userID,string,omitempty"`
 }

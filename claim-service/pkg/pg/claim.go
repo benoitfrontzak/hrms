@@ -29,7 +29,7 @@ func (c *Claim) Insert() (int, error) {
 	defer cancel()
 
 	// SQL statement which update an employee (soft delete)
-	stmt := `INSERT INTO public."CLAIM" (claim_definition_id, 
+	stmt := `INSERT INTO public."CLAIM_APPLICATION" (claim_definition_id, 
 										 "name", 
 										 description, 
 										 amount, 
@@ -82,7 +82,7 @@ func (c *Claim) Update(id int) error {
 	defer cancel()
 
 	// SQL statement which update an employee (soft delete)
-	stmt := `UPDATE public."CLAIM" SET soft_delete=1 WHERE id=$1;`
+	stmt := `UPDATE public."CLAIM_APPLICATION" SET soft_delete=1 WHERE id=$1;`
 
 	// executes SQL query
 	_, err := db.ExecContext(ctx, stmt, id)
@@ -103,7 +103,7 @@ func (c *Claim) Approve(rowID, userID, amount int) error {
 	defer cancel()
 
 	// SQL statement which update the claim (approve it)
-	stmt := `UPDATE public."CLAIM" SET status_id=4, approved_at=$1, approved_by=$2, approved_amount=$3, updated_by=$2, updated_at=$1 WHERE id=$4;`
+	stmt := `UPDATE public."CLAIM_APPLICATION" SET status_id=4, approved_at=$1, approved_by=$2, approved_amount=$3, updated_by=$2, updated_at=$1 WHERE id=$4;`
 
 	// executes SQL query
 	_, err := db.ExecContext(ctx, stmt, now, userID, amount, rowID)
@@ -124,7 +124,7 @@ func (c *Claim) Reject(rowID, userID int, reason string) error {
 	defer cancel()
 
 	// SQL statement which update the claim (approve it)
-	stmt := `UPDATE public."CLAIM" SET status_id=3, approved_at=$1, approved_by=$2, approved_amount=0 , approved_reason=$3, updated_by=$2, updated_at=$1 WHERE id=$4;`
+	stmt := `UPDATE public."CLAIM_APPLICATION" SET status_id=3, approved_at=$1, approved_by=$2, approved_amount=0 , approved_reason=$3, updated_by=$2, updated_at=$1 WHERE id=$4;`
 
 	// executes SQL query
 	_, err := db.ExecContext(ctx, stmt, now, userID, reason, rowID)
@@ -143,7 +143,7 @@ func (c *Claim) Delete(id int) error {
 	defer cancel()
 
 	// SQL statement which update an employee (soft delete)
-	stmt := `UPDATE public."CLAIM" SET soft_delete=1 WHERE id=$1;`
+	stmt := `UPDATE public."CLAIM_APPLICATION" SET soft_delete=1 WHERE id=$1;`
 
 	// executes SQL query
 	_, err := db.ExecContext(ctx, stmt, id)
@@ -180,7 +180,7 @@ func (c *Claim) GetAllMyClaim(eid int) ([]*Claim, error) {
 					 c.created_by,
 					 c.updated_at,
 					 c.updated_by
-			  FROM public."CLAIM" c, public."CLAIM_DEFINITION" cd, public."CONFIG_CATEGORY" ccc, public."CONFIG_STATUS" ccs
+			  FROM public."CLAIM_APPLICATION" c, public."CLAIM_DEFINITION" cd, public."CONFIG_CATEGORY" ccc, public."CONFIG_STATUS" ccs
 			  WHERE c.soft_delete = 0
 			  AND c.employee_id = $1
 			  AND c.claim_definition_id = cd.id
@@ -360,7 +360,7 @@ func getAllClaimByStatus(status int) ([]*Claim, error) {
 					 c.created_by,
 					 c.updated_at,
 					 c.updated_by
-			  FROM public."CLAIM" c, public."CLAIM_DEFINITION" cd, public."CONFIG_CATEGORY" ccc, public."CONFIG_STATUS" ccs
+			  FROM public."CLAIM_APPLICATION" c, public."CLAIM_DEFINITION" cd, public."CONFIG_CATEGORY" ccc, public."CONFIG_STATUS" ccs
 			  WHERE c.status_id = $1
 			  AND c.claim_definition_id = cd.id
 			  and c.category_id = ccc.id
@@ -436,7 +436,7 @@ func getAllMyClaimByStatus(status, eid int) ([]*Claim, error) {
 					 c.created_by,
 					 c.updated_at,
 					 c.updated_by
-			  FROM public."CLAIM" c, public."CLAIM_DEFINITION" cd, public."CONFIG_CATEGORY" ccc, public."CONFIG_STATUS" ccs
+			  FROM public."CLAIM_APPLICATION" c, public."CLAIM_DEFINITION" cd, public."CONFIG_CATEGORY" ccc, public."CONFIG_STATUS" ccs
 			  WHERE c.status_id = $1
 			  AND c.employee_id  = $2
 			  AND c.claim_definition_id = cd.id
@@ -496,7 +496,7 @@ func getMyYearlyClaimByStatus(status, eid int) (float32, error) {
 
 	// SQL statement which fetch employee summary
 	query := `SELECT COALESCE(SUM(amount),0) as total
-			  FROM public."CLAIM" c
+			  FROM public."CLAIM_APPLICATION" c
 			  WHERE c.status_id = $1
 			  AND c.employee_id  = $2
 			  AND date_part('year', c.created_at) = date_part('year', CURRENT_DATE)`

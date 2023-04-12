@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"employee/pkg/pg"
 	"encoding/json"
-	"log"
 	"net/http"
 	"time"
 )
@@ -15,32 +14,27 @@ import (
 func (rep *Repository) Create(w http.ResponseWriter, r *http.Request) {
 
 	// extract payload from request
-	var p pg.Employee
-	err := rep.readJSON(w, r, &p)
+	err := rep.readJSON(w, r, &rep.App.Models.Employee)
 	if err != nil {
-		log.Println("err decoding:", err)
 		rep.errorJSON(w, err)
 		return
 	}
 
 	// insert payload to employee DB
-	rep.App.Models.Employee = p
 	rowID, err := rep.App.Models.Employee.Insert()
 	if err != nil {
-		log.Println("err db:", err)
 		rep.errorJSON(w, err)
 		return
 	}
 
 	// convert payload to employee (employee-service) & user (authentication-service)
 	// newEmployee := convertToEmployee(p)
-	newUser := convertToUser(p, rowID)
+	newUser := convertToUser(rep.App.Models.Employee, rowID)
 
 	// insert all the child table
 	// (emergency contact, spouse, employment, statutory, addition&deduction, bank, attachment )
-	err = rep.App.Models.Employee.InsertChilds(rowID, p.CreatedBy)
+	err = rep.App.Models.Employee.InsertChilds(rowID, rep.App.Models.Employee.CreatedBy)
 	if err != nil {
-		log.Println("err db childs:", err)
 		rep.errorJSON(w, err)
 		return
 	}
@@ -54,8 +48,18 @@ func (rep *Repository) Create(w http.ResponseWriter, r *http.Request) {
 
 	// store new employee info
 	u := User{
-		ID:    rowID,
-		Email: p.PrimaryEmail,
+		ID:            rowID,
+		Email:         rep.App.Models.Employee.PrimaryEmail,
+		GenderID:      rep.App.Models.Employee.Gender,
+		ConnectedUser: rep.App.Models.Employee.ConnectedUser,
+		UserID:        rep.App.Models.Employee.CreatedBy,
+	}
+
+	// send user to leave-service to create default entitled leaves
+	err = sendUSerToLeaves(u)
+	if err != nil {
+		rep.errorJSON(w, err)
+		return
 	}
 
 	// response to be sent
@@ -64,7 +68,7 @@ func (rep *Repository) Create(w http.ResponseWriter, r *http.Request) {
 		Message:   "employee successfully created",
 		Data:      u,
 		CreatedAt: time.Now().Format("02-Jan-2006 15:04:05"),
-		CreatedBy: p.ConnectedUser,
+		CreatedBy: rep.App.Models.Employee.ConnectedUser,
 	}
 
 	rep.writeJSON(w, http.StatusAccepted, answer)
@@ -94,6 +98,24 @@ func sendUserToAuthentication(p authPayload) error {
 
 	// send http POST request to authentication-service
 	url := authenticationService + "api/v1/authentication/createUser"
+	_, err = http.Post(url, "application/json", bytes.NewBuffer(encoded))
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// create employee leaves
+func sendUSerToLeaves(u User) error {
+	// Encode payload to []byte
+	encoded, err := json.Marshal(u)
+	if err != nil {
+		return err
+	}
+
+	// send http POST request to leave-service
+	url := leaveService + "api/v1/myleave/create/entitled"
 	_, err = http.Post(url, "application/json", bytes.NewBuffer(encoded))
 	if err != nil {
 		return err

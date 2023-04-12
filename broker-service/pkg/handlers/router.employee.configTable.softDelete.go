@@ -9,7 +9,7 @@ import (
 // forward the post request from the front-end to employee-service to create a new employee
 func SoftDeleteEmployeeCT(w http.ResponseWriter, r *http.Request) {
 	// send post request to employee-service and collect the response
-	url := claimService + "api/v1/claim/configTable/softDelete"
+	url := employeeService + "api/v1/employee/configTable/softDelete"
 	resp, err := http.Post(url, "application/json", r.Body)
 	if err != nil {
 		errorJSON(w, err)

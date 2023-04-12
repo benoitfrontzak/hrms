@@ -58,7 +58,7 @@ class HomeAPI{
         const result = await response.json()
         return result
     }
-
+    
     // fetch connected employee's leave details
     async getEmployeeLeaveDetailsByID(eid) {
         const url = broker + 'route/myleave/get/today'

@@ -483,6 +483,63 @@ class EmployeeUpdateHelpers{
     myBooleanIcons(value){
         return (value == 1) ? '<i class="bi-check2-square"></i> true' : '<i class="bi-x-square"></i> false'
     }
+
+    // compare current employment values with new ones
+    compareEmployment(c, n) {
+
+        if (n['JobTitle'] != c['jobTitle']) return false           
+        if (n['Department'] != c['department']) return false            
+        if (n['Superior'] != c['superior']) return false            
+        if (n['Supervisor'] != c['supervisor']) return false            
+        if (n['EmployeeType'] != c['employeeType']) return false            
+        if (n['WagesType'] != c['wagesType']) return false            
+        if (n['BasicRate'] != c['basicRate']) return false            
+        if (n['PayFrequency'] != c['payFrequency']) return false            
+        if (n['PaymentBy'] != c['paymentBy']) return false            
+        if (n['BankPayout'] != c['bankPayout']) return false            
+        if (n['Group'] != c['group']) return false            
+        if (n['Branch'] != c['branch']) return false            
+        if (n['Project'] != c['project']) return false            
+        if (n['Overtime'] != c['overtime']) return false            
+        if (n['WorkingPermitExpiry'] != c['workingPermitExpiry'].substring(0,10)) return false     
+        if (n['JoinDate'] != c['joinDate'].substring(0,10)) return false                
+        if (n['ConfirmDate'] != c['confirmDate'].substring(0,10)) return false             
+        if (n['ResignDate'] != c['resignDate'].substring(0,10)) return false  
+        
+       
+        return true
+    }
+
+    // compare current statutory values with new ones
+    compareStatutory(c, n) {
+        if (n['EPFTable']           != c['epfTable']         ) return false
+        if (n['EPFNumber']          != c['epfNumber']        ) return false
+        if (n['EPFInitial']         != c['epfInitial']       ) return false
+        if (n['NK']                 != c['nk']               ) return false
+        if (n['EPFBorne']           != c['epfBorne']         ) return false
+        if (n['SOCSOCategory']      != c['socsoCategory']    ) return false
+        if (n['SOCSONumber']        != c['socsoNumber']      ) return false
+        if (n['SOCSOStatus']        != c['socsoStatus']      ) return false
+        if (n['SOCSOBorne']         != c['socsoBorne']       ) return false
+        if (n['ContributeEIS']      != c['contributeEIS']    ) return false
+        if (n['EISBorne']           != c['eisBorne']         ) return false
+        if (n['TaxStatus']          != c['taxStatus']        ) return false
+        if (n['TaxNumber']          != c['taxNumber']        ) return false
+        if (n['TaxBranch']          != c['taxBranch']        ) return false
+        if (n['EASerial']           != c['eaSerial']         ) return false
+        if (n['TaxBorne']           != c['taxBorne']         ) return false
+        if (n['ForeignWorkerLevy']  != c['foreignWorkerLevy']) return false
+        if (n['ZakatNumber']        != c['zakatNumber']      ) return false
+        if (n['ZakatAmount']        != c['zakatAmount']      ) return false
+        if (n['TabungHajiNumber']   != c['tabungHajiNumber'] ) return false
+        if (n['TabungHajiAmount']   != c['tabungHajiAmount'] ) return false
+        if (n['ASNNumber']          != c['asnNumber']        ) return false
+        if (n['ASNAmount']          != c['asnAmount']        ) return false
+        if (n['ContributeHRDF']     != c['contributeHRDF']   ) return false
+             
+        return true
+    }
+
     // get all information from the form
     getForm(formID, eid, connectedEmail, connectedID){
         const form = document.querySelector(`#${formID}`),
@@ -497,12 +554,16 @@ class EmployeeUpdateHelpers{
               statutory     = this.getStatutoryData(data),
               bank          = this.getBankData(data)
 
+        // check if employment|statutory didn't change
+        const eSame = this.compareEmployment(cEmployment, employment)
+        const sSame = this.compareStatutory(cStatutory, statutory)
+
         myjson['Employee']          = employee
         myjson['EmergencyContact']  = ec
         myjson['OtherInformation']  = oi
         myjson['Spouse']            = spouse
-        myjson['Employment']        = employment
-        myjson['Statutory']         = statutory
+        myjson['Employment']        = (eSame) ? null : employment
+        myjson['Statutory']         = (sSame) ? null : statutory
         myjson['Bank']              = bank
         
         return JSON.stringify(myjson, function replacer(key, value) { return value})
@@ -607,7 +668,6 @@ class EmployeeUpdateHelpers{
         employment['PayFrequency']          = data.get('payFrequency')
         employment['PaymentBy']             = data.get('paymentBy') 
         employment['BankPayout']            = data.get('bankPayout')
-        employment['DefaultRule']           = data.get('defaultRule')
         employment['Group']                 = data.get('group')
         employment['Branch']                = data.get('branch')
         employment['Project']               = data.get('project')

@@ -10,22 +10,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // fetch all claim's definition & update DOM 
     API.getAllClaimDefinition().then(resp => {
-        const active = 1,
-              inactive = 0
-        // display by default active claim definition
-        Helpers.checkData(resp.data.Active, active)
-        // when active claim definition is requested
-        document.querySelector('#activeBtn').addEventListener('click', () => {
-            Helpers.checkData(resp.data.Active, active)
-        })
-        // when inactive claim definition is requested
-        document.querySelector('#inactiveBtn').addEventListener('click', () => {
-            Helpers.checkData(resp.data.Inactive, inactive)
-        })            
-        // when deleted claim definition is requested
-        document.querySelector('#deletedBtn').addEventListener('click', () => {
-            Helpers.checkData(resp.data.Deleted, inactive)
-        })        
+        // display active claim definition
+        Helpers.insertRows(resp.data.Active)
+        Helpers.makeEditable()        
     })
 
     // fetch claim category & update DOM (form dropdown)

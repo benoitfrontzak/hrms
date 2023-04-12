@@ -23,6 +23,9 @@ const sPage = "http://localhost/employee/update/"
 let allEmployees = new Map()
 allEmployees.set(0, 'not defined')
 
+// store current selected employee Employment & Statutory information
+let cEmployment, cStatutory
+
 // When DOM is loaded
 window.addEventListener('DOMContentLoaded', () => {
     const path =  window.location.pathname.split( '/' ),
@@ -47,6 +50,9 @@ window.addEventListener('DOMContentLoaded', () => {
                   employmentArchive = resp.data.EmploymentArchive,
                   statutoryArchive = resp.data.StatutoryArchive
 
+            cEmployment = resp.data.Employment
+            cStatutory = resp.data.Statutory
+
             if(!resp.error) {
                 // populate form
                 Helpers.populateFormData(employee, eid)
@@ -54,7 +60,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 // fetch all employee information
                 API.getAllEmployees().then(resp => {
                     allEmployees = Common.updateEmployeeList(resp.data, allEmployees)
-                    // populate archives DT
+                    // populate archives DataTables
                     Helpers.populateArchivesDT(employmentArchive, statutoryArchive)
                     // todo replace ids by values
                 })
@@ -76,6 +82,8 @@ window.addEventListener('DOMContentLoaded', () => {
         const error = Common.validateRequiredFields(myRIF)
         if (error == '0'){
             myData = Helpers.getForm('updateEmployeeForm', eid, connectedEmail, connectedID)
+           
+            
             console.log(myData);
             
             API.updateEmployee(myData).then(resp => {

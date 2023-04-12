@@ -3,11 +3,19 @@
 {{define "content"}}
 
 <div class="container-fluid" style="width:100%">
-    <!-- ACTION BUTTON -->
-    <div class="d-flex flex-row-reverse mt-3">
-      <div class="p-2 bd-highlight"><a href="#" class="btn btn-danger" id="deleteAllMyLeave"><i class="bi-dash-circle"></i> delete</a></div>
-      <div class="p-2 bd-highlight"><a href="#" class="btn btn-danger" id="openCreateMyLeave" data-bs-toggle="modal" data-bs-target="#myLeave"><i class="bi bi-plus-circle-fill"></i> add</a></div>
-    </div>
+   <div class="zoomOut">
+    <div class="row">
+      <div class="col my-3">
+        <h4 id="leaveTitle">My Leaves</h4>
+      </div>
+      <div class="col">
+        <!-- ACTION BUTTON -->
+        <div class="d-flex flex-row-reverse mt-3">
+          <div class="p-2 bd-highlight"><a href="#" class="btn btn-danger" id="deleteAllMyLeave"><i class="bi-dash-circle"></i> delete</a></div>
+          <div class="p-2 bd-highlight"><a href="#" class="btn btn-danger" id="openCreateMyLeave" data-bs-toggle="modal" data-bs-target="#myLeave"><i class="bi bi-plus-circle-fill"></i> add</a></div>
+        </div>
+      </div>
+    </div>    
     <!-- WARNING DELETE MESSAGE -->
     <div class="alert alert-warning mt-3 hide" role="alert" id="deleteWarningMessageDiv">
       <div class="d-flex justify-content-between">
@@ -17,8 +25,7 @@
       <p>You must select at least one entry before deleting...</p>
       <hr>
       <p class="mb-0 smaller">Please check in on some of those fields below...</p>
-    </div>
-    
+    </div>    
     <hr />
     <!-- TABLE -->
     <table id="myLeaveTable" class="display stripe" style="width:100%">
@@ -36,7 +43,7 @@
         </thead>
         <tbody id="myLeaveBody"></tbody>
     </table>
-
+  </div>
 </div>
 
 <!-- modal: Confirm employee deletion -->
@@ -44,7 +51,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Confirm delete</h5>
+        <h5 class="modal-title">Confirm Delete</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -52,7 +59,7 @@
       </div>
       <div class="modal-footer">
         <a href="#" class="btn btn-danger" id="confirmDeleteSubmit"><i class="bi bi-save2-fill"></i> Confirm</a>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">close</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
@@ -90,7 +97,7 @@
             <div class="col-sm-4">
               <div class="form-floating">
                   <select class="form-select" id="leaveDefinition" name="leaveDefinition" aria-label="Select one leave definition"></select>
-                  <label for="leaveDefinition"><i class="bi-shield-fill-exclamation"></i> leave definition</label>
+                  <label for="leaveDefinition"><i class="bi-shield-fill-exclamation"></i> Leave definition</label>
               </div>
               <div class="fw-bolder text-danger fst-italic smaller" id="leaveDefinitionError"></div>
             </div>         
@@ -98,7 +105,7 @@
             <div class="col-sm-8">
                <div class="form-floating">
                 <textarea class="form-control" name="description" id="description" style="height: 100px"></textarea>
-                <label for="description"><i class="bi-shield-fill-exclamation"></i> description</label>
+                <label for="description"><i class="bi-shield-fill-exclamation"></i> Description</label>
               </div>
               <div class="fw-bolder text-danger fst-italic smaller" id="descriptionError"></div>       
             </div>          

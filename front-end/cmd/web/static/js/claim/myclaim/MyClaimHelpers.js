@@ -111,8 +111,8 @@ class MyClaimHelpers {
         return (d == '0001-01-01') ? b = '' : b = d
     }
     // insert to datatable one row per element of data
-    insertRows(id, data) {
-        const target = document.querySelector('#' + id)
+    insertRows(data) {
+        const target = document.querySelector('#myClaimBody')
         target.innerHTML = ''
         data.forEach(element => { 
             let opt = document.createElement('tr')
@@ -140,28 +140,8 @@ class MyClaimHelpers {
                             </td>`
             target.appendChild(opt)
         })
+        $('#myClaimTable').DataTable()
     } 
-    // trigger datatable and row click event
-    triggerDT(dt) {
-        const table = $('#' + dt).DataTable()
-    }
-    // generate data table
-    generateDT(data){
-        this.insertRows('myClaimBody', data)
-        this.triggerDT('myClaimTable')
-    }
-    // check wether data is null or not
-    checkData(data){
-        if (data == null ){
-            document.querySelector('#gotData').style.display = 'none'
-            document.querySelector('#noData').style.display = 'block'
-        } else {
-            document.querySelector('#gotData').style.display = 'block'
-            document.querySelector('#noData').style.display = 'none'
-            this.generateDT(data)
-            this.makeEditable()
-        }
-    }
 
     // returns list of selected claim id to be deleted
     selectedClaim(){

@@ -24,25 +24,6 @@ func New(dbPool *sql.DB) Models {
 	}
 }
 
-// Models is the type for this package. Note that any model that is included as a member
-// in this type is available to us throughout the application, anywhere that the
-// app variable is used, provided that the model is also added in the New function.
-type Models struct {
-	User User
-}
-
-// User is the structure which holds one user from the database.
-type User struct {
-	ID         int    `json:"id"`
-	Email      string `json:"email"`
-	Fullname   string `json:"fullname,omitempty"`
-	Nickname   string `json:"nickname,omitempty"`
-	Password   string `json:"password,omitempty"`
-	Active     int    `json:"active"`
-	Role       int    `json:"role"`
-	EmployeeID int    `json:"employeeID"`
-}
-
 // GetAll returns a slice of all users, sorted by id
 func (u *User) GetAll() ([]*User, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
@@ -195,7 +176,7 @@ func (u *User) Insert(user User) (int, error) {
 
 	var newID int
 	stmt := `insert into "USERS" (email, fullname, nickname, password, active, role, employee_id)
-		values ($1, $2, $3, $4, $5, $6, $7, $8) returning id`
+		values ($1, $2, $3, $4, $5, $6, $7) returning id`
 
 	err = db.QueryRowContext(ctx, stmt,
 		user.Email,
@@ -215,17 +196,17 @@ func (u *User) Insert(user User) (int, error) {
 }
 
 // ResetPassword is the method we will use to change a user's password.
-func (u *User) ResetPassword(password string) error {
+func (u *User) UpdatePassword() error {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
-
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), 12)
+	log.Println("password to be hashed is ", u.Password)
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(u.Password), 12)
 	if err != nil {
 		return err
 	}
 
-	stmt := `update users set password = $1 where id = $2`
-	_, err = db.ExecContext(ctx, stmt, hashedPassword, u.ID)
+	stmt := `update "USERS" set password = $1 where employee_id = $2`
+	_, err = db.ExecContext(ctx, stmt, hashedPassword, u.EmployeeID)
 	if err != nil {
 		return err
 	}
@@ -249,4 +230,23 @@ func (u *User) PasswordMatches(plainText string) (bool, error) {
 	}
 
 	return true, nil
+}
+
+// Get user password for compare
+func (u *User) GetPassword(id int) (string, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+	log.Println("employeeID is ", id)
+
+	stmt := `SELECT password FROM "USERS" WHERE employee_id = $1`
+	row := db.QueryRowContext(ctx, stmt, id)
+
+	var pwd string
+	err := row.Scan(&pwd)
+	if err != nil {
+		return "", err
+	}
+
+	return pwd, nil
 }

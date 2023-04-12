@@ -48,6 +48,7 @@ type ApprovedLeave struct {
 type EntitledLeave struct {
 	ID                  int     `json:"rowid,string,omitempty"`
 	Entitled            float32 `json:"entitled,string"`
+	Credits             float32 `json:"credits,string"`
 	Taken               float32 `json:"taken,string"`
 	LeaveDefinitionID   int     `json:"leaveDefinition,string"`
 	LeaveDefinitionCode string  `json:"leaveDefinitionCode"`

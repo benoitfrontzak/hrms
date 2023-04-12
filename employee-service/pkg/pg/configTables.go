@@ -119,10 +119,6 @@ func (ct *ConfigTables) GetAllConfigTables() (*ConfigTables, error) {
 	if err != nil {
 		return nil, err
 	}
-	ct.EmploymentRule, err = getAllRowsConfigTable("CONFIG_EMPLOYMENT_RULE")
-	if err != nil {
-		return nil, err
-	}
 	ct.EmploymentType, err = getAllRowsConfigTable("CONFIG_EMPLOYMENT_TYPE")
 	if err != nil {
 		return nil, err

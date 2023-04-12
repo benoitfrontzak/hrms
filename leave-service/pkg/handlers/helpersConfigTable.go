@@ -5,9 +5,9 @@ func getTableNameDB(ct string) string {
 	var dbTable string
 	switch ct {
 	case "Category":
-		dbTable = "CONFIG_CLAIM_CATEGORY"
+		dbTable = "CONFIG_LEAVE_CATEGORY"
 	case "Status":
-		dbTable = "CONFIG_CLAIM_STATUS"
+		dbTable = "CONFIG_LEAVE_STATUS"
 	default:
 		dbTable = ""
 	}

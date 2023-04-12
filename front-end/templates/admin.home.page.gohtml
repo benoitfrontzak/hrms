@@ -4,165 +4,212 @@
 
 <!-- Main home page -->
 <div class="container-fluid bg-light">
-      <!-- Title: Employee self-service -->
-      <div class="row justify-content-md-center border my-3 bg-white">
-          <div class="col-sm-12 my-3 text-start">
-            <h4><i class="bi-card-list"></i> Employee self-service</h4>            
-          </div>
+  <!-- Title: Employee self-service -->
+  <div class="row justify-content-md-center mb-3 bg-white">
+      <div class="col-sm-12 my-3 p-3 text-start">
+        <h4><i class="bi-card-list"></i> Employee Self-Service</h4>            
       </div>
-
+  </div>
+  <div class="zoomOut">   
       <!-- Cards: On leave today | On leave tomorrow | My pending request | Requested my approval -->
-      <div class="d-flex justify-content-between">
-       
+      <div class="row">
         <!-- Card: On leave today -->
-        <div class="card">
-          <div class="card-header myBaseBG fw-bolder text-white">
-            <div class="d-flex justify-content-between">
-              <div class="flex-grow-1"><i class="bi-calendar-event-fill"></i> On leave today</div>
-            </div>    
-          </div>
-          <div class="card-body">
-            <div class="row"> <div class="col-sm-12 mt-3 text-center fw-bolder" id="leaveToday"></div> </div>
-            <div class="row"> <div class="col-sm-12 mt-3 text-end smaller pointer" data-bs-toggle="modal" data-bs-target="#onLeaveToday">see details <i class="bi-caret-right-square-fill"></i></div> </div>
+        <div class="col p-3">
+          <div class="row myTint6BG shadow">
+            <div class="col p-3 myBaseTextColor fw-bolder largeIcon"><h1><i class="bi-calendar-event-fill "></i></h1></div>
+            <div class="col text-end mb-3">
+              <div class="fw-bolder fs-1" id="leaveToday"></div>
+              <div class="">On Leave Today</div>
+              <div class="smaller pointer myMainTextColor fw-bolder fs-6 my-3" data-bs-toggle="modal" data-bs-target="#onLeaveToday">VIEW DETAILS <i class="bi-caret-right-fill"></i></div>
+            </div>
           </div>
         </div>
         <!-- Card: On leave tomorrow -->
-        <div class="card">
-          <div class="card-header myBaseBG fw-bolder text-white">
-            <div class="d-flex justify-content-between">
-              <div class="flex-grow-1"><i class="bi-calendar-range-fill"></i> On leave tomorrow</div>
-            </div>    
-          </div>
-          <div class="card-body">
-            <div class="row"> <div class="col-sm-12 mt-3 text-center fw-bolder" id="leaveTomorrow"></div> </div>
-            <div class="row"> <div class="col-sm-12 mt-3 text-end smaller pointer" data-bs-toggle="modal" data-bs-target="#onLeaveTomorrow">see details <i class="bi-caret-right-square-fill"></i></div> </div>
+        <div class="col p-3">
+          <div class="row myTint6BG shadow">
+            <div class="col p-3 myBaseTextColor fw-bolder largeIcon"><h1><i class="bi-calendar-range-fill"></i></h1></div>
+            <div class="col text-end mb-3">
+              <div class="fw-bolder fs-1" id="leaveTomorrow"></div>
+              <div class="">On Leave Tomorrow</div>
+              <div class="smaller pointer myMainTextColor fw-bolder fs-6 my-3" data-bs-toggle="modal" data-bs-target="#onLeaveTomorrow">VIEW DETAILS <i class="bi-caret-right-fill"></i></div>
+            </div>
           </div>
         </div>
         <!-- Card: My pending request -->
-        <div class="card">
-          <div class="card-header myBaseBG fw-bolder text-white">
-            <div class="d-flex justify-content-between">
-              <div class="flex-grow-1"><i class="bi-clipboard-data"></i> My pending request</div>
-            </div>    
-          </div>
-          <div class="card-body">
-            <div class="row"> <div class="col-sm-12 mt-3 text-center fw-bolder" id="myClaimsPending"></div> </div>
-            <div class="row"> <div class="col-sm-12 mt-3 text-end smaller pointer" data-bs-toggle="modal" data-bs-target="#myPendingRequest">see details <i class="bi-caret-right-square-fill"></i></div> </div>
+        <div class="col p-3">
+          <div class="row myTint6BG shadow">
+            <div class="col p-3 myBaseTextColor fw-bolder largeIcon"><h1><i class="bi-clipboard-data"></i></h1></div>
+            <div class="col text-end mb-3">
+              <div class="fw-bolder fs-1" id="myClaimsPending"></div>
+              <div class="">My Pending Request</div>
+              <div class="smaller pointer myMainTextColor fw-bolder fs-6 my-3" data-bs-toggle="modal" data-bs-target="#myPendingRequest">VIEW DETAILS <i class="bi-caret-right-fill"></i></div>
+            </div>
           </div>
         </div>
         <!-- Card: Requested claims -->
-        <div class="card">
-          <div class="card-header myBaseBG fw-bolder text-white">
-            <div class="d-flex justify-content-between">
-              <div class="flex-grow-1"><i class="bi-clipboard-check"></i> Requested claims</div>
-            </div>    
-          </div>
-          <div class="card-body">
-            <div class="row"> <div class="col-sm-12 mt-3 text-center fw-bolder" id="myClaimsRequested"></div> </div>
-            <div class="row"> <div class="col-sm-12 mt-3 text-end smaller pointer" data-bs-toggle="modal" data-bs-target="#requestedMyClaims">see details <i class="bi-caret-right-square-fill"></i></div> </div>
-          </div>
-        </div>
-       
-      </div>
-
-      <div class="space"></div>
-
-      <!-- Cards: Profile | My claim -->
-      <div class="row justify-content-md-center">
-        <div class="col-sm-6 my-3 text-center">
-          <!-- Card: Profile -->
-          <div class="card">
-            <div class="card-header myTint1BG fw-bolder text-white">
-              <div class="row">
-                <div class="col text-start">Profile</div>
-              </div>    
+        <div class="col p-3">
+          <div class="row myTint6BG shadow">
+            <div class="col p-3 myBaseTextColor fw-bolder largeIcon"><h1><i class="bi-clipboard-check"></i></h1></div>
+            <div class="col text-end mb-3">
+              <div class="fw-bolder fs-1" id="myClaimsRequested"></div>
+              <div class="">Requested claims</div>
+              <div class="pointer myMainTextColor fw-bolder fs-6 my-3" data-bs-toggle="modal" data-bs-target="#requestedMyClaims">VIEW DETAILS <i class="bi-caret-right-fill"></i></div>
             </div>
-            <div class="card-body">
-              <div class="row"> 
-                <div class="col-sm-12 mt-3 text-center" id="myProfile"></div>
-              </div>
-              <div class="row"> 
-                <div class="col-sm-8 mt-3 text-start" id="myProfileDates"></div> 
-                <div class="col-sm-4 mt-3 text-end"> 
-                  <div class="d-flex justify-content-between"> 
-                    <a href="/myleave" class="btn btn-light text-secondary pointer">Leave</a> 
-                    <a href="/myclaim" class="btn btn-light text-secondary pointer">Claim</a>
-                  </div> 
+          </div>
+        </div>       
+      </div>
+      <div class="space"></div>
+      <!-- Cards: Profile | My claim -->
+      <div class="row">
+        <!-- Card: Profile --> 
+        <div class="col-6">
+          <div class="myRedImgBG borderRadiusTop p-3">
+            <div class="row">
+              <div class="col fs-5 text-white fw-bolder">PROFILE</div>
+            </div>
+            <!-- space --> 
+            <div class="row">
+              <div class="col"><div class="space"></div></div>
+            </div>
+            <div class="row">
+              <div class="col"><div class="space"></div></div>
+            </div>
+            <div class="row">
+              <div class="col text-white text-center" style="font-size: 64px"><i class="bi-person-circle"></i></div>
+              <div class="col-10" >
+                <div class="row">
+                  <!-- Profile name | ic/passport | job title -->
+                  <div class="col text-white" id="myProfile"></div>
+                </div>
+                <div class="row">
+                  <!-- Profile join & confirm dates -->
+                  <div class="col-8" id="myProfileDates"></div>
+                  <div class="col">
+                    <div class="d-flex justify-content-between"> 
+                      <a href="/myleave" class="btn btn-light myMainTextColor pointer">Leave</a>                    
+                      <a href="/myclaim" class="btn btn-light myMainTextColor pointer">Claim</a>
+                    </div>
+                  </div>
                 </div>
               </div>
+            </div> 
+            <!-- space --> 
+            <div class="row">
+              <div class="col"> <div class="space"></div> </div>
             </div>
-          </div>            
-        </div>
-        <div class="col-sm-6 my-3 text-center">
-          <!-- Card: My claim -->
-          <div class="card">
-            <div class="card-header myTint1BG fw-bolder text-white">
-              <div class="d-flex justify-content-between">
-                <div>My claims</div>
-              </div>    
+            <div class="row">
+              <div class="col"><div class="space"></div></div>
             </div>
-            <div class="card-body">
-              <div id="pieChartClaims" style="width: 800px; height: 500px;"></div>
+          </div>
+          <div class="bg-white borderRadiusBottom p-3">
+            <div class="row bg-white">
+              <div class="col fs-5 myTint1TextColor fw-bolder">PAY SLIP</div>
+            </div>
+            <!-- space --> 
+            <div class="row bg-white">
+              <div class="col"><div class="space bg-white"></div></div>
+            </div>
+            <!-- Pay Slip month-->
+            <div class="row bg-white myTint1TextColor text-center">
+              <div class="col">Jan</div>
+              <div class="col">Feb</div>
+              <div class="col">Mar</div>
+              <div class="col">Apr</div>
+              <div class="col">May</div>
+              <div class="col">Jun</div>
+              <div class="col">Jul</div>
+              <div class="col">Aug</div>
+              <div class="col">Sep</div>
+              <div class="col">Oct</div>
+              <div class="col">Nov</div>
+              <div class="col">Dec</div>
+            </div>
+            <!-- Pay Slip miniature --> 
+            <div class="row bg-white myTint1TextColor text-center">
+              <div class="col mb-3"><img class="myMiniature" src="/static/images/Payslip-demo.jpg" /></div>
+              <div class="col mb-3"><img class="myMiniature" src="/static/images/Payslip-demo.jpg" /></div>
+              <div class="col mb-3"><img class="myMiniature" src="/static/images/Payslip-demo.jpg" /></div>
+              <div class="col mb-3"><img class="myMiniature" src="/static/images/Payslip-demo.jpg" /></div>
+              <div class="col mb-3"></div>
+              <div class="col mb-3"></div>
+              <div class="col mb-3"></div>
+              <div class="col mb-3"></div>
+              <div class="col mb-3"></div>
+              <div class="col mb-3"></div>
+              <div class="col mb-3"></div>
+              <div class="col mb-3"></div>
+            </div>
+          </div>
+        </div>        
+        <!-- Card: My claim --> 
+        <div class="col-6 p-3">
+          <div class="row">
+            <div class="col fs-5 fw-bolder myMainTextColor" style="text-indent: 10px">MY CLAIM</div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <div id="pieChartClaims" style="width:300px; height:300px"></div>
+            </div>
+            <div class="col">               
               <div class="row"> 
-                <div class="col-sm-8 text-end"></div> 
-                <div class="col-sm-4 text-end fw-bolder">Total</div> 
+                <div class="col fw-bolder text-white myMainBG borderRadiusTop">TOTAL</div> 
               </div>
               <div class="row">
-                <div class="col-sm-8 text-end"></div>
-                <div class="col-sm-4 text-end border-bottom fw-bolder">RM <span id="claimsTotal"></span></div>
+                <div class="col fw-bolder text-white fs-1 myMainBG borderRadiusBottom">RM <span id="claimsTotal"></span></div>
               </div>
               <div class="space"></div>
               <div class="row"> 
-                <div class="col-sm-8 text-end"></div>
-                <div class="col-sm-4 text-end smaller">Pending: RM <span id="claimsTotalPending"></span></div> 
-              </div>
-              <div class="row"> 
-                <div class="col-sm-8 text-end"></div> 
-                <div class="col-sm-4 text-end smaller">Rejected: RM <span id="claimsTotalRejected"></span></div> 
-              </div>
-              <div class="row"> 
-                <div class="col-sm-8 text-end"></div> 
-                <div class="col-sm-4 text-end smaller">Approved: RM <span id="claimsTotalApproved"></span></div> 
-              </div>              
-            </div>
-          </div>            
-        </div>
-      </div>
-
-      <div class="space"></div>
-
-      <!-- Cards: Leave -->
-      <div class="row justify-content-md-center">
-        <div class="col-sm-12 my-3 text-center">
-          <!-- Card: Profile -->
-          <div class="card">
-            <div class="card-header myTint2BG fw-bolder text-white">
-              <div class="row">
-                <div class="col text-start">Leave</div>
-              </div>    
-            </div>
-            <div class="card-body">
-              <div class="row">
-                <div class="col-7"><div id="chartLeaves" style="width: 900px; height: 500px;"></div></div>
-                <div class="col-5">
-                  <div class="row mb-3 border-bottom"> 
-                    <div class="col text-start fw-bolder">Title</div> 
-                    <div class="col text-start fw-bolder">Entitled</div> 
-                    <div class="col text-start fw-bolder">Taken</div> 
-                    <div class="col text-start fw-bolder">Balance</div> 
+                <div class="col">
+                  <div class="d-flex align-items-center">
+                    <div class="circleBlue"></div>
+                    <div>&nbsp;</div>
+                    <div> Pending: RM <span id="claimsTotalPending"></span></div>
                   </div>
-                  <div id="leaveDetailsBody"></div>
-                </div>
-              </div> 
+                  <div class="d-flex align-items-center">
+                    <div class="circleBlack"></div> 
+                    <div>&nbsp;</div>
+                    <div> Rejected: RM <span id="claimsTotalRejected"></span></div>
+                  </div>
+                  <div class="d-flex align-items-center">
+                    <div class="circleTurquoise"></div>
+                    <div>&nbsp;</div>
+                    <div> Approved: RM <span id="claimsTotalApproved"></span></div>
+                  </div>                   
+                </div> 
+              </div>                
             </div>
-          </div>            
+          </div>
         </div>
       </div>
-
       <div class="space"></div>
-
+      <!-- Cards: Leave -->      
+      <div class="row">
+        <div class="col p-3">
+          <div class="row myTint2BG borderRadiusTop" >
+            <div class="col fs-5 fw-bolder text-white">LEAVES</div>
+          </div>
+          <div class="row bg-white shadow">
+            <div class="col-7 mt-3"><div class="p-3" id="chartLeaves"></div></div>
+            <div class="col-5 mt-3">
+              <div class="row my-3 border-bottom"> 
+                <div class="col-4 mt-3 myTint2TextColor text-start fw-bolder">Title</div> 
+                <div class="col-2 mt-3 myTint2TextColor text-start fw-bolder">Entitled</div> 
+                <div class="col-2 mt-3 myTint2TextColor text-start fw-bolder">Credits</div> 
+                <div class="col-2 mt-3 myTint2TextColor text-start fw-bolder">Taken</div> 
+                <div class="col-2 mt-3 myTint2TextColor text-start fw-bolder">Balance</div> 
+              </div>
+              <div id="leaveDetailsBody"></div>
+            </div>
+          </div>          
+        </div>
+      </div>
+      <div class="space"></div>
+  </div>
 </div>
 
+  <a href="javascript:void(0);" id="backToTop" class="back-to-top">
+    <i class="arrow"></i><i class="arrow"></i>
+  </a>
 
 <!-- Modal: On leave today -->
 <div class="modal fade" id="onLeaveToday" tabindex="-1" aria-labelledby="onLeaveTodayLabel" aria-hidden="true">
@@ -221,11 +268,11 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <div class="d-flex flex-row justify-content-between border-bottom bd-highlight"> 
-          <div class="fw-bolder">Requested</div>
-          <div class="fw-bolder">Description</div>
-          <div class="fw-bolder">Requested Amount</div>
-          <div class="fw-bolder">Requested Date</div>
+        <div class="row border-bottom bd-highlight"> 
+          <div class="col fw-bolder">Requested</div>
+          <div class="col fw-bolder">Description</div>
+          <div class="col fw-bolder">Requested Amount</div>
+          <div class="col fw-bolder">Requested Date</div>
         </div>
         <div class="mb-3" id="myPendingRequestBody"></div>
       </div>

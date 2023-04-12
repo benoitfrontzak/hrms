@@ -3,10 +3,18 @@
 {{define "content"}}
 
 <div class="container-fluid" style="width:100%">
-    <!-- ACTION BUTTON -->
-    <div class="d-flex flex-row-reverse mt-3">
-      <div class="p-2 bd-highlight"><a href="#" class="btn btn-danger" id="deleteAllLeaveDefinition"><i class="bi-dash-circle"></i> delete</a></div>
-      <div class="p-2 bd-highlight"><a href="#" class="btn btn-danger" id="openCreateLeaveDefinition" data-bs-toggle="modal" data-bs-target="#createLeaveDefinition"><i class="bi bi-plus-circle-fill"></i> add</a></div>
+  <div class="zoomOut">
+    <div class="row">
+      <div class="col my-3">
+        <h4 id="leaveTitle">Leave Definitions</h4>
+      </div>
+      <div class="col">
+        <!-- ACTION BUTTON -->
+        <div class="d-flex flex-row-reverse mt-3">
+          <div class="p-2 bd-highlight"><a href="#" class="btn btn-danger" id="deleteAllLeaveDefinition"><i class="bi-dash-circle"></i> delete</a></div>
+          <div class="p-2 bd-highlight"><a href="#" class="btn btn-danger" id="openCreateLeaveDefinition" data-bs-toggle="modal" data-bs-target="#createLeaveDefinition"><i class="bi bi-plus-circle-fill"></i> add</a></div>
+        </div>
+      </div>
     </div>
     <!-- WARNING DELETE MESSAGE -->
     <div class="alert alert-warning mt-3 hide" role="alert" id="deleteWarningMessageDiv">
@@ -17,8 +25,7 @@
       <p>You must select at least one entry before deleting...</p>
       <hr>
       <p class="mb-0 smaller">Please check in on some of those fields below...</p>
-    </div>
-    
+    </div>    
     <hr />
     <!-- TABLE -->
     <table id="leaveDefinitionTable" class="display stripe" style="width:100%">
@@ -39,7 +46,7 @@
 
         <tbody id="leaveDefinitionBody"></tbody>
     </table>
-
+  </div>
 </div>
 
 <!-- modal: Confirm employee deletion -->
@@ -47,7 +54,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Confirm delete</h5>
+        <h5 class="modal-title">Confirm Delete</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -55,7 +62,7 @@
       </div>
       <div class="modal-footer">
         <a href="#" class="btn btn-danger" id="confirmDeleteSubmit"><i class="bi bi-save2-fill"></i> Confirm</a>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">close</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
@@ -66,7 +73,7 @@
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="createLeaveDefinitionTitle">New leave</h5>
+        <h5 class="modal-title" id="createLeaveDefinitionTitle">New Leave</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <form name="createLeaveDefinitionForm" id="createLeaveDefinitionForm">
@@ -92,7 +99,7 @@
             <div class="col-sm-4">
                 <div class="form-floating">
                   <input type="text" class="form-control" id="code" name="code" />
-                  <label for="code"><i class="bi-shield-fill-exclamation"></i> code</label>
+                  <label for="code"><i class="bi-shield-fill-exclamation"></i> Code</label>
                 </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="codeError"></div>
             </div>
@@ -101,7 +108,7 @@
             <div class="col-sm-4">
                 <div class="form-floating">
                   <input type="text" class="form-control" id="description" name="description" />
-                  <label for="description"><i class="bi-shield-fill-exclamation"></i> description</label>
+                  <label for="description"><i class="bi-shield-fill-exclamation"></i> Description</label>
                 </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="descriptionError"></div>
             </div>            
@@ -126,7 +133,7 @@
                       <option value="11">November</option>
                       <option value="12">December</option>
                     </select>
-                    <label for="expiry"><i class="bi-shield-fill-exclamation"></i> expiry</label>
+                    <label for="expiry"><i class="bi-shield-fill-exclamation"></i> Expiry</label>
                 </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="expiryError"></div>
               </div>
@@ -137,10 +144,10 @@
                     <select class="form-select" id="gender" name="gender" aria-label="Select one month">
                       <option selected hidden value="">Please select a value</option>
                       <option value="1">Male</option>
-                      <option value="2">Female</option>
-                      <option value="3">All</option>
+                      <option value="0">Female</option>
+                      <option value="2">All</option>
                     </select>
-                    <label for="gender"><i class="bi-shield-fill-exclamation"></i> gender</label>
+                    <label for="gender"><i class="bi-shield-fill-exclamation"></i> Gender</label>
                 </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="genderError"></div>
               </div>
@@ -151,7 +158,7 @@
               <div class="col-sm-4">
                 <div class="form-floating">
                     <select class="form-select" id="limitation" name="limitation" aria-label="Select one month"></select>
-                    <label for="limitation"><i class="bi-shield-fill-exclamation"></i> limitation</label>
+                    <label for="limitation"><i class="bi-shield-fill-exclamation"></i> Limitation</label>
                 </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="limitationError"></div>
               </div>
@@ -160,7 +167,7 @@
               <div class="col-sm-4">
                 <div class="form-floating">
                     <select class="form-select" id="calculation" name="calculation" aria-label="Select one month"></select>
-                    <label for="calculation"><i class="bi-shield-fill-exclamation"></i> calculation</label>
+                    <label for="calculation"><i class="bi-shield-fill-exclamation"></i> Calculation</label>
                 </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="calculationError"></div>
               </div>
@@ -175,33 +182,33 @@
               <div class="col-sm-4">
                 <div class="form-check">
                   <input class="form-check-input" type="radio" name="unpaid" id="unpaid1" value="1">
-                  <label class="form-check-label" for="unpaid1">unpaid leave is allowed</label>
+                  <label class="form-check-label" for="unpaid1">Unpaid Leave is Allowed</label>
                 </div>
                 <div class="form-check">
                   <input class="form-check-input" type="radio" name="unpaid" id="unpaid2" value="0" checked>
-                  <label class="form-check-label" for="unpaid2">unpaid leave is not allowed</label>
+                  <label class="form-check-label" for="unpaid2">Unpaid Leave is Not Allowed</label>
                 </div>
               </div>
               <!-- Leave definition Replacement -->
               <div class="col-sm-4"> 
                 <div class="form-check">
                   <input class="form-check-input" type="radio" name="replacement" id="replacement1" value="1">
-                  <label class="form-check-label" for="replacement1">do required replacement day</label>
+                  <label class="form-check-label" for="replacement1">Do required Replacement day</label>
                 </div>
                 <div class="form-check">
                   <input class="form-check-input" type="radio" name="replacement" id="replacement2" value="0" checked>
-                  <label class="form-check-label" for="replacement2">do not required replacement day</label>
+                  <label class="form-check-label" for="replacement2">Do Not required Replacement day</label>
                 </div>
               </div>
               <!-- Leave definition Attachment -->
               <div class="col-sm-4">
                 <div class="form-check">
                   <input class="form-check-input" type="radio" name="attachment" id="attachment1" value="1">
-                  <label class="form-check-label" for="attachment1">do required attachment</label>
+                  <label class="form-check-label" for="attachment1">Do required Attachment</label>
                 </div>
                 <div class="form-check">
                   <input class="form-check-input" type="radio" name="attachment" id="attachment2" value="0" checked>
-                  <label class="form-check-label" for="attachment2">do not required attachment</label>
+                  <label class="form-check-label" for="attachment2">Do Not required Attachment</label>
                 </div>
               </div>
           </div>          
@@ -218,7 +225,7 @@
             <div class="col-sm-4">
                 <div class="form-floating">
                   <input type="text" class="form-control" id="seniority0" name="seniority0" value="0" />
-                  <label for="seniority"><i class="bi-shield-fill-exclamation"></i> seniority</label>
+                  <label for="seniority"><i class="bi-shield-fill-exclamation"></i> Seniority</label>
                 </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="seniority0Error"></div>
             </div>
@@ -226,7 +233,7 @@
             <div class="col-sm-4">
                 <div class="form-floating">
                   <input type="text" class="form-control" id="entitled0" name="entitled0" />
-                  <label for="entitled"><i class="bi-shield-fill-exclamation"></i> entitled</label>
+                  <label for="entitled"><i class="bi-shield-fill-exclamation"></i> Entitled</label>
                 </div>
                 <div class="fw-bolder text-danger fst-italic smaller" id="entitled0Error"></div>
             </div> 
@@ -238,7 +245,7 @@
       </form>
       <div class="modal-footer">
         <a href="#" class="btn btn-danger" id="createLeaveDefinitionSubmit"><i class="bi bi-save2-fill"></i> Save</a>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">close</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>

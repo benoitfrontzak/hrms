@@ -7,7 +7,7 @@ class HomeHelpers{
         const myCredentials = this.getCredentials(data.Employee.icNumber, data.Employee.passportNumber)
 
         let row = document.createElement('div')
-        row.innerHTML = `<h4>${data.Employee.fullname}</h4>
+        row.innerHTML = `<h2>${data.Employee.fullname}</h2>
                          <div>${myCredentials}</div>
                          <div>${data.Employment.jobTitle}</div>`
 
@@ -69,11 +69,11 @@ class HomeHelpers{
 
             data.Pending.forEach(element => {
                 let row = document.createElement('div')
-                row.classList = 'd-flex flex-row justify-content-between'
-                row.innerHTML = `<div>${element.claimDefinition}</div>
-                                <div>${element.description}</div>
-                                <div>${element.amount}</div>
-                                <div>${this.formatDate(element.createdAt)}</div>`
+                row.classList = 'row'
+                row.innerHTML = `<div class="col">${element.claimDefinition}</div>
+                                <div class="col">${element.description}</div>
+                                <div class="col">${element.amount}</div>
+                                <div class="col">${this.formatDate(element.createdAt)}</div>`
 
                 targetPending.appendChild(row)
             });
@@ -163,16 +163,48 @@ class HomeHelpers{
         target.innerHTML = ''
 
         data.forEach(element => {
-            const balance = Number(this.cleanDecimal(element.entitled)) - Number(element.taken)
+            const balance = Number(this.cleanDecimal(element.entitled)) + Number(element.credits) - Number(element.taken)
             let row = document.createElement('div')
             row.classList = 'row'
-            row.innerHTML = `<div class="col text-start">${element.leaveDefinitionCode} - ${element.leaveDefinitionName}</div>
-                             <div class="col text-start">${this.cleanDecimal(element.entitled)}</div>
-                             <div class="col text-start">${element.taken}</div>
-                             <div class="col text-start">${balance}</div>`
+            row.innerHTML = `<div class="col-4 text-start">${element.leaveDefinitionCode} - ${element.leaveDefinitionName}</div>
+                             <div class="col-2 text-start">${this.cleanDecimal(element.entitled)}</div>
+                             <div class="col-2 text-start">${element.credits}</div>
+                             <div class="col-2 text-start">${element.taken}</div>
+                             <div class="col-2 text-start">${balance}</div>`
 
             target.appendChild(row)
         })
+    }
+
+     // update connected user leaves (progress details)
+     populateMyLeaveDetailsProgress(data){
+        // populate main card with leave details
+        const target = document.querySelector('#chartLeaves')
+        target.innerHTML = ''
+
+        data.forEach(element => {
+            const balance = Number(this.cleanDecimal(element.entitled)) + Number(element.credits) - Number(element.taken),
+                  max = Number(this.cleanDecimal(element.entitled)) + Number(element.credits)
+     
+            let percentage
+            (element.taken != 0)? percentage = Math.round(Number(element.taken)*100/max) : percentage = 0
+
+            let row = document.createElement('div')
+            row.classList = 'mb-3 p-3 border borderRadiusTop borderRadiusBottom'
+            row.innerHTML = `<div class="row mb-3">
+                                <div class="col">${element.leaveDefinitionCode} - ${element.leaveDefinitionName}</div>
+                                <div class="col text-end">${element.taken}/${max} days</div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="progress">
+                                        <div class="progress-bar myHarmonyBlue" role="progressbar" style="width: ${percentage}%" aria-valuenow="${percentage}" aria-valuemin="0" aria-valuemax="${max}">${percentage}%</div>
+                                    </div>
+                                </div>
+                             </div>`
+
+            target.appendChild(row)
+        }) 
     }
 
     // customize boolean (0|1) with icons
@@ -239,10 +271,10 @@ class HomeHelpers{
     }
     // build leaves chart data
     buildLeavesChartData(data){
-        const myData = [['Leave',   'Entitled', 'Taken', 'Balance']]
+        const myData = [['Leave', 'Entitled', 'Taken', 'Balance']]
         
         data.forEach(element => {
-          const leave = element.leaveDefinitionCode+' - '+element.leaveDefinitionName,
+          const leave = element.leaveDefinitionCode,
                 entitled = Number(this.cleanDecimal(element.entitled)),
                 taken = Number(element.taken),
                 balance = entitled - taken,
@@ -252,23 +284,6 @@ class HomeHelpers{
         })
 
         return myData
-    }
-    // draw leave Google chart
-    chartLeaves(myData){
-        const gData = this.buildLeavesChartData(myData)
-        const data = google.visualization.arrayToDataTable(gData)
-
-        const options = {
-          title : 'Employee\'s leave',
-          vAxis: {title: 'Days'},
-          hAxis: {title: 'Leave'},
-          seriesType: 'bars',
-          colors: ['#3544DC', '#DC0015', '#45DC35']
-        }
-
-        const chart = new google.visualization.ComboChart(document.getElementById('chartLeaves'))
-        chart.draw(data, options)
-
     }
 
     // draw claims Google pie
@@ -281,14 +296,19 @@ class HomeHelpers{
         ])
 
         const options = {
-        title: 'My Claims ' + new Date().getFullYear(),
+        // title: 'My Claims ' + new Date().getFullYear(),
         is3D: true,
-        pieSliceText: 'value-and-percentage',
-        colors: ['#3544DC', '#45DC35', '#DC0015']
+        legend: 'none',
+        pieSliceText: 'percentage',
+        backgroundColor: 'transparent',
+        chartArea: {'width': '80%', 'height': '80%'},
+        colors: ['#3587DC', '#35DCCC', '#515151']
         }
 
         const chart = new google.visualization.PieChart(document.getElementById('pieChartClaims'))
         chart.draw(data, options)
+
+        
     }
 
 }

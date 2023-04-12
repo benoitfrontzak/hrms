@@ -39,6 +39,7 @@ func multiplexer() http.Handler {
 	// My profile
 	mux.Handle("/myclaim/", handlers.Middleware(http.HandlerFunc(handlers.Repo.MyClaim))) // my claim applications (CRUD)
 	mux.Handle("/myleave/", handlers.Middleware(http.HandlerFunc(handlers.Repo.MyLeave))) // my leave applications (CRUD)
+	mux.Handle("/profile/password", handlers.Middleware(http.HandlerFunc(handlers.Repo.Password)))
 
 	// configuration
 	mux.Handle("/configuration/employee/", handlers.Middleware(http.HandlerFunc(handlers.Repo.EmployeeConfiguration)))

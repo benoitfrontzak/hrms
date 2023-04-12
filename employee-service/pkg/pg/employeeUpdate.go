@@ -39,18 +39,20 @@ func (e *Employee) UpdateAllEmployeeInformation(emp EmployeeFull) error {
 		return uSp
 	}
 
-	uEm := emp.Employment.updateEmployment(eid, uid)
-	log.Println("eid, uid")
-	log.Println(eid, uid)
-	if uEm != nil {
-		log.Println("uEm err: ", uEm)
-		return uEm
+	if emp.Employment != nil {
+		uEm := emp.Employment.updateEmployment(eid, uid)
+		if uEm != nil {
+			log.Println("uEm err: ", uEm)
+			return uEm
+		}
 	}
 
-	uSt := emp.Statutory.updateStatutory(eid, uid)
-	if uSt != nil {
-		log.Println("uSt err: ", uSt)
-		return uSt
+	if emp.Statutory != nil {
+		uSt := emp.Statutory.updateStatutory(eid, uid)
+		if uSt != nil {
+			log.Println("uSt err: ", uSt)
+			return uSt
+		}
 	}
 
 	uBk := emp.Bank.updateBank(eid, uid)
@@ -237,14 +239,13 @@ func (e *Employment) updateEmployment(eid, uid int) error {
 				 superior_id=$3, supervisor_id=$4, 
 				 employee_type_id=$5, wages_type_id=$6, basic_rate=$7, 
 				 pay_frequency_id=$8, payment_by_id=$9, bank_payout_id=$10, 
-				 default_rule_id=$11, 
-				 group_id=$12, branch_id=$13, project_id=$14, 
-				 overtime_id=$15, 
-				 working_permit_expiry=$16, 
-				 join_date=$17, confirm_date=$18, resign_date=$19,
-				 updated_at=$20,
-				 updated_by=$21				 
-			 WHERE employee_id=$22;`
+				 group_id=$11, branch_id=$12, project_id=$13, 
+				 overtime_id=$14, 
+				 working_permit_expiry=$15, 
+				 join_date=$16, confirm_date=$17, resign_date=$18,
+				 updated_at=$19,
+				 updated_by=$20				 
+			 WHERE employee_id=$21;`
 
 	// executes SQL query
 	_, err := db.ExecContext(ctx, stmt,
@@ -253,7 +254,6 @@ func (e *Employment) updateEmployment(eid, uid int) error {
 		e.Superior, e.Supervisor,
 		e.EmployeeType, e.WagesType, e.BasicRate,
 		e.PayFrequency, e.PaymentBy, e.BankPayout,
-		e.DefaultRule,
 		e.Group, e.Branch, e.Project,
 		e.Overtime,
 		e.WorkingPermitExpiry,

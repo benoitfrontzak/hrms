@@ -7,11 +7,22 @@ import (
 )
 
 // generate all entitled leaves to LEAVE_EMPLOYEE for employee_id
-func (l *Leave) CreateEntitled(eid, uid int) error {
+func (l *Leave) CreateEntitled(eid, uid, genderid int) error {
 	// canceling this context releases resources associated with it
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
+	log.Println("user gender is: ", genderid)
+
+	// check which gender to skip: if male then skip female...
+	skipGender := 1 // skip male by default
+	if genderid == 1 {
+		skipGender = 0 // if employee is male, then skip female
+	} else {
+		skipGender = 1
+	}
+
+	log.Println("gender to skip  is: ", skipGender)
 	// SQL statement which fetch all available leave definition
 	// since employee is new we only care about the lowest seniority
 	stmt := `SELECT ldd.leave_definition_id  ,
@@ -20,9 +31,10 @@ func (l *Leave) CreateEntitled(eid, uid int) error {
 			 FROM "LEAVE_DEFINITION_DETAILS" ldd, "LEAVE_DEFINITION" ld 
 			 WHERE ldd.seniority < 2 
 			 AND ldd.soft_delete = 0
+			 AND ld.gender_id <> $1
 			 AND ldd.leave_definition_id = ld.id `
 
-	rows, err := db.QueryContext(ctx, stmt)
+	rows, err := db.QueryContext(ctx, stmt, skipGender)
 	if err != nil {
 		return err
 	}
@@ -46,12 +58,16 @@ func (l *Leave) CreateEntitled(eid, uid int) error {
 	}
 
 	// insert all entitled leaves to EMPLOYEE_LEAVE
-	// if calculation is 1,2,3 (not earned) entitled is straight
-	// if calculation is 4,5,6 (earned) entitled 0
+	// if calculation is 1 (not earned) entitled is straight
+	// if calculation is 2 (earned) entitled 0
 	for _, entry := range all {
+		log.Println("")
+		log.Println("entry.ID", entry.ID)
+		log.Println("entry.CalculationID", entry.CalculationID)
+		log.Println("entry.Entitled", entry.Entitled)
 		var entitled int
 		switch entry.CalculationID {
-		case 1, 2, 3:
+		case 1:
 			entitled = entry.Entitled
 		default:
 			entitled = 0
@@ -88,6 +104,7 @@ func InsertEntitled(definitionID, entitled, eid, uid int) (int, error) {
 		uid,
 	).Scan(&newID)
 	if err != nil {
+		log.Println("err while insert to db entitled: ", err)
 		return 0, err
 	}
 
@@ -261,6 +278,7 @@ func (l *Leave) GetAllMyEntitledLeave(eid int) ([]*EntitledLeave, error) {
 	// SQL statement which fetch employee summary
 	query := `SELECT le.id, 
 					 le.entitled, 
+					 le.credits, 
 					 le.taken, 
 					 le.leave_definition_id, 
 					 ld.code as leave_code,
@@ -290,6 +308,7 @@ func (l *Leave) GetAllMyEntitledLeave(eid int) ([]*EntitledLeave, error) {
 		err = rows.Scan(
 			&myLeaves.ID,
 			&myLeaves.Entitled,
+			&myLeaves.Credits,
 			&myLeaves.Taken,
 			&myLeaves.LeaveDefinitionID,
 			&myLeaves.LeaveDefinitionCode,

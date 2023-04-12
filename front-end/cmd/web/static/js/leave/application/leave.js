@@ -33,25 +33,25 @@ window.addEventListener('DOMContentLoaded', () => {
 
         // fetch all leaves & update DOM (data table)
         API.getAllLeaves().then(resp => {
+            console.log(resp);
             // display by default pending request
-            if (resp.data.Pending !== null && typeof resp.data.Pending !== undefined) Helpers.generateDT(resp.data.Pending)
-            if (resp.data.Pending === null || typeof resp.data.Pending === undefined) Helpers.generateDT(noData)
+            Helpers.insertRows(resp.data.Pending)
             // when approved is selected
             document.querySelector('#approvedBtn').addEventListener('click', () => {
-                if (resp.data.Approved !== null && typeof resp.data.Approved !== undefined) Helpers.generateDT(resp.data.Approved, noAction)
-                if (resp.data.Approved === null || typeof resp.data.Approved === undefined) Helpers.generateDT(noData)
+                Helpers.insertRows(resp.data.Approved, noAction)
+                document.querySelector('#leaveTitle').innerHTML = 'Approved Leaves'
             })
 
              // when rejected is selected
              document.querySelector('#rejectedBtn').addEventListener('click', () => {
-                if (resp.data.Rejected !== null && typeof resp.data.Rejected !== undefined) Helpers.generateDT(resp.data.Rejected, noAction)
-                if (resp.data.Rejected === null || typeof resp.data.Rejected === undefined) Helpers.generateDT(noData)
+                Helpers.insertRows(resp.data.Rejected, noAction)
+                document.querySelector('#leaveTitle').innerHTML = 'Rejected Leaves'
             })
 
              // when pending is selected
              document.querySelector('#pendingBtn').addEventListener('click', () => {
-                if (resp.data.Pending !== null && typeof resp.data.Pending !== undefined) Helpers.generateDT(resp.data.Pending)
-                if (resp.data.Pending === null || typeof resp.data.Pending === undefined) Helpers.generateDT(noData)
+                Helpers.insertRows(resp.data.Pending)
+                document.querySelector('#leaveTitle').innerHTML = 'Pending Leaves'
             })
         })
     })

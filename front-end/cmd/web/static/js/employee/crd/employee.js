@@ -18,28 +18,29 @@ const sPage = "http://localhost/employee/update/"
 
 // When DOM is loaded
 window.addEventListener('DOMContentLoaded', () => {
+    
      // fetch all employees & update DOM & set delete by icon event
      API.getAllEmployees().then(resp => { 
+        console.log(resp);
         // display by default active employees
-        Helpers.insertRows('employeeSummaryBody', resp.data.Active, sPage)
-        Helpers.triggerDT('employeeSummary', 'employeeSummaryBody', sPage)
+        Helpers.insertRows(resp.data.Active, sPage)
 
         // when active employees is requested
         document.querySelector('#activeBtn').addEventListener('click', () => {
-            Helpers.insertRows('employeeSummaryBody', resp.data.Active, sPage)
-            Helpers.triggerDT('employeeSummary', 'employeeSummaryBody', sPage)
+            Helpers.insertRows(resp.data.Active, sPage)
+            document.querySelector('#employeeTitle').innerHTML = 'Active Employees'
         })
 
         // when inactive employees is requested
         document.querySelector('#inactiveBtn').addEventListener('click', () => {
-            Helpers.insertRows('employeeSummaryBody', resp.data.Inactive, sPage)
-            Helpers.triggerDT('employeeSummary', 'employeeSummaryBody', sPage)
+            Helpers.insertRows(resp.data.Inactive, sPage)
+            document.querySelector('#employeeTitle').innerHTML = 'Inactive Employees'
         })
 
         // when deleted employee is requested
         document.querySelector('#deletedBtn').addEventListener('click', () => {
-            Helpers.insertRows('employeeSummaryBody', resp.data.Deleted, sPage)
-            Helpers.triggerDT('employeeSummary', 'employeeSummaryBody', sPage)
+            Helpers.insertRows(resp.data.Deleted, sPage)
+            document.querySelector('#employeeTitle').innerHTML = 'Deleted Employees'
         })
 
         // When one delete icon is clicked
@@ -75,7 +76,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
         if (error == '0'){
             myData = Helpers.getForm('createEmployeeForm')
-            
             API.createEmployee(myData).then(resp => {
                 if (! resp.error) window.location.href = sPage+resp.data.id 
             })            

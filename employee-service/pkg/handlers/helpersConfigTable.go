@@ -26,8 +26,6 @@ func getTableNameDB(ct string) string {
 		dbTable = "CONFIG_EMPLOYMENT_PAY_FREQUENCY"
 	case "EmploymentProject":
 		dbTable = "CONFIG_EMPLOYMENT_PROJECT"
-	case "EmploymentRule":
-		dbTable = "CONFIG_EMPLOYMENT_RULE"
 	case "EmploymentType":
 		dbTable = "CONFIG_EMPLOYMENT_TYPE"
 	case "EmploymentWages":

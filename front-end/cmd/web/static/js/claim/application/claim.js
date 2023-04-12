@@ -9,25 +9,6 @@ const myRIF = [ 'name', 'description', 'category']
 let allEmployees = new Map()
 allEmployees.set(0, 'not defined')
 
-// store empty row for claims with no data (approved, rejected or pending)
-const noData = {
-    employeeid: 0,
-    claimDefinitionID: 0,
-    claimDefinition: 'No data',
-    categoryID: 0,
-    category: 'No data',
-    name: 'No data',
-    description: 'No data',
-    amount: 0,
-    statusID: 0,
-    status: 'No data',
-    approvedAt: '0001-01-01',
-    approvedBy: 0,
-    approvedAmount: 0,
-    approvedReason: ''
-}
-const noDataAr = [noData]
-
 // when DOM is loaded
 window.addEventListener('DOMContentLoaded', () => {
     const noAction = false
@@ -38,24 +19,23 @@ window.addEventListener('DOMContentLoaded', () => {
         // fetch all claims & update DOM (data table)
         API.getAllClaims().then(resp => {
             // display by default pending request
-            if (resp.data.Pending !== null && typeof resp.data.Pending !== undefined) Helpers.generateDT(resp.data.Pending)
-            if (resp.data.Pending === null || typeof resp.data.Pending === undefined) Helpers.generateDT(noData)
+            Helpers.insertRows(resp.data.Pending)
             // when approved is selected
             document.querySelector('#approvedBtn').addEventListener('click', () => {
-                if (resp.data.Approved !== null && typeof resp.data.Approved !== undefined) Helpers.generateDT(resp.data.Approved, noAction)
-                if (resp.data.Approved === null || typeof resp.data.Approved === undefined) Helpers.generateDT(noData)
+                Helpers.insertRows(resp.data.Approved, noAction)
+                document.querySelector('#claimTitle').innerHTML = 'Approved Claims'
             })
 
              // when rejected is selected
              document.querySelector('#rejectedBtn').addEventListener('click', () => {
-                if (resp.data.Rejected !== null && typeof resp.data.Rejected !== undefined) Helpers.generateDT(resp.data.Rejected, noAction)
-                if (resp.data.Rejected === null || typeof resp.data.Rejected === undefined) Helpers.generateDT(noData)
+                Helpers.insertRows(resp.data.Rejected, noAction)
+                document.querySelector('#claimTitle').innerHTML = 'Rejected Claims'
             })
 
              // when pending is selected
              document.querySelector('#pendingBtn').addEventListener('click', () => {
-                if (resp.data.Pending !== null && typeof resp.data.Pending !== undefined) Helpers.generateDT(resp.data.Pending)
-                if (resp.data.Pending === null || typeof resp.data.Pending === undefined) Helpers.generateDT(noData)
+                Helpers.insertRows(resp.data.Pending)
+                document.querySelector('#claimTitle').innerHTML = 'Pending Claims'
             })
         })
     })

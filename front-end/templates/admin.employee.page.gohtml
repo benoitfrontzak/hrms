@@ -3,49 +3,56 @@
 {{define "content"}}
 
   <div class="container-fluid">
-    <!-- ACTION BUTTON -->
-    <div class="d-flex flex-row-reverse mt-3">
-      <div class="p-2 bd-highlight"><a href="#" class="btn btn-danger" id="deleteAllEmployee"><i class="bi-dash-circle"></i> delete</a></div>
-      <div class="p-2 bd-highlight"><a href="#" class="btn btn-danger" id="openCreateEmployee" data-bs-toggle="modal" data-bs-target="#createEmployee"><i class="bi bi-plus-circle-fill"></i> add</a></div>
-      <div class="p-2 bd-highlight">
-        <div class="dropdown">
-          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">View</button>
-          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-            <li><a class="dropdown-item" href="#" id="activeBtn">Active</a></li>
-            <li><a class="dropdown-item" href="#" id="inactiveBtn">Inactive</a></li>
-            <li><a class="dropdown-item" href="#" id="deletedBtn">Deleted</a></li>
-          </ul>
+    <div class="zoomOut">
+      <div class="row">
+        <div class="col my-3">
+          <h4 id="employeeTitle">Active Employees</h4>
         </div>
+        <div class="col">
+          <!-- ACTION BUTTON -->
+          <div class="d-flex flex-row-reverse mt-3">
+            <div class="p-2 bd-highlight"><a href="#" class="btn btn-danger" id="deleteAllEmployee"><i class="bi-dash-circle"></i> delete</a></div>
+            <div class="p-2 bd-highlight"><a href="#" class="btn btn-danger" id="openCreateEmployee" data-bs-toggle="modal" data-bs-target="#createEmployee"><i class="bi bi-plus-circle-fill"></i> add</a></div>
+            <div class="p-2 bd-highlight">
+              <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">View</button>
+                <ul class="dropdown-menu" aria-labelledby="DropdownMenuButton1">
+                  <li><a class="dropdown-item" href="#" id="activeBtn">Active</a></li>
+                  <li><a class="dropdown-item" href="#" id="inactiveBtn">Inactive</a></li>
+                  <li><a class="dropdown-item" href="#" id="deletedBtn">Deleted</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>   
+      <!-- WARNING DELETE MESSAGE -->
+      <div class="alert alert-warning mt-3 hide" role="alert" id="deleteWarningMessageDiv">
+        <div class="d-flex justify-content-between">
+          <div class="flex-grow-1"><h4 class="alert-heading"><i class="bi-exclamation-diamond-fill"></i> Warning!</h4></div>
+          <div class="flex-shrink-1"><i class="bi-x-circle-fill pointer" id="hidedeleteWarningMessage"></i></div>
+        </div>      
+        <p>You must select at least one entry before deleting...</p>
+        <hr>
+        <p class="mb-0 smaller">Please check in on some of those fields below...</p>
       </div>
-    </div>
-    <!-- WARNING DELETE MESSAGE -->
-    <div class="alert alert-warning mt-3 hide" role="alert" id="deleteWarningMessageDiv">
-      <div class="d-flex justify-content-between">
-        <div class="flex-grow-1"><h4 class="alert-heading"><i class="bi-exclamation-diamond-fill"></i> Warning!</h4></div>
-        <div class="flex-shrink-1"><i class="bi-x-circle-fill pointer" id="hidedeleteWarningMessage"></i></div>
-      </div>      
-      <p>You must select at least one entry before deleting...</p>
-      <hr>
-      <p class="mb-0 smaller">Please check in on some of those fields below...</p>
-    </div>
-    <hr />
-
-    <table id="employeeSummary" class="display stripe" style="width:100%">
-      <thead>
-          <tr>
-              <th>Code</th>
-              <th>Fullname</th>
-              <th>Email</th>
-              <th>Mobile</th>
-              <th>Birthdate</th>
-              <th>Race</th>
-              <th>Gender</th>
-              <th></th>
-          </tr>
-      </thead>
-      <tbody id="employeeSummaryBody"></tbody>
-     </table>
-
+      <hr />
+      <table id="employeeSummary" class="display stripe" style="width:100%">
+        <thead>
+            <tr>
+                <th>Code</th>
+                <th>Fullname</th>
+                <th>Email</th>
+                <th>Mobile</th>
+                <th>Birthdate</th>
+                <th>Race</th>
+                <th>Gender</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="employeeSummaryBody"></tbody>
+      </table>
+    </div><!-- End zoomOut-->  
   </div>
 
 <!-- modal: Confirm employee deletion -->
@@ -53,7 +60,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Confirm delete</h5>
+        <h5 class="modal-title">Confirm Delete</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -61,7 +68,7 @@
       </div>
       <div class="modal-footer">
         <a href="#" class="btn btn-danger" id="confirmDeleteSubmit"><i class="bi bi-save2-fill"></i> Confirm</a>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">close</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
@@ -72,8 +79,8 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="createEmployeelabel">Create employee</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+        <h5 class="modal-title" id="createEmployeelabel">Create Employee</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <form name="createEmployeeForm" id="createEmployeeForm">
         <div class="modal-body">
@@ -105,7 +112,7 @@
                 <div class="col-sm-8">
                   <div class="form-floating">
                     <input type="text" class="form-control" id="fullName" name="fullName" />
-                    <label for="fullName"><i class="bi-shield-fill-exclamation"></i> full name</label>
+                    <label for="fullName"><i class="bi-shield-fill-exclamation"></i> Full Name</label>
                   </div>
                   <div class="fw-bolder text-danger fst-italic smaller" id="fullNameError"></div>
                 </div>
@@ -113,7 +120,7 @@
                 <div class="col-sm-4">
                   <div class="form-floating">
                     <input type="text" class="form-control" id="nickName" name="nickName" />
-                    <label for="nickName">nick name</label>
+                    <label for="nickName">Nickname</label>
                   </div>
                   <div class="fw-bolder text-danger fst-italic smaller" id="nickNameError"></div>
                 </div>
@@ -125,7 +132,7 @@
                 <div class="col-sm-4">
                   <div class="form-floating">
                     <input type="text" class="form-control" id="employeeCode" name="employeeCode" />
-                    <label for="employeeCode"><i class="bi-shield-fill-exclamation"></i> employee code</label>
+                    <label for="employeeCode"><i class="bi-shield-fill-exclamation"></i> Employee Code</label>
                   </div>
                   <div class="fw-bolder text-danger fst-italic smaller" id="employeeCodeError"></div>
                 </div>
@@ -136,21 +143,21 @@
                     <div class="col">
                       <div class="form-check">
                         <input class="form-check-input" type="radio" name="gender" id="gender1" value="1" checked>
-                        <label class="form-check-label" for="gender1">male</label>
+                        <label class="form-check-label" for="gender1">Male</label>
                       </div>
                       <div class="form-check">
                         <input class="form-check-input" type="radio" name="gender" id="gender2" value="0">
-                        <label class="form-check-label" for="gender2">female</label>
+                        <label class="form-check-label" for="gender2">Female</label>
                       </div>
                     </div> 
                     <div class="col">
                       <div class="form-check">
                         <input class="form-check-input" type="radio" name="maritalstatus" id="maritalstatus1" value=0 checked>
-                        <label class="form-check-label" for="maritalstatus1">single</label>
+                        <label class="form-check-label" for="maritalstatus1">Single</label>
                       </div>
                       <div class="form-check">
                         <input class="form-check-input" type="radio" name="maritalstatus" id="maritalstatus2" value=1>
-                        <label class="form-check-label" for="maritalstatus2">married</label>
+                        <label class="form-check-label" for="maritalstatus2">Married</label>
                       </div>
                     </div> 
                   </div>
@@ -164,7 +171,7 @@
                 <div class="col-sm-4">
                   <div class="form-floating">
                     <input type="text" class="form-control" id="icNumber" name="icNumber" />
-                    <label for="icNumber">ic number</label>
+                    <label for="icNumber">IC Number</label>
                   </div>
                   <div class="fw-bolder text-danger fst-italic smaller" id="icNumberError"></div>
                 </div>
@@ -172,7 +179,7 @@
                 <div class="col-sm-4">
                   <div class="form-floating">
                     <input type="text" class="form-control" id="passportNumber" name="passportNumber" />
-                    <label for="passportNumber">passport number</label>
+                    <label for="passportNumber">Passport Number</label>
                   </div>
                   <div class="fw-bolder text-danger fst-italic smaller" id="passportNumberError"></div>
                 </div>
@@ -180,7 +187,7 @@
                 <div class="col-sm-4">
                   <div class="form-floating">
                     <input type="date" class="form-control" value=NULL id="passportExpiryAt" name="passportExpiryAt" />
-                    <label for="passportExpiryAt">passport expiry date</label>
+                    <label for="passportExpiryAt">Passport Expiry Date</label>
                   </div>
                   <div class="fw-bolder text-danger fst-italic smaller" id="passportExpiryAtError"></div>
                 </div>
@@ -193,7 +200,7 @@
                 <div class="col-sm-4">
                   <div class="form-floating">
                     <select class="form-select" id="nationality" name="nationality"></select>
-                    <label for="nationality"><i class="bi-shield-fill-exclamation"></i> nationality</label>
+                    <label for="nationality"><i class="bi-shield-fill-exclamation"></i> Nationality</label>
                   </div>
                   <div class="fw-bolder text-danger fst-italic smaller" id="nationalityError"></div>
                 </div>
@@ -201,7 +208,7 @@
                 <div class="col-sm-4">
                   <div class="form-floating">
                     <select class="form-select" id="residence" name="residence"></select>
-                    <label for="residence"><i class="bi-shield-fill-exclamation"></i> residence</label>
+                    <label for="residence"><i class="bi-shield-fill-exclamation"></i> Residence</label>
                   </div>
                   <div class="fw-bolder text-danger fst-italic smaller" id="residenceError"></div>
                 </div>
@@ -209,7 +216,7 @@
                 <div class="col-sm-4">
                   <div class="form-floating">
                     <input type="text" class="form-control" id="immigrationNumber" name="immigrationNumber" />
-                    <label for="immigrationNumber">immigration number</label>
+                    <label for="immigrationNumber">Immigration Number</label>
                   </div>
                   <div class="fw-bolder text-danger fst-italic smaller" id="immigrationNumberError"></div>
                 </div>
@@ -222,7 +229,7 @@
                 <div class="col-sm-4">
                   <div class="form-floating">
                     <input type="date" class="form-control" value=NULL id="birthdate" name="birthdate" />
-                    <label for="birthdate">date of birth</label>
+                    <label for="birthdate">Date of Birth</label>
                   </div>
                   <div class="fw-bolder text-danger fst-italic smaller" id="birthdateError"></div>
                 </div>
@@ -230,7 +237,7 @@
                 <div class="col-sm-4">
                   <div class="form-floating">
                     <select class="form-select" id="race" name="race"></select>
-                    <label for="race">race</label>
+                    <label for="race">Race</label>
                   </div>
                   <div class="fw-bolder text-danger fst-italic smaller" id="raceError"></div>
                 </div>
@@ -238,7 +245,7 @@
                 <div class="col-sm-4">
                   <div class="form-floating">
                     <select class="form-select" id="religion" name="religion"></select>
-                    <label for="religion">religion</label>
+                    <label for="religion">Religion</label>
                   </div>
                   <div class="fw-bolder text-danger fst-italic smaller" id="religionError"></div>
                 </div>
@@ -251,15 +258,15 @@
                 <div class="col-sm-4">
                   <div class="form-check">
                     <input class="form-check-input" type="checkbox" value="1" id="isActive" name="isActive">
-                    <label class="form-check-label fw-lighter fst-italic smaller" for="isActive">is active</label>
+                    <label class="form-check-label fw-lighter fst-italic smaller" for="isActive">Is Active</label>
                   </div>
                   <div class="form-check">
                     <input class="form-check-input" type="checkbox" value="1" id="isForeigner" name="isForeigner">
-                    <label class="form-check-label fw-lighter fst-italic smaller" for="isForeigner">is foreigner</label>
+                    <label class="form-check-label fw-lighter fst-italic smaller" for="isForeigner">Is Foreigner</label>
                   </div>
                   <div class="form-check">
                     <input class="form-check-input" type="checkbox" value="1" id="isDisable" id="isDisable">
-                    <label class="form-check-label fw-lighter fst-italic smaller" for="isDisable">is disable person</label>
+                    <label class="form-check-label fw-lighter fst-italic smaller" for="isDisable">Is Disabled Person</label>
                   </div>
                 </div>
                 <div class="col-sm-4"></div>
@@ -286,15 +293,15 @@
                 <div class="col-sm-4">
                   <div class="form-check">
                     <input class="form-check-input" type="radio" name="role" id="role1" value="4" checked>
-                    <label class="form-check-label" for="role1">user</label>
+                    <label class="form-check-label" for="role1">User</label>
                   </div>
                   <div class="form-check">
                     <input class="form-check-input" type="radio" name="role" id="role2" value="3">
-                    <label class="form-check-label" for="role2">manager</label>
+                    <label class="form-check-label" for="role2">Manager</label>
                   </div>
                   <div class="form-check">
                     <input class="form-check-input" type="radio" name="role" id="role3" value="2">
-                    <label class="form-check-label" for="role3">admin</label>
+                    <label class="form-check-label" for="role3">Admin</label>
                   </div>
                 </div>      
               </div>        
@@ -318,7 +325,7 @@
                 <div class="col-sm-4">
                   <div class="form-floating">
                     <input type="text" class="form-control" id="streetaddr1" name="streetaddr1" />
-                    <label for="streetaddr1"><i class="bi-shield-fill-exclamation"></i> street address</label>
+                    <label for="streetaddr1"><i class="bi-shield-fill-exclamation"></i> Street Address Line 1</label>
                   </div>
                   <div class="fw-bolder text-danger fst-italic smaller" id="streetaddr1Error"></div>
                 </div>
@@ -326,7 +333,7 @@
                 <div class="col-sm-4">
                   <div class="form-floating">
                     <input type="text" class="form-control" id="streetaddr2" name="streetaddr2" />
-                    <label for="streetaddr2"><i class="bi-shield-fill-exclamation"></i> street address line2</label>
+                    <label for="streetaddr2"><i class="bi-shield-fill-exclamation"></i> Street Address Line 2</label>
                   </div>
                   <div class="fw-bolder text-danger fst-italic smaller" id="streetaddr2Error"></div>
                 </div>
@@ -334,7 +341,7 @@
                 <div class="col-sm-4">
                   <div class="form-floating">
                     <input type="text" class="form-control" id="zip" name="zip" />
-                    <label for="zip"><i class="bi-shield-fill-exclamation"></i> zip code</label>
+                    <label for="zip"><i class="bi-shield-fill-exclamation"></i> Zip Code</label>
                   </div>
                   <div class="fw-bolder text-danger fst-italic smaller" id="zipError"></div>
                 </div>      
@@ -345,7 +352,7 @@
                 <div class="col-sm-4">
                   <div class="form-floating">
                     <input type="text" class="form-control" id="city" name="city" />
-                    <label for="city"><i class="bi-shield-fill-exclamation"></i> city</label>
+                    <label for="city"><i class="bi-shield-fill-exclamation"></i> City</label>
                   </div>
                   <div class="fw-bolder text-danger fst-italic smaller" id="cityError"></div>
                 </div>              
@@ -353,7 +360,7 @@
                 <div class="col-sm-4">
                   <div class="form-floating">
                     <input type="text" class="form-control" id="state" name="state" />
-                    <label for="state"><i class="bi-shield-fill-exclamation"></i> state / province</label>
+                    <label for="state"><i class="bi-shield-fill-exclamation"></i> State / Province</label>
                   </div>
                   <div class="fw-bolder text-danger fst-italic smaller" id="stateError"></div>
                 </div>              
@@ -361,7 +368,7 @@
                 <div class="col-sm-4">
                   <div class="form-floating">
                     <select class="form-select" id="country" name="country"></select>
-                    <label for="country"><i class="bi-shield-fill-exclamation"></i> country</label>
+                    <label for="country"><i class="bi-shield-fill-exclamation"></i> Country</label>
                   </div>
                   <div class="fw-bolder text-danger fst-italic smaller" id="countryError"></div>
                 </div>
@@ -374,7 +381,7 @@
                 <div class="col-sm-4">
                   <div class="form-floating">
                     <input type="text" class="form-control" id="primaryPhone" name="primaryPhone" />
-                    <label for="primaryPhone"><i class="bi-shield-fill-exclamation"></i>  primary phone</label>
+                    <label for="primaryPhone"><i class="bi-shield-fill-exclamation"></i>  Primary Phone</label>
                   </div>
                   <div class="fw-bolder text-danger fst-italic smaller" id="primaryPhoneError"></div>
                 </div>
@@ -382,7 +389,7 @@
                 <div class="col-sm-4">
                   <div class="form-floating">
                     <input type="text" class="form-control" id="secondaryPhone" name="secondaryPhone" />
-                    <label for="secondaryPhone">secondary phone</label>
+                    <label for="secondaryPhone">Secondary Phone</label>
                   </div>
                   <div class="fw-bolder text-danger fst-italic smaller" id="secondaryPhoneError"></div>
                 </div>
@@ -394,7 +401,7 @@
                 <div class="col-sm-4">
                   <div class="form-floating">
                     <input type="text" class="form-control" id="primaryEmail" name="primaryEmail" />
-                    <label for="primaryEmail"><i class="bi-shield-fill-exclamation"></i>  primary email</label>
+                    <label for="primaryEmail"><i class="bi-shield-fill-exclamation"></i>  Primary Email</label>
                   </div>
                   <div class="fw-bolder text-danger fst-italic smaller" id="primaryEmailError"></div>
                 </div>
@@ -402,7 +409,7 @@
                 <div class="col-sm-4">
                   <div class="form-floating">
                     <input type="text" class="form-control" id="secondaryEmail" name="secondaryEmail" />
-                    <label for="secondaryEmail">secondary email</label>
+                    <label for="secondaryEmail">Secondary Email</label>
                   </div>
                   <div class="fw-bolder text-danger fst-italic smaller" id="secondaryEmailError"></div>
                 </div>
@@ -416,7 +423,7 @@
       </form>
       <div class="modal-footer">
         <a href="#" class="btn btn-danger" id="employeeAddSubmit"><i class="bi bi-save2-fill"></i> Save</a>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">close</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>

@@ -9,7 +9,7 @@ import (
 // forward the post request from the front-end to leave-service to update a leave CT
 func LeaveConfigTableUpdate(w http.ResponseWriter, r *http.Request) {
 	// send post request to leave-service and collect the response
-	url := claimService + "api/v1/claim/configTable/update"
+	url := leaveService + "api/v1/leave/configTable/update"
 	resp, err := http.Post(url, "application/json", r.Body)
 	if err != nil {
 		errorJSON(w, err)

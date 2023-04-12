@@ -3,23 +3,19 @@
 {{define "content"}}
 
 <div class="container-fluid" style="width:100%">
-    <!-- ACTION BUTTON -->
-    <div class="d-flex flex-row-reverse mt-3">
-      <div class="p-2 bd-highlight"><a href="#" class="btn btn-danger" id="deleteAllClaimDefinition"><i class="bi-dash-circle"></i> delete</a></div>
-      <div class="p-2 bd-highlight"><a href="#" class="btn btn-danger" id="openCreateClaimDefinition" data-bs-toggle="modal" data-bs-target="#createClaimDefinition"><i class="bi bi-plus-circle-fill"></i> add</a></div>
-      <div class="p-2 bd-highlight">
-        <div class="dropdown">
-          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">View</button>
-          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-            <li><a class="dropdown-item" href="#" id="activeBtn">Active</a></li>
-            <li><a class="dropdown-item" href="#" id="inactiveBtn">Inactive</a></li>
-            <li><a class="dropdown-item" href="#" id="deletedBtn">Deleted</a></li>
-          </ul>
-        </div>
-        <!-- this hidden field is used to store the active status of claim definition (active|inactive) -->
-        <input type="hidden" id="dataView" value="1" />
+  <div class="zoomOut">
+    <div class="row">
+      <div class="col my-3">
+        <h4 id="leaveTitle">Claim Definitions</h4>
       </div>
-    </div>
+      <div class="col">
+        <!-- ACTION BUTTON -->
+        <div class="d-flex flex-row-reverse mt-3">
+          <div class="p-2 bd-highlight"><a href="#" class="btn btn-danger" id="deleteAllClaimDefinition"><i class="bi-dash-circle"></i> delete</a></div>
+          <div class="p-2 bd-highlight"><a href="#" class="btn btn-danger" id="openCreateClaimDefinition" data-bs-toggle="modal" data-bs-target="#createClaimDefinition"><i class="bi bi-plus-circle-fill"></i> add</a></div>
+        </div>
+      </div>
+    </div>    
     <!-- WARNING DELETE MESSAGE -->
     <div class="alert alert-warning mt-3 hide" role="alert" id="deleteWarningMessageDiv">
       <div class="d-flex justify-content-between">
@@ -29,11 +25,8 @@
       <p>You must select at least one entry before deleting...</p>
       <hr>
       <p class="mb-0 smaller">Please check in on some of those fields below...</p>
-    </div>
-    
+    </div>    
     <hr />
-    
-    <div id="gotData">
     <!-- TABLE -->
     <table id="claimDefinitionTable" class="display stripe" style="width:100%">
         <thead>
@@ -50,11 +43,7 @@
         </thead>
         <tbody id="claimDefinitionBody"></tbody>
     </table>
-    </div>
-
-    <!-- NO DATA -->
-    <div class="hide" id="noData">No data to display</div>
-
+  </div>
 </div>
 
 <!-- modal: Confirm employee deletion -->
@@ -62,7 +51,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Confirm delete</h5>
+        <h5 class="modal-title">Confirm Delete</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -70,7 +59,7 @@
       </div>
       <div class="modal-footer">
         <a href="#" class="btn btn-danger" id="confirmDeleteSubmit"><i class="bi bi-save2-fill"></i> Confirm</a>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">close</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
@@ -81,7 +70,7 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="createClaimDefinitionTitle">New allowance</h5>
+        <h5 class="modal-title" id="createClaimDefinitionTitle">New Allowance</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <form name="createClaimDefinitionForm" id="createClaimDefinitionForm">
@@ -109,7 +98,7 @@
             <div class="col-sm-4">
               <div class="form-floating">
                 <input type="text" class="form-control" id="name" name="name" />
-                <label for="name"><i class="bi-shield-fill-exclamation"></i> name</label>
+                <label for="name"><i class="bi-shield-fill-exclamation"></i> Name</label>
               </div>
               <div class="fw-bolder text-danger fst-italic smaller" id="nameError"></div>
             </div>
@@ -118,7 +107,7 @@
             <div class="col-sm-4">
               <div class="form-floating">
                 <select class="form-select" id="category" name="category" aria-label="Select one leave definition"></select>
-                <label for="category"><i class="bi-shield-fill-exclamation"></i> category</label>
+                <label for="category"><i class="bi-shield-fill-exclamation"></i> Category</label>
               </div>
               <div class="fw-bolder text-danger fst-italic smaller" id="categoryError"></div>
             </div>
@@ -130,7 +119,7 @@
             <div class="col-sm-12">
               <div class="form-floating">
                 <textarea class="form-control" name="description" id="description" style="height: 100px"></textarea>
-                <label for="description"><i class="bi-shield-fill-exclamation"></i> description</label>
+                <label for="description"><i class="bi-shield-fill-exclamation"></i> Description</label>
               </div>
               <div class="fw-bolder text-danger fst-italic smaller" id="descriptionError"></div>
             </div>
@@ -147,7 +136,7 @@
           <div class="col-sm-4">
             <div class="form-floating">
               <input type="text" class="form-control" id="limitation" name="limitation" value="0" />
-              <label for="limitation"><i class="bi-shield-fill-exclamation"></i> limitation</label>
+              <label for="limitation"><i class="bi-shield-fill-exclamation"></i> Limitation</label>
             </div>
             <div class="fw-bolder text-danger fst-italic smaller" id="limitationError"></div>
           </div>
@@ -162,18 +151,18 @@
             <div class="col-sm-8">
                 <div class="form-check">
                   <input class="form-check-input" type="radio" name="confirmation" id="confirmation1" value="1" checked>
-                  <label class="form-check-label" for="confirmation1">requires seniority confirmation</label>
+                  <label class="form-check-label" for="confirmation1">Requires seniority confirmation</label>
                 </div>
                 <div class="form-check">
                   <input class="form-check-input" type="radio" name="confirmation" id="confirmation2" value="0">
-                  <label class="form-check-label" for="confirmation2">requires no seniority confirmation</label>
+                  <label class="form-check-label" for="confirmation2">Requires no seniority confirmation</label>
                 </div>
             </div>
             <!-- Claim definition seniority -->
             <div class="col-sm-4">
               <div class="form-floating" id="seniorityDiv">
                 <input type="text" class="form-control" id="seniority" name="seniority" />
-                <label for="seniority"><i class="bi-shield-fill-exclamation"></i> seniority</label>
+                <label for="seniority"><i class="bi-shield-fill-exclamation"></i> Seniority</label>
               </div>
               <div class="fw-bolder text-danger fst-italic smaller" id="seniorityError"></div>
             </div>
@@ -188,11 +177,11 @@
             <div class="col-sm-4">
                 <div class="form-check">
                   <input class="form-check-input" type="radio" name="active" id="active1" value="1" checked>
-                  <label class="form-check-label" for="active1">active</label>
+                  <label class="form-check-label" for="active1">Active</label>
                 </div>
                 <div class="form-check">
                   <input class="form-check-input" type="radio" name="active" id="active2" value="0">
-                  <label class="form-check-label" for="active2">inactive</label>
+                  <label class="form-check-label" for="active2">Inactive</label>
                 </div>
             </div>
             <div class="col-sm-4"></div>
@@ -200,11 +189,11 @@
             <div class="col-sm-4">
                 <div class="form-check">
                   <input class="form-check-input" type="radio" name="docRequired" id="docRequired1" value="1" checked>
-                  <label class="form-check-label" for="docRequired1">requires doc</label>
+                  <label class="form-check-label" for="docRequired1">Requires document</label>
                 </div>
                 <div class="form-check">
                   <input class="form-check-input" type="radio" name="docRequired" id="docRequired2" value="0">
-                  <label class="form-check-label" for="docRequired2">requires no doc</label>
+                  <label class="form-check-label" for="docRequired2">Requires no document</label>
                 </div>
             </div>
         </div>
@@ -214,7 +203,7 @@
       </form>
       <div class="modal-footer">
         <a href="#" class="btn btn-danger" id="createClaimDefinitionSubmit"><i class="bi bi-save2-fill"></i> Save</a>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">close</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>

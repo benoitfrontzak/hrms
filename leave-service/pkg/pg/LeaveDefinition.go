@@ -89,6 +89,82 @@ func (ld *LeaveDefinition) GetLeaveDefinition() ([]*LeaveDefinition, error) {
 	return all, nil
 }
 
+// get one leave definition by id
+func (ld *LeaveDefinition) GetLeaveDefinitionID(lid int) (*LeaveDefinition, error) {
+	// canceling this context releases resources associated with it
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+	// SQL statement which fetch leave definition
+	query := `SELECT ld.id, 
+					 ld.code,  
+					 ld.description,
+					 ld.is_unpaid,
+					 ld.is_encashable,
+					 ld.replacement_required,
+					 ld.doc_required, 
+					 ld.expiry_month, 
+					 ld.gender_id, 
+					 cg.name as gender, 
+					 ld.limitation_id, 
+					 cl.name as limitation, 
+					 ld.calculation_method_id, 
+					 ccm.name as calculation_method, 
+					 ld.soft_delete, 
+					 ld.created_at, 
+					 ld.created_by, 
+					 ld.updated_at, 
+					 ld.updated_by 
+			  FROM public."LEAVE_DEFINITION" ld, public."CONFIG_GENDER" cg, public."CONFIG_LIMITATION" cl, public."CONFIG_CALCULATION_METHOD" ccm
+			  WHERE ld.id = $1 
+			  AND ld.soft_delete = 0
+			  AND ld.gender_id = cg.id
+			  AND ld.limitation_id = cl.id
+			  AND ld.calculation_method_id = ccm.id
+			  ORDER BY ld.id;`
+
+	// executes SQL query
+	row := db.QueryRowContext(ctx, query, lid)
+
+	// populate returned rows to leave definition struct
+	var def LeaveDefinition
+
+	err := row.Scan(
+		&def.ID,
+		&def.Code,
+		&def.Description,
+		&def.Unpaid,
+		&def.Encashable,
+		&def.ReplacementRequired,
+		&def.DocRequired,
+		&def.Expiry,
+		&def.GenderID,
+		&def.Gender,
+		&def.LimitationID,
+		&def.Limitation,
+		&def.CalculationID,
+		&def.Calculation,
+		&def.SoftDelete,
+		&def.CreatedAt,
+		&def.CreatedBy,
+		&def.UpdatedAt,
+		&def.UpdatedBy,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	// fetch all leave definition details
+	details, err := GetLeaveDefinitionDetails(lid)
+	if err != nil {
+		return nil, err
+	}
+	def.Details = details
+
+	// return all leave definition rows
+	return &def, nil
+}
+
 // get all leave definition details
 func GetLeaveDefinitionDetails(id int) ([]*LeaveDefinitionDetails, error) {
 	// canceling this context releases resources associated with it
@@ -144,6 +220,7 @@ func GetLeaveDefinitionDetails(id int) ([]*LeaveDefinitionDetails, error) {
 }
 
 // insert a new leave definition & all leave definition details relative
+// update new leave definition to leave employee
 func (ld *LeaveDefinition) Insert() (int, error) {
 	// insert new leave definition and fetch rowID inserted
 	rowID, err := ld.insertLeaveDefinition()
@@ -225,7 +302,7 @@ func insertLeaveDefinitionDetails(seniority, entitled, user, rowID int) (int, er
 	return newID, nil
 }
 
-// update claim definition by id
+// update leave definition by id
 func (ld *LeaveDefinition) Update() error {
 	// update leave definition
 	err := ld.updateLeaveDefinition()
@@ -366,5 +443,23 @@ func (ld *LeaveDefinition) Delete(id int) error {
 	}
 
 	// return error
+	return nil
+}
+
+// create the entitlement for a specific leave definition id of an employee id
+func (ld *LeaveDefinition) CreateEntitledByDefinition(lid, eid int, entitled float64) error {
+	// canceling this context releases resources associated with it
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+	// SQL statement which update an employee (soft delete)
+	stmt := `INSERT INTO public."LEAVE_EMPLOYEE" (entitled, taken, credits, leave_definition_id, employee_id, soft_delete, created_at, created_by, updated_at, updated_by) 
+			 VALUES($1, 0, 0, $2, $3, 0, now(), 0, now(), 0)returning id;`
+
+	// executes SQL query
+	_, err := db.ExecContext(ctx, stmt, entitled, lid, eid)
+	if err != nil {
+		return err
+	}
 	return nil
 }

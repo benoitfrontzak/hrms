@@ -37,28 +37,39 @@ class EmployeeReadHelpers{
     }
 
     // Insert to datatable one row per element of data
-    insertRows(id, data, sPage){
-        const target = document.querySelector('#'+id)
+    insertRows(data, sPage){
+
+        $('#employeeSummary').DataTable().destroy()
+        const target = document.querySelector('#employeeSummaryBody')
         target.innerHTML = ''
-        data.forEach(element => {
-            const updateURL = sPage + element.ID
-            let opt = document.createElement('tr')
-            opt.id = element.ID
-            opt.innerHTML = `<td><a href="${updateURL}" class="link-dark myLink">${element.Code}</a></td>
-                             <td><a href="${updateURL}" class="link-dark myLink">${element.Fullname}</a></td>
-                             <td><a href="${updateURL}" class="link-dark myLink">${element.Email}</a></td>
-                             <td><a href="${updateURL}" class="link-dark myLink">${element.Mobile}</a></td>
-                             <td><a href="${updateURL}" class="link-dark myLink">${this.birthdate(element.Birthdate)}</a></td>
-                             <td><a href="${updateURL}" class="link-dark myLink">${element.Race}</a></td>
-                             <td><a href="${updateURL}" class="link-dark myLink">${this.gender(element.Gender)}</a></td>
-                             <td>
-                                <div class="form-check">
-                                    <input class="form-check-input deleteCheckboxes"  type="checkbox" value="${element.ID}" name="softDelete">
-                                    <label class="form-check-label fw-lighter fst-italic smaller" for="softDelete"><i class="bi-trash2-fill largeIcon pointer deleteEmployee"></i></label>
-                                </div>                                
-                             </td>`
-            target.appendChild(opt)
-        })
+        if (data != null){
+            data.forEach(element => {
+                const updateURL = sPage + element.ID
+                let opt = document.createElement('tr')
+                opt.id = element.ID
+                opt.innerHTML = `<td><a href="${updateURL}" class="link-dark myLink">${element.Code}</a></td>
+                                <td><a href="${updateURL}" class="link-dark myLink">${element.Fullname}</a></td>
+                                <td><a href="${updateURL}" class="link-dark myLink">${element.Email}</a></td>
+                                <td><a href="${updateURL}" class="link-dark myLink">${element.Mobile}</a></td>
+                                <td><a href="${updateURL}" class="link-dark myLink">${this.birthdate(element.Birthdate)}</a></td>
+                                <td><a href="${updateURL}" class="link-dark myLink">${element.Race}</a></td>
+                                <td><a href="${updateURL}" class="link-dark myLink">${this.gender(element.Gender)}</a></td>
+                                <td>
+                                    <div class="form-check">
+                                        <input class="form-check-input deleteCheckboxes"  type="checkbox" value="${element.ID}" name="softDelete">
+                                        <label class="form-check-label fw-lighter fst-italic smaller" for="softDelete"><i class="bi-trash2-fill largeIcon pointer deleteEmployee"></i></label>
+                                    </div>                                
+                                </td>`
+                target.appendChild(opt)
+            })
+             // trigger datatable
+            $('#employeeSummary').DataTable()
+            // set pointer mouse on mouseover
+            $('#employeeSummary'+' tr').css('cursor', 'pointer')
+        }else{
+            $('#employeeSummary').DataTable()
+            $('#employeeSummary').DataTable().clear().draw()
+        }
     }
     // convert gender_id
     gender(id){
@@ -73,12 +84,13 @@ class EmployeeReadHelpers{
         // the zero value of a date is 0001-01-01
         return (d == '0001-01-01') ? b = '' : b = d
     }
+
     // trigger datatable and row click event
-    triggerDT(dt, dtBody, sPage){
+    triggerDT(){
         // trigger datatable
-        const table = $('#'+dt).DataTable()
+        const table = $('#employeeSummary').DataTable()
         // set pointer mouse on mouseover
-        $('#'+dt+' tr').css('cursor', 'pointer')
+        $('#employeeSummary'+' tr').css('cursor', 'pointer')
     }
 
     // returns list of selected employee id to be deleted
@@ -134,8 +146,8 @@ class EmployeeReadHelpers{
         myjson['Residence']           = data.get('residence')
         myjson['Maritalstatus']       = (data.get('maritalstatus') == '0') ? '0' : '1'
         myjson['Gender']              = (data.get('gender') == '0') ? '0' : '1'
-        myjson['Race']                = data.get('race')
-        myjson['Religion']            = data.get('religion')
+        myjson['Race']                = (data.get('race') == '') ? '0' : data.get('race')
+        myjson['Religion']            = (data.get('religion') == '') ? '0' : data.get('religion')
         myjson['Streetaddr1']         = data.get('streetaddr1')
         myjson['Streetaddr2']         = data.get('streetaddr2')
         myjson['City']                = data.get('city')

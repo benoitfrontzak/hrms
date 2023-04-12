@@ -119,8 +119,8 @@ class MainHelpers{
         const form = document.querySelector(`#${formID}`),
               data = new FormData(form)
 
-        data.append('createdAt', userID)
-        data.append('updatedAt', userID)
+        data.append('createdBy', userID)
+        data.append('updatedBy', userID)
         
         const formJSON = JSON.stringify(Object.fromEntries(data))
 

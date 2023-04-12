@@ -28,8 +28,8 @@ window.addEventListener('DOMContentLoaded', () => {
         
         // fetch all 'my claims' & update DOM (data table)
         API.getAllMyClaim(connectedID, connectedEmail).then(resp => {
-            Helpers.checkData(resp.data)
-            // Helpers.makeEditable()
+            Helpers.insertRows(resp.data)
+            Helpers.makeEditable()
         })
     })    
 

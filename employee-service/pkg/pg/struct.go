@@ -57,7 +57,6 @@ type Employment struct {
 	PayFrequency        int    `json:"payFrequency,string"`
 	PaymentBy           int    `json:"paymentBy,string"`
 	BankPayout          int    `json:"bankPayout,string"`
-	DefaultRule         int    `json:"defaultRule,string"`
 	Group               int    `json:"group,string"`
 	Branch              int    `json:"branch,string"`
 	Project             int    `json:"project,string"`
@@ -232,9 +231,9 @@ type EmployeeFull struct {
 	EmergencyContact  *EmergencyContact    `json:"EmergencyContact"`
 	OtherInformation  *OtherInformation    `json:"OtherInformation"`
 	Spouse            *Spouse              `json:"Spouse"`
-	Employment        *Employment          `json:"Employment"`
+	Employment        *Employment          `json:"Employment,omitempty"`
 	EmploymentArchive []*EmploymentArchive `json:"EmploymentArchive"`
-	Statutory         *Statutory           `json:"Statutory"`
+	Statutory         *Statutory           `json:"Statutory,omitempty"`
 	StatutoryArchive  []*StatutoryArchive  `json:"StatutoryArchive"`
 	Bank              *Bank                `json:"Bank"`
 }
@@ -273,7 +272,6 @@ type ConfigTables struct {
 	EmploymentPaymentBy    []configT
 	EmploymentPayFrequency []configT
 	EmploymentProject      []configT
-	EmploymentRule         []configT
 	EmploymentType         []configT
 	EmploymentWages        []configT
 	StatutoryEPF           []configT
@@ -301,10 +299,12 @@ type configC struct {
 
 // employeeList holds the name of one employee
 type employeeList struct {
-	ID       int
-	Code     string
-	Fullname string
-	Nickname string
+	ID        int
+	Code      string
+	Fullname  string
+	Nickname  string
+	GenderID  int
+	Seniority int // number of years from join date
 }
 
 // employeeLeave holds the information required for leave application

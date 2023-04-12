@@ -48,8 +48,8 @@ class ClaimDefinitionHelpers {
         return (value == 1) ? '<i class="bi-check2-square"></i> true' : '<i class="bi-x-square"></i> false'
     }
     // insert to datatable one row per element of data
-    insertRows(id, data) {
-        const target = document.querySelector('#' + id)
+    insertRows(data) {
+        const target = document.querySelector('#claimDefinitionBody')
         target.innerHTML = ''
         data.forEach(element => { 
             let row = document.createElement('tr')
@@ -78,29 +78,8 @@ class ClaimDefinitionHelpers {
                             </td>`
             target.appendChild(row)
         })
+        $('#claimDefinitionTable').DataTable()
     } 
-    // trigger datatable and row click event
-    triggerDT(dt, dtBody) {
-        const table = $('#' + dt).DataTable()
-    }
-    // generate data table
-    generateDT(data, active){
-        this.insertRows('claimDefinitionBody', data)
-        this.triggerDT('claimDefinitionTable', 'claimDefinitionBody')
-        Common.insertInputValue(active, 'dataView') // set dataView to active
-    }
-    // check wether data is null or not
-    checkData(data, active){
-        if (data == null ){
-            document.querySelector('#gotData').style.display = 'none'
-            document.querySelector('#noData').style.display = 'block'
-        } else {
-            document.querySelector('#gotData').style.display = 'block'
-            document.querySelector('#noData').style.display = 'none'
-            this.generateDT(data, active)
-            this.makeEditable()
-        }
-    }
 
     // remove element from my required input fields array
     removeElementFromRIF(name){

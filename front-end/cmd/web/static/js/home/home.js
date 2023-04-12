@@ -13,7 +13,7 @@ window.addEventListener('DOMContentLoaded', () => {
   // fetch & populate connected user information
   API.getEmployeeInfoByEmail(connectedEmail).then(resp => {
     Helpers.populateMyProfile(resp.data)
-    Helpers.populateMyProfileDates(resp.data.Employment.joinDate, resp.data.Employment.confirmDate)
+    // Helpers.populateMyProfileDates(resp.data.Employment.joinDate, resp.data.Employment.confirmDate)
   })
 
   // fetch & populate all employees
@@ -27,18 +27,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
   // fetch & populate connected user leaves (entitled)
   API.getEmployeeLeaveDetailsByID(connectedID).then(resp => {
-    console.log('leave details');
     console.log(resp);
-    resp.data.forEach(element => {
-      console.log(typeof element.entitled);
-      console.log(element.entitled);
-      console.log(Helpers.cleanDecimal(element.entitled));
-    });
-    Helpers.populateMyLeaveDetails(resp.data)        
-    google.charts.setOnLoadCallback(Helpers.chartLeaves(resp.data))
+    Helpers.populateMyLeaveDetails(resp.data)
+    Helpers.populateMyLeaveDetailsProgress(resp.data)
   })
-
-  
   
   // fetch & populate connected user claims (total)
   API.getEmployeeClaimByID(connectedID).then(resp => {
@@ -51,4 +43,21 @@ window.addEventListener('DOMContentLoaded', () => {
       Helpers.populateMyClaimDetails(resp.data)        
   })
 
+  // scroll back to top
+  var btn = $('#backToTop');
+  $(window).on('scroll', function() {
+      if ($(window).scrollTop() > 300) {
+          btn.addClass('show');
+      } else {
+          btn.removeClass('show');
+      }
+  });
+  btn.on('click', function(e) {
+      e.preventDefault();
+      $('html, body').animate({
+          scrollTop: 0
+      }, '300');
+  });
+
+  
 })

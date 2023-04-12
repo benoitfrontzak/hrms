@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"leave/pkg/pg"
 	"net/http"
 	"time"
 )
@@ -11,15 +10,13 @@ import (
 func (rep *Repository) UpdateLeaveDefinition(w http.ResponseWriter, r *http.Request) {
 
 	// extract payload from request
-	var p pg.LeaveDefinition
-	err := rep.readJSON(w, r, &p)
+	err := rep.readJSON(w, r, &rep.App.Models.LeaveDefinition)
 	if err != nil {
 		rep.errorJSON(w, err)
 		return
 	}
 
 	// insert payload to employee's config table DB
-	rep.App.Models.LeaveDefinition = p
 	err = rep.App.Models.LeaveDefinition.Update()
 	if err != nil {
 		rep.errorJSON(w, err)
@@ -30,7 +27,7 @@ func (rep *Repository) UpdateLeaveDefinition(w http.ResponseWriter, r *http.Requ
 	answer := jsonResponse{
 		Error:     false,
 		Message:   "leave definition successfully updated",
-		Data:      p,
+		Data:      rep.App.Models.LeaveDefinition,
 		CreatedAt: time.Now().Format("02-Jan-2006 15:04:05"),
 		CreatedBy: "p.ConnectedUser",
 	}

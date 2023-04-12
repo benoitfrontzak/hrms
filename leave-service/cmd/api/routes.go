@@ -10,7 +10,9 @@ func multiplexer() http.Handler {
 
 	// API v1 Leave Definition
 	mux.HandleFunc("/api/v1/leave/definition/get/all", handlers.Repo.GetAllLeaveDefinition)
+	mux.HandleFunc("/api/v1/leave/definition/get/id", handlers.Repo.GetLeaveDefinitionID)
 	mux.HandleFunc("/api/v1/leave/definition/create", handlers.Repo.CreateLeaveDefinition)
+	mux.HandleFunc("/api/v1/leave/definition/create/employee/entitled", handlers.Repo.CreateEntitledByDefinition)
 	mux.HandleFunc("/api/v1/leave/definition/update", handlers.Repo.UpdateLeaveDefinition)
 	mux.HandleFunc("/api/v1/leave/definition/softDelete", handlers.Repo.SoftDeleteLeaveDefinition)
 
