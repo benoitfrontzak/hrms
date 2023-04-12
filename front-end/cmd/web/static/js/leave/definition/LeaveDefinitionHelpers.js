@@ -238,7 +238,7 @@ class LeaveDefinitionHelpers {
 
     // customize boolean (0|1) with icons
     myBooleanIcons(value){
-        return (value == 1) ? '<i class="bi-check2-square"></i> true' : '<i class="bi-x-square"></i> false'
+        return (value == 1) ? '<i class="bi-check-square"></i>' : '<i class="bi-square"></i>'
     }
 
     // convert month digit
