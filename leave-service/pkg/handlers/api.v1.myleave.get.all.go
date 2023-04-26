@@ -14,7 +14,7 @@ func (rep *Repository) GetAllMyLeave(w http.ResponseWriter, r *http.Request) {
 	var p User
 	err := rep.readJSON(w, r, &p)
 	if err != nil {
-		log.Println("decoded json:", err)
+		log.Println("json err", err)
 		rep.errorJSON(w, err)
 		return
 	}

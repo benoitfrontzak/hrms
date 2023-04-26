@@ -13,7 +13,6 @@ func multiplexer() http.Handler {
 	mux.HandleFunc("/route/authentication/update/password", handlers.UpdatePassword) // update employee's password
 	// employee-service routes
 	mux.HandleFunc("/route/employee/get/all", handlers.AllEmployees)        // return all employee by status (active, inactive, deleted)
-	mux.HandleFunc("/route/employee/get/active", handlers.AllActive)        // return list of all active employees
 	mux.HandleFunc("/route/employee/get/id", handlers.EmployeeByID)         // return employee information by id
 	mux.HandleFunc("/route/employee/get/email", handlers.EmployeeByEmail)   // return employee information by email
 	mux.HandleFunc("/route/employee/get/leave", handlers.EmployeeLeaveInfo) // return employee information relative to leave-service

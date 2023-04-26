@@ -1,6 +1,8 @@
-const Common  = new MainHelpers(),
-      Helpers = new LeaveHelpers(),
-      API     = new LeaveAPI()
+const Common    = new MainHelpers(),
+      Helpers   = new LeaveHelpers(),
+      DT        = new DataTableFeatures(),
+      Draggable = new DraggableModal(),
+      API       = new LeaveAPI()
 
 // set form's parameters (Required Input Fields...)
 const myRIF = [ 'name', 'description', 'category']
@@ -9,59 +11,60 @@ const myRIF = [ 'name', 'description', 'category']
 let allEmployees = new Map()
 allEmployees.set(0, 'not defined')
 
-// store empty row for leaves with no data (approved, rejected or pending)
-const noData = {
-    employeeid: 0,
-    leaveDefinition: 0,
-    leaveDefinitionCode: 'No data',
-    leaveDefinitionName:'No data',
-    description: 'No data',
-    statusid: 0,
-    status: 'No data',
-    approvedAt: '0001-01-01',
-    approvedBy: 0,
-    rejectedReason: ''
-}
-const noDataAr = [noData]
-
 // when DOM is loaded
 window.addEventListener('DOMContentLoaded', () => {
-    const noAction = false
+    let action = false
      // fetch all employee information
      API.getAllEmployees().then(resp => {
         allEmployees = Common.updateEmployeeList(resp.data, allEmployees)
 
         // fetch all leaves & update DOM (data table)
         API.getAllLeaves().then(resp => {
-            console.log(resp);
+            const approved = resp.data.Approved,
+                  rejected = resp.data.Rejected,
+                  pending  = resp.data.Pending
+
             // display by default pending request
             Helpers.insertRows(resp.data.Pending)
-            // when approved is selected
-            document.querySelector('#approvedBtn').addEventListener('click', () => {
-                Helpers.insertRows(resp.data.Approved, noAction)
-                document.querySelector('#leaveTitle').innerHTML = 'Approved Leaves'
-            })
 
-             // when rejected is selected
-             document.querySelector('#rejectedBtn').addEventListener('click', () => {
-                Helpers.insertRows(resp.data.Rejected, noAction)
-                document.querySelector('#leaveTitle').innerHTML = 'Rejected Leaves'
-            })
-
-             // when pending is selected
-             document.querySelector('#pendingBtn').addEventListener('click', () => {
-                Helpers.insertRows(resp.data.Pending)
-                document.querySelector('#leaveTitle').innerHTML = 'Pending Leaves'
+            // create listener when data source changed (pending | approved | rejected)
+            const dSource = ['pending', 'approved', 'rejected']
+            dSource.forEach(element => {
+                // create capitalize function
+                const capitalize = element => (element && element[0].toUpperCase() + element.slice(1)) || ""
+    
+                document.querySelector('#'+element+'Btn').addEventListener('click', () => {
+                    $('#myLeaveTable').DataTable().destroy()
+                    let ds
+                    switch (element) {
+                        case 'pending':
+                            ds = pending
+                            action = true
+                            break;
+                        case 'approved':
+                            ds = approved
+                            action = false
+                            break;
+                        case 'rejected':
+                            ds = rejected
+                            action = false
+                            break;                    
+                    } 
+                    Helpers.insertRows(ds, action)
+                    document.querySelector('#leaveTitle').innerHTML = capitalize(element) + ' Leave Applications'
+                })
             })
         })
     })
 
     // initiate confirm approval modal
     const myApprovalConfirm = new bootstrap.Modal(document.getElementById('approveModal'), { 
+        backdrop: 'static',
         keyboard: false 
     })
      // initiate confirm rejection modal
      const myRejectionConfirm = new bootstrap.Modal(document.getElementById('rejectModal'), { 
+        backdrop: 'static',
         keyboard: false 
     })
 

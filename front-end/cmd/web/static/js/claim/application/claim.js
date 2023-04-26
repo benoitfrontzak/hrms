@@ -1,6 +1,8 @@
-const Common  = new MainHelpers(),
-      Helpers = new ClaimHelpers(),
-      API     = new ClaimAPI()
+const Common    = new MainHelpers(),
+      Helpers   = new ClaimHelpers(),
+      DT        = new DataTableFeatures(),
+      Draggable = new DraggableModal(),
+      API       = new ClaimAPI()
 
 // set form's parameters (Required Input Fields...)
 const myRIF = [ 'name', 'description', 'category']
@@ -11,41 +13,60 @@ allEmployees.set(0, 'not defined')
 
 // when DOM is loaded
 window.addEventListener('DOMContentLoaded', () => {
-    const noAction = false
+    let action = false
      // fetch all employee information
      API.getAllEmployees().then(resp => {
+        // update map all employees by id
         allEmployees = Common.updateEmployeeList(resp.data, allEmployees)
-        
         // fetch all claims & update DOM (data table)
         API.getAllClaims().then(resp => {
+            const approved = resp.data.Approved,
+                  rejected = resp.data.Rejected,
+                  pending  = resp.data.Pending
             // display by default pending request
-            Helpers.insertRows(resp.data.Pending)
-            // when approved is selected
-            document.querySelector('#approvedBtn').addEventListener('click', () => {
-                Helpers.insertRows(resp.data.Approved, noAction)
-                document.querySelector('#claimTitle').innerHTML = 'Approved Claims'
-            })
-
-             // when rejected is selected
-             document.querySelector('#rejectedBtn').addEventListener('click', () => {
-                Helpers.insertRows(resp.data.Rejected, noAction)
-                document.querySelector('#claimTitle').innerHTML = 'Rejected Claims'
-            })
-
-             // when pending is selected
-             document.querySelector('#pendingBtn').addEventListener('click', () => {
-                Helpers.insertRows(resp.data.Pending)
-                document.querySelector('#claimTitle').innerHTML = 'Pending Claims'
+            Helpers.insertRows(pending)
+            // create listener when data source changed (pending | approved | rejected)
+            const dSource = ['pending', 'approved', 'rejected']
+            dSource.forEach(element => {
+                // create capitalize function
+                const capitalize = element => (element && element[0].toUpperCase() + element.slice(1)) || ""
+    
+                document.querySelector('#'+element+'Btn').addEventListener('click', () => {
+                    $('#myClaimTable').DataTable().destroy()
+                    let ds
+                    switch (element) {
+                        case 'pending':
+                            ds = pending
+                            action = true
+                            break;
+                        case 'approved':
+                            ds = approved
+                            action = false
+                            break;
+                        case 'rejected':
+                            ds = rejected
+                            action = false
+                            break;                    
+                    } 
+                    Helpers.insertRows(ds, action)
+                    document.querySelector('#claimTitle').innerHTML = capitalize(element) + ' Claim Applications'
+                })
             })
         })
     })
 
+    // make modals draggable
+    Draggable.draggableModal('rejectModal')
+    Draggable.draggableModal('approveModal')
+
     // initiate confirm approval modal
     const myApprovalConfirm = new bootstrap.Modal(document.getElementById('approveModal'), { 
+        backdrop: 'static',
         keyboard: false 
     })
      // initiate confirm rejection modal
      const myRejectionConfirm = new bootstrap.Modal(document.getElementById('rejectModal'), { 
+        backdrop: 'static',
         keyboard: false 
     })
 

@@ -1,5 +1,14 @@
 {{template "base.admin" . }}
 
+<!-- We use css marker to load specific script of the page -->
+{{define "css"}}
+  <!-- DataTables -->
+  <script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/fixedcolumns/4.2.2/js/dataTables.fixedColumns.min.js"></script>
+  <link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet"/>
+{{end}}
+
 {{define "content"}}
 
 <div class="container-fluid" style="width:100%">
@@ -28,7 +37,7 @@
     </div>    
     <hr />
     <!-- TABLE -->
-    <table id="claimDefinitionTable" class="display stripe" style="width:100%">
+    <table id="claimDefinitionTable" class="table table-hover" style="width:100%">
         <thead>
             <tr>
             <th>Name</th>

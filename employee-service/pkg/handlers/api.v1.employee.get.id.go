@@ -2,26 +2,19 @@ package handlers
 
 import (
 	"net/http"
-	"strconv"
 )
 
 // receives a get request from broker to fetch all employee info
 func (rep *Repository) GetByID(w http.ResponseWriter, r *http.Request) {
 	// extract employee id from request
-	var id string
-	err := rep.readJSON(w, r, &id)
+	var u User
+	err := rep.readJSON(w, r, &u)
 	if err != nil {
 		rep.errorJSON(w, err)
 		return
 	}
 
-	// get all employee info
-	eid, err := strconv.Atoi(id)
-	if err != nil {
-		rep.errorJSON(w, err)
-		return
-	}
-	all, err := rep.App.Models.Employee.GetAllEmployeeInfo(eid)
+	all, err := rep.App.Models.Employee.GetAllEmployeeInfo(u.ID)
 	if err != nil {
 		rep.errorJSON(w, err)
 		return

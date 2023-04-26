@@ -1,4 +1,5 @@
 class MyLeaveHelpers {
+    
     // populate form to edit entry
     populateFormEdit(data, active, rowID){
         Common.insertHTML('Edit claim', 'createClaimDefinitionTitle')

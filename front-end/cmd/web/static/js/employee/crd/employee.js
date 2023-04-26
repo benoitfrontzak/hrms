@@ -1,9 +1,13 @@
-const Common  = new MainHelpers(),
-      Helpers = new EmployeeReadHelpers(),
-      API     = new EmployeeReadAPI()
+const Common            = new MainHelpers(),
+      DT                = new DataTableFeatures(),
+      Draggable         = new DraggableModal(),
+      Employee          = new EmployeeRead(),
+      CT                = new EmployeeCT(),
+      Helpers           = new EmployeeHelpers(),
+      API               = new EmployeeReadAPI()
       
 // set form's parameters (Required Input Fields...)
-const myRIF = [ 'fullName', 'employeeCode', 
+const myRIF = [ 'fullName', 'nickName', 'employeeCode', 
                 'streetaddr1','streetaddr2', 'zip', 'city', 'state', 'country', 
                 'nationality', 'residence',
                 'primaryPhone', 'primaryEmail']
@@ -12,96 +16,66 @@ const myRIF = [ 'fullName', 'employeeCode',
 const showCard = true,
       hideCard = false,
       myCards  = ['identity', 'access', 'contact']
-   
-// page redirection when form is successfully inserted
-const sPage = "http://localhost/employee/update/"
+
+// store all employee by id
+let allEmployees = new Map()
+allEmployees.set(0, 'not defined')
 
 // When DOM is loaded
 window.addEventListener('DOMContentLoaded', () => {
-    
-     // fetch all employees & update DOM & set delete by icon event
-     API.getAllEmployees().then(resp => { 
-        console.log(resp);
+    // fetch all employee's config tables & update create new employee form
+    API.getEmployeeCT().then(resp => {
+        CT.populateConfigTables(resp.data) 
+    })
+
+    // fetch all employees & insert rows to datatable
+    API.getAllEmployees().then(resp => {
+
+        allEmployees = Common.updateEmployeeList(resp.data, allEmployees) 
+        const active = resp.data.Active,
+              inactive = resp.data.Inactive,
+              deleted = resp.data.Deleted
+
         // display by default active employees
-        Helpers.insertRows(resp.data.Active, sPage)
+        Employee.insertRows(active)
+        
+        // create listener when data source changed (active | inactive | deleted)
+        Helpers.dataSourceListener(active, inactive, deleted)
 
-        // when active employees is requested
-        document.querySelector('#activeBtn').addEventListener('click', () => {
-            Helpers.insertRows(resp.data.Active, sPage)
-            document.querySelector('#employeeTitle').innerHTML = 'Active Employees'
-        })
+    })   
 
-        // when inactive employees is requested
-        document.querySelector('#inactiveBtn').addEventListener('click', () => {
-            Helpers.insertRows(resp.data.Inactive, sPage)
-            document.querySelector('#employeeTitle').innerHTML = 'Inactive Employees'
-        })
-
-        // when deleted employee is requested
-        document.querySelector('#deletedBtn').addEventListener('click', () => {
-            Helpers.insertRows(resp.data.Deleted, sPage)
-            document.querySelector('#employeeTitle').innerHTML = 'Deleted Employees'
-        })
-
-        // When one delete icon is clicked
-        const myDelete = document.querySelectorAll('.deleteEmployee')
-
-        myDelete.forEach(element => {
-            element.addEventListener('click', () => {
-                const myCheckbox = element.parentNode.parentNode.firstElementChild
-                myCheckbox.checked = true
-                Helpers.populateConfirmDelete('confirmDeleteBody', '1')
-                myConfirm.show()
-            })
-        })
-
-    }) 
-
-    // fetch all employee's config tables & update DOM
-    API.getEmployeeCT().then(resp => { 
-        Helpers.populateConfigTables(resp.data) 
-    })  
-
-    // when open form (add button) is clicked (clear warning message & field's values)
-    const myModal = document.querySelector('#openCreateEmployee')
-
-    myModal.addEventListener('click', () =>{ 
+    
+    // when form (add button) is clicked (clear warning message & field's values)
+    document.querySelector('#openCreateEmployee').addEventListener('click', () =>{ 
         Common.clearForm('createEmployeeForm', myRIF) 
     })
 
     // When form is submitted (save button)
-    const mySubmit = document.querySelector('#employeeAddSubmit')
-    mySubmit.addEventListener('click', () => {
+    document.querySelector('#employeeAddSubmit').addEventListener('click', () => {
+        // Check for errors and display it
         const error = Common.validateRequiredFields(myRIF)
 
         if (error == '0'){
             myData = Helpers.getForm('createEmployeeForm')
             API.createEmployee(myData).then(resp => {
-                if (! resp.error) window.location.href = sPage+resp.data.id 
+                if (! resp.error) window.open('/employee/update/' + resp.data.id, "_self") 
             })            
         }
 
     })
     
-    // initiate delete confirm modal
+    // initiate confirm delete modal
     const myConfirm = new bootstrap.Modal(document.getElementById('confirmDelete'), { 
+        backdrop: 'static',
         keyboard: false 
     })
 
-    // cleaned checked checkboxes when modal is close
-    document.getElementById('confirmDelete').addEventListener('hidden.bs.modal', function (event) {
-        const myDeleteCheckboxes = document.querySelectorAll('.deleteCheckboxes')
+    // Clear selected employee when confirm delete modal is closed
+    Helpers.clearSelectedEmployee()
+    
 
-        myDeleteCheckboxes.forEach(element => {
-            element.checked = false
-        })
-
-    })
-
-    // When delete all is clicked
-    const myDeleteAll = document.querySelector('#deleteAllEmployee')
-
-    myDeleteAll.addEventListener('click', () => { 
+    // When delete employees is clicked (delete button)
+   document.querySelector('#deleteAllEmployee').addEventListener('click', () => { 
         const checked = Helpers.selectedEmployee('deleteWarningMessageDiv')
        
         if (typeof checked != 'undefined' && checked.length > 0){
@@ -111,7 +85,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     })
 
-    // When confirm delete all is clicked
+    // When confirm delete employees is clicked (confirm button from modal)
     const confirmedDelete = document.querySelector('#confirmDeleteSubmit')
 
     confirmedDelete.addEventListener('click', () => {
@@ -151,5 +125,7 @@ window.addEventListener('DOMContentLoaded', () => {
          Common.hideDivByID('deleteWarningMessageDiv')
      })
 
-     
+    // make modals draggable
+    Draggable.draggableModal('createEmployee')
+    Draggable.draggableModal('confirmDelete')
 })

@@ -1,96 +1,15 @@
-class EmployeeReadHelpers{
+class EmployeeHelpers{ 
 
-    // Populate config tables for nationality, residence country, race, religion, country, relationship
-    populateConfigTables(ct){
-        this.insertNationalityOptions('nationality', ct.Country)
-        this.insertOptions('residence', ct.Country)
-        this.insertOptions('race', ct.Race)
-        this.insertOptions('religion', ct.Religion)
-        this.insertOptions('country', ct.Country)
-        // set Malaysia as default value
-        $('#residence option[value=135]').attr('selected','selected');
-        $('#country option[value=135]').attr('selected','selected');
-    }
+    // cleaned checked checkboxes when modal is close
+    clearSelectedEmployee(){
+        document.getElementById('confirmDelete').addEventListener('hidden.bs.modal', function () {
+            const myDeleteCheckboxes = document.querySelectorAll('.deleteCheckboxes')
     
-    // Insert to selectID one option per element of data
-    insertNationalityOptions(id, data){
-        const target = document.querySelector('#'+id)
-        target.innerHTML = '<option selected hidden value="0"></option>'
-        data.forEach(element => {
-            let opt = document.createElement('option')
-            opt.value = element.ID
-            opt.innerHTML = element.Nationality
-            target.appendChild(opt)
-        })
-    }
-
-    // Insert to selectID one option per element of data
-    insertOptions(id, data){
-        const target = document.querySelector('#'+id)
-        target.innerHTML = '<option selected hidden value=""></option>'
-        data.forEach(element => {
-            let opt = document.createElement('option')
-            opt.value = element.ID
-            opt.innerHTML = element.Name
-            target.appendChild(opt)
-        })
-    }
-
-    // Insert to datatable one row per element of data
-    insertRows(data, sPage){
-
-        $('#employeeSummary').DataTable().destroy()
-        const target = document.querySelector('#employeeSummaryBody')
-        target.innerHTML = ''
-        if (data != null){
-            data.forEach(element => {
-                const updateURL = sPage + element.ID
-                let opt = document.createElement('tr')
-                opt.id = element.ID
-                opt.innerHTML = `<td><a href="${updateURL}" class="link-dark myLink">${element.Code}</a></td>
-                                <td><a href="${updateURL}" class="link-dark myLink">${element.Fullname}</a></td>
-                                <td><a href="${updateURL}" class="link-dark myLink">${element.Email}</a></td>
-                                <td><a href="${updateURL}" class="link-dark myLink">${element.Mobile}</a></td>
-                                <td><a href="${updateURL}" class="link-dark myLink">${this.birthdate(element.Birthdate)}</a></td>
-                                <td><a href="${updateURL}" class="link-dark myLink">${element.Race}</a></td>
-                                <td><a href="${updateURL}" class="link-dark myLink">${this.gender(element.Gender)}</a></td>
-                                <td>
-                                    <div class="form-check">
-                                        <input class="form-check-input deleteCheckboxes"  type="checkbox" value="${element.ID}" name="softDelete">
-                                        <label class="form-check-label fw-lighter fst-italic smaller" for="softDelete"><i class="bi-trash2-fill largeIcon pointer deleteEmployee"></i></label>
-                                    </div>                                
-                                </td>`
-                target.appendChild(opt)
+            myDeleteCheckboxes.forEach(element => {
+                element.checked = false
             })
-             // trigger datatable
-            $('#employeeSummary').DataTable()
-            // set pointer mouse on mouseover
-            $('#employeeSummary'+' tr').css('cursor', 'pointer')
-        }else{
-            $('#employeeSummary').DataTable()
-            $('#employeeSummary').DataTable().clear().draw()
-        }
-    }
-    // convert gender_id
-    gender(id){
-        let g
-        return (id == 1) ? g = 'M <i class="bi-gender-male"></i>' : g = 'F <i class="bi-gender-female"></i>'
-    }
-    // convert birthdate (remove timestamp)
-    birthdate(t){
-        let b
-        // get only the 10 first characters of the string
-        const d = t.substring(0,10)
-        // the zero value of a date is 0001-01-01
-        return (d == '0001-01-01') ? b = '' : b = d
-    }
-
-    // trigger datatable and row click event
-    triggerDT(){
-        // trigger datatable
-        const table = $('#employeeSummary').DataTable()
-        // set pointer mouse on mouseover
-        $('#employeeSummary'+' tr').css('cursor', 'pointer')
+    
+        })
     }
 
     // returns list of selected employee id to be deleted
@@ -106,7 +25,6 @@ class EmployeeReadHelpers{
         }        
     }
 
-
     // populate confirm detele message
     populateConfirmDelete(id, nb){
         let msg
@@ -114,20 +32,6 @@ class EmployeeReadHelpers{
 
         const myBody = document.querySelector('#'+id)
         myBody.innerHTML = msg
-    }
-
-    // Calculate approximated age
-    calculateAge(birthdate){
-        const today     = new Date(),
-              thisYear  = today.getFullYear(),
-              birthYear = birthdate.split('-')[0],
-              age       = thisYear - birthYear
-        return age
-    }    
-    // Populate age
-    populateAge(years){
-        const age = document.querySelector('#age')
-        age.value = years
     }
 
     getForm(formID){
@@ -172,4 +76,30 @@ class EmployeeReadHelpers{
         return JSON.stringify(myjson, function replacer(key, value) { return value})
     }
 
+    // create data source event listener
+    dataSourceListener(active, inactive, deleted){
+        const dSource = ['active', 'inactive', 'deleted']
+        dSource.forEach(element => {
+            // create capitalize function
+            const capitalize = element => (element && element[0].toUpperCase() + element.slice(1)) || ""
+ 
+            document.querySelector('#'+element+'Btn').addEventListener('click', () => {
+                $('#employeeSummary').DataTable().destroy()
+                let ds
+                switch (element) {
+                    case 'active':
+                        ds = active
+                        break;
+                    case 'inactive':
+                        ds = inactive
+                        break;
+                    case 'deleted':
+                        ds = deleted
+                        break;                    
+                } 
+                Employee.insertRows(ds)
+                document.querySelector('#employeeTitle').innerHTML = capitalize(element) + ' Employees'
+            })
+        });
+    }
 }

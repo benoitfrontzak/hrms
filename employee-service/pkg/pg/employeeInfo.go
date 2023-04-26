@@ -40,7 +40,10 @@ func (e *Employee) GetAllEmployeeInfo(id int) (*EmployeeFull, error) {
 	if err != nil {
 		return nil, err
 	}
-
+	payrollItems, err := getEmployeePayrollItemsByID(employee.ID)
+	if err != nil {
+		return nil, err
+	}
 	myEmp := EmployeeFull{
 		Employee:          employee,
 		EmergencyContact:  ec,
@@ -51,6 +54,7 @@ func (e *Employee) GetAllEmployeeInfo(id int) (*EmployeeFull, error) {
 		Statutory:         statutory,
 		StatutoryArchive:  statutoryArchive,
 		Bank:              bank,
+		PayrollItems:      payrollItems,
 	}
 	return &myEmp, nil
 }
@@ -570,6 +574,67 @@ func getEmployeeStatutoryArchiveByID(id int) ([]*StatutoryArchive, error) {
 		}
 
 		all = append(all, &s)
+	}
+	// return employee full row
+	return all, nil
+}
+func getEmployeePayrollItemsByID(id int) ([]*PayrollItem, error) {
+	// canceling this context releases resources associated with it
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+	// SQL statement which fetch employee summary
+	query := `select 	ad.id,
+						cpt."name" as type,
+						cpi.code, 
+						cpi.description,
+						cpi.pay_epf,
+						cpi.pay_socso_eif,
+						cpi.pay_hrdf,
+						cpi.pay_tax,					
+						ad.start_period,
+						ad.end_period,
+						ad.amount,
+						ad.created_at,
+						ad.created_by,
+						ad.updated_at,
+						ad.updated_by 
+				FROM "ADDITION_DEDUCTION" ad, "CONFIG_PAYROLL_ITEM" cpi, "CONFIG_PAYROLL_TYPE" cpt 
+				WHERE ad.employee_id = $1 
+				AND ad.payroll_item_id = cpi.id 
+				AND cpi.payroll_type_id = cpt.id `
+
+	// executes SQL query
+	rows, err := db.QueryContext(ctx, query, id)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	// populate returned rows to statutory struct
+	var all []*PayrollItem
+	for rows.Next() {
+		var pi PayrollItem
+		err := rows.Scan(
+			&pi.ID,
+			&pi.Type,
+			&pi.Code,
+			&pi.Description,
+			&pi.PayEPF,
+			&pi.PaySOCSO,
+			&pi.PayHRDF,
+			&pi.PayTax,
+			&pi.Start,
+			&pi.End,
+			&pi.Amount,
+			&pi.CreatedAt, &pi.CreatedBy,
+			&pi.UpdatedAt, &pi.UpdatedBy,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		all = append(all, &pi)
 	}
 	// return employee full row
 	return all, nil

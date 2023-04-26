@@ -1,15 +1,17 @@
 {{template "base.admin" . }}
 
+<!-- We use css marker to load specific script of the page -->
+{{define "css"}}
+  <!-- Google chart -->
+  <script src="https://www.gstatic.com/charts/loader.js"></script>
+  <script>google.charts.load("current", {packages:["corechart"]});   </script>
+{{end}}
+
 {{define "content"}}
 
 <!-- Main home page -->
 <div class="container-fluid bg-light">
-  <!-- Title: Employee self-service -->
-  <div class="row justify-content-md-center mb-3 bg-white">
-      <div class="col-sm-12 my-3 p-3 text-start">
-        <h4><i class="bi-card-list"></i> Employee Self-Service</h4>            
-      </div>
-  </div>
+
   <div class="zoomOut">   
       <!-- Cards: On leave today | On leave tomorrow | My pending request | Requested my approval -->
       <div class="row">

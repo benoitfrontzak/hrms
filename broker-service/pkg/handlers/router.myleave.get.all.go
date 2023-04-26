@@ -1,42 +1,78 @@
 package handlers
 
 import (
-	"encoding/json"
-	"fmt"
 	"net/http"
 )
 
-// forward the post request from the front-end to claim-service to get all my claims
+// forward the post request from the front-end to leave-service to get all my leaves
+// fetch all others needed informations related to myLeave page
 func AllMyLeave(w http.ResponseWriter, r *http.Request) {
-	// send post request to employee-service and collect the response
-	url := leaveService + "api/v1/myleave/get/all"
-	resp, err := http.Post(url, "application/json", r.Body)
+	// need to extract payload since r.Body is a ReadCloser
+	var p User
+	err := readJSON(w, r, &p)
 	if err != nil {
 		errorJSON(w, err)
 		return
 	}
-	defer resp.Body.Close()
 
-	// decode employee-service response
-	var answer jsonResponse
-	dec := json.NewDecoder(resp.Body)
-	err = dec.Decode(&answer)
-	if err != nil || answer.Error {
+	type allNeeded struct {
+		MyEntitled          interface{}
+		MyLeaves            interface{}
+		AllLeaveDefinitions interface{}
+		AllEmployees        interface{}
+	}
+	var all allNeeded
+
+	// create all post requests
+	postRequests := []Request{
+		{URL: leaveService + "api/v1/myleave/get/today", Data: p},
+		{URL: leaveService + "api/v1/myleave/get/all", Data: p},
+	}
+
+	// create a channel to receive responses and errors
+	postResponseChan := make(chan *MyResponse)
+
+	// get all post responses
+	allPostResp, err := makeConcurrentPostRequests(postRequests, postResponseChan)
+	if err != nil {
 		errorJSON(w, err)
 		return
 	}
 
-	// log to employee-service collection
-	l := rpcPayload{
-		Collection: "leave",
-		Name:       "create definition",
-		// Data:       fmt.Sprintf("new entry successfully created for table %s with id %d", ct.Table, ct.RowID),
-		Data:      fmt.Sprintf("new entry successfully created for table with id"),
-		CreatedAt: answer.CreatedAt,
-		CreatedBy: answer.CreatedBy,
+	// assign appropriate answer to allNeeded
+	for _, p := range allPostResp {
+		if p.URL == leaveService+"api/v1/myleave/get/today" {
+			all.MyEntitled = p.Data
+		}
+		if p.URL == leaveService+"api/v1/myleave/get/all" {
+			all.MyLeaves = p.Data
+		}
 	}
-	LogItemViaRPC(l)
+	// create all get requests
+	var noData any
+	getRequests := []Request{
+		{URL: employeeService + "api/v1/employee/get/all", Data: noData},
+		{URL: leaveService + "api/v1/leave/definition/get/all", Data: noData},
+	}
+
+	// create a channel to receive responses and errors
+	getResponseChan := make(chan *MyResponse)
+
+	// get all get responses
+	allGetResp, err := makeConcurrentGetRequests(getRequests, getResponseChan)
+	if err != nil {
+		errorJSON(w, err)
+		return
+	}
+	for _, g := range allGetResp {
+		if g.URL == employeeService+"api/v1/employee/get/all" {
+			all.AllEmployees = g.Data
+		}
+		if g.URL == leaveService+"api/v1/leave/definition/get/all" {
+			all.AllLeaveDefinitions = g.Data
+		}
+	}
 
 	// send response to front-end
-	writeJSON(w, http.StatusAccepted, answer)
+	writeJSON(w, http.StatusAccepted, all)
 }

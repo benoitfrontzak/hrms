@@ -118,9 +118,17 @@ class EmployeeUpdateHelpers{
 
     // Populate form data
     populateFormData(data, eid){
+        // data harvest
+        const passportExpiryDate = this.convertToDate(data.Employee.passportExpiryAt),
+              passportExpiryDays = this.daysDifferenceNow(passportExpiryDate),
+              birthdate = this.convertToDate(data.Employee.birthdate),
+              age = this.calculateAge(birthdate),
+              visaExpiryDate = this.convertToDate(data.Employment.workingPermitExpiry),
+              visaExpiryDays = this.daysDifferenceNow(visaExpiryDate)
+
         // update title page
         Common.insertHTML(data.Employee.fullname, 'pageTitle')
-        Common.insertHTML(data.Employee.nickname, 'pageSubtitle')
+        Common.insertHTML(`<div class="mb-3">${this.gender(data.Employee.gender)} ${data.Employee.nickname} (${age} years old)</div>`, 'pageSubtitle')
 
         // update identity card
         Common.insertInputValue(data.Employee.fullname, 'fullName')
@@ -130,16 +138,12 @@ class EmployeeUpdateHelpers{
         Common.checkRadio(data.Employee.maritalstatus, 'maritalstatus')
         Common.insertInputValue(data.Employee.icNumber, 'icNumber')
         Common.insertInputValue(data.Employee.passportNumber, 'passportNumber')        
-        const passportExpiryDate = this.convertToDate(data.Employee.passportExpiryAt),
-              passportExpiryDays = this.daysDifferenceNow(passportExpiryDate)
         Common.insertInputValue(passportExpiryDate, 'passportExpiryAt')
         // insert passport expiry days
         if (passportExpiryDate != '') Common.insertHTML('( in ' + passportExpiryDays + ' days)', 'passportExpiryDays')        
         Common.selectBoxOptionSelected(data.Employee.nationality,'nationality')
         Common.selectBoxOptionSelected(data.Employee.residence,'residence')
         Common.insertInputValue(data.Employee.immigrationNumber, 'immigrationNumber')
-        const birthdate = this.convertToDate(data.Employee.birthdate),
-              age = this.calculateAge(birthdate)
         Common.insertInputValue(birthdate, 'birthdate')
         // insert approximated age (years)
         if (birthdate != '') Common.insertHTML('(' + age + ' years)', 'age')
@@ -198,19 +202,15 @@ class EmployeeUpdateHelpers{
         Common.selectBoxOptionSelected(data.Employment.project, 'project')
         Common.selectBoxOptionSelected(data.Employment.branch, 'branch')
         Common.selectBoxOptionSelected(data.Employment.overtime, 'overtime')
-        const visaExpiryDate = this.convertToDate(data.Employment.workingPermitExpiry),
-              visaExpiryDays = this.daysDifferenceNow(visaExpiryDate)
         Common.insertInputValue(visaExpiryDate, 'visaExpiryAt')
         // insert visa expiry days
         if (visaExpiryDate != '') Common.insertHTML('( in ' + visaExpiryDays + ' days)', 'visaDays')
-
         Common.insertInputValue(this.convertToDate(data.Employment.joinDate), 'joinDate')
         // insert join date days
-        if (this.convertToDate(data.Employment.joinDate) != '') Common.insertHTML('( in ' + this.daysDifferenceNow(this.convertToDate(data.Employment.joinDate)) + ' days)', 'joinDays')
-        
+        if (this.convertToDate(data.Employment.joinDate) != '') Common.insertHTML('( in ' + this.getFormatedStringFromDays(this.daysDifferenceNow(this.convertToDate(data.Employment.joinDate))) + ' days)', 'joinDays')
         Common.insertInputValue(this.convertToDate(data.Employment.confirmDate), 'confirmDate')
         // insert confirm date days
-        if (this.convertToDate(data.Employment.confirmDate) != '') Common.insertHTML('( in ' + this.daysDifferenceNow(this.convertToDate(data.Employment.confirmDate)) + ' days)', 'confirmDays')
+        if (this.convertToDate(data.Employment.confirmDate) != '') Common.insertHTML('( in ' + this.getFormatedStringFromDays(this.daysDifferenceNow(this.convertToDate(data.Employment.confirmDate))) + ' days)', 'confirmDays')
 
         Common.insertInputValue(this.convertToDate(data.Employment.resignDate), 'resignDate')
         // insert confirm date days
@@ -401,6 +401,11 @@ class EmployeeUpdateHelpers{
     // populate upload files
     populateUploadFiles(wanted){
         switch (wanted) {
+            case 'profile':
+                Common.insertHTML('Profile', 'uploadedFilesTitle')
+                Common.insertInputValue('profile', 'uploadedFilename')
+                break;
+
             case 'ic':
                 Common.insertHTML('IC', 'uploadedFilesTitle')
                 Common.insertInputValue('ic', 'uploadedFilename')
@@ -411,6 +416,11 @@ class EmployeeUpdateHelpers{
                 Common.insertInputValue('passport', 'uploadedFilename')
                 break;
             
+            case 'otherinformation':
+                Common.insertHTML('Other Information', 'uploadedFilesTitle')
+                Common.insertInputValue('otherInformation', 'uploadedFilename')
+                break;
+
             default:
                 break;
         }
@@ -418,6 +428,12 @@ class EmployeeUpdateHelpers{
 
     // populate uploaded files
     populateUploadedFiles(data, email){
+        if (data.Files.profile != null && data.Files.profile.length > 0){
+            this.insertProfileAttachments(data.Files.profile, email, 'profilePicture', 'profile')
+        }
+        if (data.Archive.profile != null && Object.keys(data.Archive.profile).length > 0){
+            this.insertArchiveAttachments(data.Archive.profile, email, 'archivedProfileBody', 'archive/profile')
+        }
         if (data.Files.ic != null && data.Files.ic.length > 0){
             this.insertAttachments(data.Files.ic, email, 'uploadedICBody', 'ic')
         }
@@ -430,17 +446,48 @@ class EmployeeUpdateHelpers{
         if (data.Archive.passport != null && Object.keys(data.Archive.passport).length > 0){
             this.insertArchiveAttachments(data.Archive.passport, email, 'archivedPassportBody', 'archive/passport')
         }
+        if (data.Files.otherInformation != null && data.Files.otherInformation.length > 0){
+            this.insertAttachments(data.Files.otherInformation, email, 'uploadedOtherInformationBody', 'otherInformation')
+        }
+        if (data.Archive.otherInformation != null && Object.keys(data.Archive.otherInformation).length > 0){
+            this.insertArchiveAttachments(data.Archive.otherInformation, email, 'archivedOtherInformationBody', 'archive/otherInformation')
+        }
     }
+    
     // create attachment download link
+    insertProfileAttachments(data, email, id, category){
+        const target = document.querySelector('#'+id)
+        target.innerHTML = ''
+        let ms = Date.now();
+        data.forEach(element => {
+            let path = `/upload/${email}/${category}/${element}?${ms}`
+
+            const extension = element.slice(-3)
+            if (extension == 'pdf') path = `/static/images/pdfFile.png`
+
+            let row = document.createElement('div')
+            row.classList = 'p-2 bd-highlight shadow borderRadiusTop borderRadiusBottom'
+            row.innerHTML = `<div><img class="myPictureFiltered" src="${path}" /></div>
+                             <div class="text-end"><a href="/upload/${email}/${category}/${element}" class="myLink" download="${element}"><i class="bi-download pointer"></i> download</a></div>`
+            
+            target.appendChild(row)
+        })
+
+    }
     insertAttachments(data, email, id, category){
         const target = document.querySelector('#'+id)
         target.innerHTML = ''
-
+        let ms = Date.now();
         data.forEach(element => {
+            let path = `/upload/${email}/${category}/${element}?${ms}`
+
+            const extension = element.slice(-3)
+            if (extension == 'pdf') path = `/static/images/pdfFile.png`
+
             let row = document.createElement('div')
             row.classList = 'd-flex justify-content-center mb-3'
             row.innerHTML = `<div>
-                                <div><img class="myPicture" src="/upload/${email}/${category}/${element}" /></div>
+                                <div><img class="myPicture" src="${path}" /></div>
                                 <div class="text-end"><a href="/upload/${email}/${category}/${element}" class="myLink" download="${element}"><i class="bi-download pointer"></i> download</a></div>
                              </div>`
             target.appendChild(row)
@@ -451,15 +498,20 @@ class EmployeeUpdateHelpers{
     insertArchiveAttachments(data, email, id, category){
         const target = document.querySelector('#'+id)
         target.innerHTML = ''
-
+        let ms = Date.now();
         for (const key in data) {            
             let row = document.createElement('div')
             row.classList = 'row'
             const title = 'Archived at ' + this.formatTimestamp(key)
             row.innerHTML = `<div class="fw-bolder">${title}</div>`
             data[key].forEach(element => {
+                let path = `/upload/${email}/${category}/${key}/${element}?${ms}`
+
+                const extension = element.slice(-3)
+                if (extension == 'pdf') path = `/static/images/pdfFile.png`
+
                 row.innerHTML += `<div class="row mb-3">
-                                    <div><img class="myPicture" src="/upload/${email}/${category}/${key}/${element}" /></div>
+                                    <div><img class="myPicture" src="${path}" /></div>
                                     <div class="text-end"><a href="/upload/${email}/${category}/${key}/${element}" class="myLink" download="${element}"><i class="bi-download pointer"></i> download</a></div>
                                   </div>`
             })
@@ -479,11 +531,26 @@ class EmployeeUpdateHelpers{
         // the zero value of a date is 0001-01-01
         return (d == '0001-01-01') ? b = '' : b = d
     }
+    // convert days to years, months, days
+    getFormatedStringFromDays(numberOfDays) {
+        var years = Math.floor(numberOfDays / 365);
+        var months = Math.floor(numberOfDays % 365 / 30);
+        var days = Math.floor(numberOfDays % 365 % 30);
+    
+        var yearsDisplay = years > 0 ? years + (years == 1 ? " year, " : " years, ") : "";
+        var monthsDisplay = months > 0 ? months + (months == 1 ? " month, " : " months, ") : "";
+        var daysDisplay = days > 0 ? days + (days == 1 ? " day" : " days") : "";
+        return yearsDisplay + monthsDisplay + daysDisplay; 
+    }
     // customize boolean (0|1) with icons
     myBooleanIcons(value){
         return (value == 1) ? '<i class="bi-check2-square"></i> true' : '<i class="bi-x-square"></i> false'
     }
-
+    // convert gender_id
+    gender(id){
+        let g
+        return (id == 1) ? g = '<i class="bi-gender-male"></i>' : g = '<i class="bi-gender-female"></i>'
+    }
     // compare current employment values with new ones
     compareEmployment(c, n) {
 

@@ -22,22 +22,28 @@ class LeaveHelpers {
         return (d == '0001-01-01') ? b = '' : b = d
     }
 
+    // convert isHalf
+    leaveDay(isHalf){
+        let result
+        return (isHalf == 1) ? result = 'Full <i class="bi-square-fill"></i>' : result = 'Half <i class="bi-square-half"></i>'
+    }
     // create rows leave requested dates (modal)
     createRowsLRD(entries){
-        let details =``
+        let details = `<div class="d-flex justify-content-between">
+                            <div>${this.formatDate(entries[0].requestedDate)}</div>
+                            <div>&nbsp;</div>
+                            <div>${this.leaveDay(entries[0].isHalf)}</div>
+                        </div>`
 
         if (entries.length > 1){
+            details =``
             entries.forEach(e => {
                 details += `<div class="d-flex justify-content-between">
-                            <div>From year ${e.requestedDate}</div>
-                            <div>${e.isHalf} days</div>
-                         </div>`
+                              <div>${this.formatDate(e.requestedDate)}</div>
+                              <div>&nbsp;</div>
+                              <div>${this.leaveDay(e.isHalf)}</div>
+                            </div>`
             })
-        }else{
-            details = `<div class="d-flex justify-content-between">
-                        <div>No condition</div>
-                        <div>${entries[0].requestedDate} (${entries[0].isHalf} )</div>
-                    </div>`
         }
 
         return details
@@ -45,69 +51,67 @@ class LeaveHelpers {
         
     // insert to datatable one row per element of data
     insertRows(data, action=true) {
-        $('#myLeaveTable').DataTable().destroy
+        // $('#myLeaveTable').DataTable().destroy
         const target = document.querySelector('#myLeaveBody')
         target.innerHTML = ''
-        if(data != null){
-            data.forEach(element => { 
-                let details = this.createRowsLRD(element.details)
-                let row = document.createElement('tr')
-                row.id = 'leave' + element.rowid
-                if (action){
-                    Common.showDivByID('approveBtn')
-                    Common.showDivByID('rejectBtn')
-                    row.innerHTML = `<td class="row-data">${allEmployees.get(Number(element.employeeid))}</td>
-                                 <td class="row-data" data-id="${element.leaveDefinition}">${element.leaveDefinitionCode} - ${element.leaveDefinitionName}</td>
-                                 <td class="row-data">${element.description}</td>
-                                 <td class="row-data" data-id="${element.statusid}">${element.status}</td>
-                                 <td class="row-data">${this.formatDate(element.approvedAt)}</td>
-                                 <td class="row-data">${allEmployees.get(Number(element.approvedBy))}</td>
-                                 <td class="row-data">${element.rejectedReason}</td>
-                                 <td class="row-data" data-entries=${JSON.stringify(element.details, function replacer(key, value) { return value})} data-bs-toggle="modal" data-bs-target="#details${element.rowid}">dates</td>
-                                 <td>
-                                    <div class="d-flex justify-content-between">
-                                        <div class="form-check">
-                                            <label class="form-check-label" for="leaves"><i class="bi-person-check-fill largeIcon"></i></label>
-                                            <input class="form-check-input leavesCheckboxes"  type="checkbox" value="${element.rowid}" name="leaves">
-                                        </div>
-                                    </div>                                                            
-                                </td>
-                                <div class="modal fade" id="details${element.rowid}" tabindex="-1">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">Leave reuqested dates ${element.leaveDefinitionCode} - ${element.leaveDefinitionName}</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            ${details}
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">close</button>
-                                        </div>
-                                        </div>
-                                    </div>
-                                </div>`
-                }else{
-                    Common.hideDivByID('approveBtn')
-                    Common.hideDivByID('rejectBtn')
-                    row.innerHTML = `<td class="row-data">${allEmployees.get(Number(element.employeeid))}</td>
-                                     <td class="row-data" data-id="${element.leaveDefinition}">${element.leaveDefinitionCode} - ${element.leaveDefinitionName}</td>
-                                     <td class="row-data">${element.description}</td>
-                                     <td class="row-data" data-id="${element.statusid}">${element.status}</td>
-                                     <td class="row-data">${this.formatDate(element.approvedAt)}</td>
-                                     <td class="row-data">${allEmployees.get(Number(element.approvedBy))}</td>
-                                     <td class="row-data">${element.rejectedReason}</td>
-                                     <td><i class="bi-lock"></i></td>`
-                }
-                
-                target.appendChild(row)
-            })
-            $('#myLeaveTable').DataTable()
-        }else{
-            $('#myLeaveTable').DataTable()
+
+        const myColumns = [
+            {title: "Employee"},
+            {title: "Leave"},
+            {title: "Description"},
+            {title: "Approved At"},
+            {title: "Approved By"},
+            {title: "Reason"},
+            {title: "Dates"},
+            {title: "Created At"},
+            {title: "Created By"},
+            {title: "Updated At"},
+            {title: "Updated By"},
+            {title: "Action"}
+        ]
+
+        if (data == null){
+            DT.initiateMyTable('myLeaveTable', myColumns)
             $('#myLeaveTable').DataTable().clear().draw()
+            return
         }
+        
+        data.forEach(element => { 
+            let details = this.createRowsLRD(element.details)
+            let row = document.createElement('tr')
+            row.id = 'leave' + element.rowid
+            row.innerHTML = `<td class="row-data">${allEmployees.get(Number(element.employeeid))}</td>
+                             <td class="row-data" data-id="${element.leaveDefinition}">${element.leaveDefinitionCode} - ${element.leaveDefinitionName}</td>
+                             <td class="row-data">${element.description}</td>
+                             <td class="row-data">${this.formatDate(element.approvedAt)}</td>
+                             <td class="row-data">${allEmployees.get(Number(element.approvedBy))}</td>
+                             <td class="row-data">${element.rejectedReason}</td>
+                             <td class="row-data">${details}</td>
+                             <td class="row-data">${this.formatDate(element.createdAt)}</td>
+                             <td class="row-data">${allEmployees.get(Number(element.createdBy))}</td>
+                             <td class="row-data">${this.formatDate(element.updatedAt)}</td>
+                             <td class="row-data">${allEmployees.get(Number(element.createdBy))}</td>`
+            if (action){
+                Common.showDivByID('approveBtn')
+                Common.showDivByID('rejectBtn')
+                row.innerHTML += `
+                             <td>
+                                <div class="d-flex justify-content-between">
+                                    <div class="form-check">
+                                        <label class="form-check-label" for="leaves"><i class="bi-person-check-fill largeIcon"></i></label>
+                                        <input class="form-check-input leavesCheckboxes"  type="checkbox" value="${element.rowid}" name="leaves">
+                                    </div>
+                                </div>                                                            
+                            </td>`
+            }else{
+                Common.hideDivByID('approveBtn')
+                Common.hideDivByID('rejectBtn')
+                row.innerHTML += `<td><i class="bi-lock"></i></td>`
+            }
+            
+            target.appendChild(row)
+        })
+        DT.initiateMyTable('myLeaveTable', myColumns)
         
     } 
 

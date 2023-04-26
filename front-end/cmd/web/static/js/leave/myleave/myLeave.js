@@ -14,21 +14,12 @@ const myRequestedDates = []
 
 // when DOM is loaded
 window.addEventListener('DOMContentLoaded', () => {
-    // fetch all employee information
-    API.getAllEmployees().then(resp => {
-        allEmployees = Common.updateEmployeeList(resp.data, allEmployees)
-
-        // fetch all 'my leaves' & update DOM (data table)
-        API.getAllMyLeave(connectedID, connectedEmail).then(resp => {
-            Helpers.generateDT(resp.data)
-            // when edit icon is clicked
-            // Helpers.makeEditable()
-        })
-    })    
-
-    // fetch all leave's definitions & update DOM (form)
-    API.getAllleaveDefinition().then(resp => {
-        Helpers.insertOptions('leaveDefinition', resp.data)
+    // fetch all needed informations  
+    API.getAllInformationsMyLeave(connectedID, connectedEmail).then(resp => {
+        console.log(resp);
+        allEmployees = Common.updateEmployeeList(resp.AllEmployees, allEmployees)
+        Helpers.generateDT(resp.MyLeaves)
+        Helpers.insertOptions('leaveDefinition', resp.AllLeaveDefinitions)
     })
       
     // when leave definition change

@@ -6,6 +6,8 @@ import (
 	"strings"
 )
 
+var wantedFiles = []string{"profile", "ic", "passport", "otherInformation"}
+
 // API which fetchs and returns all uploaded files of one employee
 func (rep *Repository) GetUploadedFiles(w http.ResponseWriter, r *http.Request) {
 
@@ -35,54 +37,21 @@ func (rep *Repository) GetUploadedFiles(w http.ResponseWriter, r *http.Request) 
 
 // collect all employee's uploaded files from one employee (email)
 func myUploadedFiles(email string) (*uploadedFiles, error) {
-	// collect active IC files
-	myIC, err := filesInDirectory(filepath.Join(path, email, "ic"))
-	if err != nil {
-		return nil, err
-	}
-	// collect active passport files
-	myPassport, err := filesInDirectory(filepath.Join(path, email, "passport"))
-	if err != nil {
-		return nil, err
-	}
-
-	// collect archive IC files (per timestamp directory)
-	myArchiveDirIC, err := filesInDirectory(filepath.Join(path, email, "archive", "ic"))
-	if err != nil {
-		return nil, err
-	}
-	myArchiveICFiles := map[string][]string{}
-	if len(myArchiveDirIC) > 0 {
-		for _, dir := range myArchiveDirIC {
-			myArchiveICFiles[dir], err = filesInDirectory(filepath.Join(path, email, "archive", "ic", dir))
-			if err != nil {
-				return nil, err
-			}
-		}
-	}
-
-	// collect archive passport files (per timestamp directory)
-	myArchiveDirPassport, err := filesInDirectory(filepath.Join(path, email, "archive", "passport"))
-	if err != nil {
-		return nil, err
-	}
-	myArchivePassportFiles := map[string][]string{}
-	if len(myArchiveDirPassport) > 0 {
-		for _, dir := range myArchiveDirPassport {
-			myArchivePassportFiles[dir], err = filesInDirectory(filepath.Join(path, email, "archive", "passport", dir))
-			if err != nil {
-				return nil, err
-			}
-		}
-	}
-
 	myFiles := map[string][]string{}
-	myFiles["ic"] = myIC
-	myFiles["passport"] = myPassport
-
 	myArchive := map[string]map[string][]string{}
-	myArchive["ic"] = myArchiveICFiles
-	myArchive["passport"] = myArchivePassportFiles
+
+	for _, wf := range wantedFiles {
+		myF, err := myActiveFiles(email, wf)
+		if err != nil {
+			return nil, err
+		}
+		myAF, err := myArchiveFiles(email, wf)
+		if err != nil {
+			return nil, err
+		}
+		myFiles[wf] = myF
+		myArchive[wf] = myAF
+	}
 
 	myUploadedFiles := uploadedFiles{
 		Files:   myFiles,
@@ -90,4 +59,33 @@ func myUploadedFiles(email string) (*uploadedFiles, error) {
 	}
 
 	return &myUploadedFiles, nil
+}
+
+func myActiveFiles(email, myFile string) ([]string, error) {
+	// collect active profile files
+	active, err := filesInDirectory(filepath.Join(path, email, myFile))
+	if err != nil {
+		return nil, err
+	}
+
+	return active, nil
+}
+
+func myArchiveFiles(email, myFile string) (map[string][]string, error) {
+	// collect archive IC files (per timestamp directory)
+	myArchiveDir, err := filesInDirectory(filepath.Join(path, email, "archive", myFile))
+	if err != nil {
+		return nil, err
+	}
+	myArchiveFiles := map[string][]string{}
+	if len(myArchiveDir) > 0 {
+		for _, dir := range myArchiveDir {
+			myArchiveFiles[dir], err = filesInDirectory(filepath.Join(path, email, "archive", myFile, dir))
+			if err != nil {
+				return nil, err
+			}
+		}
+	}
+
+	return myArchiveFiles, nil
 }

@@ -3,6 +3,7 @@ package handlers
 import (
 	"authentication/pkg/pg"
 	"errors"
+	"log"
 	"net/http"
 )
 
@@ -15,16 +16,20 @@ func (rep *Repository) UpdatePassword(w http.ResponseWriter, r *http.Request) {
 		rep.errorJSON(w, err)
 		return
 	}
-
+	log.Println(payload)
 	// fetch user information from DB
 	user, err := rep.App.Models.User.GetOne(payload.CreatedBy)
 	if err != nil {
 		rep.errorJSON(w, err)
 		return
 	}
-
+	log.Println(user.Fullname)
+	log.Println(user.Email)
+	log.Println(user.ID)
+	log.Println(user.EmployeeID)
 	//validate and convert payload to user to be reuse
 	valid, err := user.PasswordMatches(payload.OldPassword)
+	log.Println(valid)
 	if err != nil {
 		rep.errorJSON(w, err)
 		return

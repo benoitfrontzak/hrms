@@ -115,4 +115,5 @@ class PasswordHelpers{
         Common.insertHTML('Not matching with the DB password', oldPasswordError.id)
         this.displayWarningMessage(notValid)
     }
+    
 }

@@ -141,7 +141,7 @@ class MainHelpers{
         this.displayWarningMessage(notValid)
     }
 
-    // updateEmployeeList
+    // updateEmployeeList map
     updateEmployeeList(data, allEmployees){
         // update allEmployee active
         if (data.Active !== null){
@@ -164,4 +164,5 @@ class MainHelpers{
 
         return allEmployees
     }
+
 }

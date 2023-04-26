@@ -1,21 +1,65 @@
 {{template "base.admin" . }}
 
-{{define "content"}}
+<!-- We use css marker to load specific script of the page -->
+{{define "css"}}
+  <!-- DataTables -->
+  <script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+  <!-- Fixed columns -->
+  <script type="text/javascript" src="https://cdn.datatables.net/fixedcolumns/4.2.2/js/dataTables.fixedColumns.min.js"></script>
+  <!-- Export buttons -->
+  <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+  <!-- Reorder columns -->
+  <script src="https://cdn.datatables.net/colreorder/1.6.2/js/dataTables.colReorder.min.js"></script>
+  <!-- Draggable feature (modal) -->
+  <script type="text/javascript" src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 
+
+  <link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet"/>
+  <link href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.dataTables.min.css" rel="stylesheet"/>  
+{{end}}
+
+{{define "content"}}
   <div class="container-fluid">
-    <div class="zoomOut">
+    <div class="zoomOut mt-3 p-3 borderRadiusTop borderRadiusBottom shadow">
+      <!-- TITLE & BUTTONS -->
       <div class="row">
-        <div class="col my-3">
-          <h4 id="employeeTitle">Active Employees</h4>
+        <div class="col-10">
+          <h1 class="text-dark fw-bolder" id="employeeTitle">Active Employees</h1>
         </div>
-        <div class="col">
-          <!-- ACTION BUTTON -->
-          <div class="d-flex flex-row-reverse mt-3">
-            <div class="p-2 bd-highlight"><a href="#" class="btn btn-danger" id="deleteAllEmployee"><i class="bi-dash-circle"></i> delete</a></div>
-            <div class="p-2 bd-highlight"><a href="#" class="btn btn-danger" id="openCreateEmployee" data-bs-toggle="modal" data-bs-target="#createEmployee"><i class="bi bi-plus-circle-fill"></i> add</a></div>
-            <div class="p-2 bd-highlight">
-              <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">View</button>
+        <div class="col-2">
+          <div class="d-flex justify-content-end mb-1">
+            <div><a href="#" class="btn btn-secondary myButton" id="openCreateEmployee" data-bs-toggle="modal" data-bs-target="#createEmployee" data-bs-toggle="tooltip" title="Add Employee"><i class="bi-plus-lg largeIcon"></i></a></div>
+            <div>&nbsp;</div>
+            <div><a href="#" class="btn btn-secondary myButton" id="deleteAllEmployee" data-bs-toggle="tooltip" title="Delete Employee(s)"><i class="bi-x-lg largeIcon"></i></a></div>
+          </div>
+          <div class="d-flex justify-content-end">
+            <div class="dropdown" data-bs-toggle="tooltip" title="Show/Hide Columns">
+              <button type="button" class="btn btn-secondary myButton dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi-card-checklist largeIcon"></i></button>
+              <ul class="dropdown-menu">
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Code" id="Code" /><span> Code</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Fullname" id="Fullname" /><span> Fullname</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Email" id="Email" /><span> Email</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Mobile" id="Mobile" /><span> Mobile</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Birthdate" id="Birthdate" /><span> Birthdate</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Race" id="Race" /><span> Race</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Gender" id="Gender" /><span> Gender</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="CreatedAt" id="CreatedAt" /><span> Created At</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="CreatedBy" id="CreatedBy" /><span> Created By</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="UpdatedAt" id="UpdatedAt" /><span> Updated At</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="UpdatedBy" id="UpdatedBy" /><span> Updated By</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Action" id="Action" /><span> Action</span></a></li>
+              </ul>
+            </div>
+            <div>&nbsp;</div>
+            <div>
+              <div class="dropdown" data-bs-toggle="tooltip" title="Data Source">
+                <button class="btn btn-secondary myButton dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi-funnel-fill largeIcon"></i></button>
                 <ul class="dropdown-menu" aria-labelledby="DropdownMenuButton1">
                   <li><a class="dropdown-item" href="#" id="activeBtn">Active</a></li>
                   <li><a class="dropdown-item" href="#" id="inactiveBtn">Inactive</a></li>
@@ -25,7 +69,9 @@
             </div>
           </div>
         </div>
-      </div>   
+      </div>
+      <!-- TITLE & BUTTONS -->
+
       <!-- WARNING DELETE MESSAGE -->
       <div class="alert alert-warning mt-3 hide" role="alert" id="deleteWarningMessageDiv">
         <div class="d-flex justify-content-between">
@@ -37,26 +83,26 @@
         <p class="mb-0 smaller">Please check in on some of those fields below...</p>
       </div>
       <hr />
-      <table id="employeeSummary" class="display stripe" style="width:100%">
-        <thead>
-            <tr>
-                <th>Code</th>
-                <th>Fullname</th>
-                <th>Email</th>
-                <th>Mobile</th>
-                <th>Birthdate</th>
-                <th>Race</th>
-                <th>Gender</th>
-                <th></th>
-            </tr>
-        </thead>
+      <!-- WARNING DELETE MESSAGE -->
+
+      <!-- DATATABLE PROCESSING -->
+      <div id="processing" class="row my-3">
+        <div class="row text-center w-100"><div class="col">Processing data...</div></div>
+        <div class="row text-center w-100"><div class="col"><div class="loader"></div></div></div>
+      </div>
+      <!-- DATATABLE PROCESSING -->
+
+      <!-- DATATABLE -->
+      <table id="employeeSummary" class="table table-hover nowrap" style="width:100%">
+        <thead></thead>
         <tbody id="employeeSummaryBody"></tbody>
       </table>
-    </div><!-- End zoomOut-->  
+      <!-- DATATABLE -->
+    </div>
   </div>
 
 <!-- modal: Confirm employee deletion -->
-<div class="modal fade" id="confirmDelete" tabindex="-1">
+<div class="modal fade" id="confirmDelete" tabindex="-1" aria-labelledby="confirmDelete" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -77,7 +123,7 @@
 <!-- modal: Create employee -->
 <div class="modal fade" id="createEmployee" tabindex="-1" aria-labelledby="createEmployeelabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
-    <div class="modal-content">
+    <div class="modal-content zoomOut">
       <div class="modal-header">
         <h5 class="modal-title" id="createEmployeelabel">Create Employee</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -98,7 +144,7 @@
           <!-- card: identity -->
           <div class="card">
             <!-- card header: identity  -->
-            <div class="card-header bg-dark fw-bolder text-white">
+            <div class="card-header myTint3BG fw-bolder text-white">
               <div class="d-flex justify-content-between">
                 <div class="flex-grow-1"><i class="bi-person-lines-fill"></i> identity</div>
                 <div class="flex-shrink-1"><span class="fw-bolder fst-italic"><small><i class="bi-x-circle-fill" id="identityHide"></i><i class="bi-fullscreen hide" id="identityShow"></i></small></span></div>
@@ -120,7 +166,7 @@
                 <div class="col-sm-4">
                   <div class="form-floating">
                     <input type="text" class="form-control" id="nickName" name="nickName" />
-                    <label for="nickName">Nickname</label>
+                    <label for="nickName"><i class="bi-shield-fill-exclamation"></i> Nickname</label>
                   </div>
                   <div class="fw-bolder text-danger fst-italic smaller" id="nickNameError"></div>
                 </div>
@@ -277,7 +323,7 @@
           <!-- card: access-->
           <div class="card mt-3">
             <!-- card header: access  -->
-            <div class="card-header bg-dark fw-bolder text-white">
+            <div class="card-header myTint3BG fw-bolder text-white">
               <div class="d-flex justify-content-between">
                 <div class="flex-grow-1"><i class="bi-person-lines-fill"></i> Access</div>
                 <div class="flex-shrink-1"><span class="fw-bolder fst-italic"><small><i class="bi-x-circle-fill" id="accessHide"></i><i class="bi-fullscreen hide" id="accessShow"></i></small></span></div>
@@ -311,7 +357,7 @@
           <!-- card: contact-->
           <div class="card mt-3">
             <!-- card header: contact  -->
-            <div class="card-header bg-dark fw-bolder text-white">
+            <div class="card-header myTint3BG fw-bolder text-white">
               <div class="d-flex justify-content-between">
                 <div class="flex-grow-1"><i class="bi-person-lines-fill"></i> contact</div>
                 <div class="flex-shrink-1"><span class="fw-bolder fst-italic"><small><i class="bi-x-circle-fill" id="contactHide"></i><i class="bi-fullscreen hide" id="contactShow"></i></small></span></div>
@@ -437,8 +483,12 @@
 </script>
 
 <script src="/static/js/common/MainHelpers.js"></script>
+<script src="/static/js/common/JqueryDatables.js"></script>
+<script src="/static/js/common/JqueryDraggableModal.js"></script>
 
 <script src="/static/js/employee/crd/EmployeeAPI.js"></script>
+<script src="/static/js/employee/crd/EmployeeRead.js"></script>
+<script src="/static/js/employee/crd/EmployeeCT.js"></script>
 <script src="/static/js/employee/crd/EmployeeHelpers.js"></script>
 <script src="/static/js/employee/crd/employee.js"></script>
 {{end}}

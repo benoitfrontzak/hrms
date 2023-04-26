@@ -1,5 +1,14 @@
 {{template "base.admin" . }}
 
+<!-- We use css marker to load specific script of the page -->
+{{define "css"}}
+  <!-- DataTables -->
+  <script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/fixedcolumns/4.2.2/js/dataTables.fixedColumns.min.js"></script>
+  <link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet"/>
+{{end}}
+
 {{define "content"}}
 
 <div class="container-fluid" style="width:100%">
@@ -10,7 +19,30 @@
       </div>
       <div class="col">
         <!-- ACTION BUTTON -->
-        <div class="d-flex flex-row-reverse mt-3">
+        <div class="d-flex flex-row-reverse my-3">
+          <div class="p-2 bd-highlight">
+              <div class="dropdown">
+              <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi-card-checklist"></i></button>
+              <ul class="dropdown-menu">
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Code" id="Code" /><span>Code</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Description" id="Description" /><span>Description</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Is_Unpaid" id="Is_Unpaid" /><span>Is Unpaid</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Requires_Replacement" id="Requires_Replacement" /><span>Requires Replacement</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Requires_Attachment" id="Requires_Attachment" /><span>Requires Attachment</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Expiry" id="Expiry" /><span>Expiry</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Gender" id="Gender" /><span>Gender</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Limitation" id="Limitation" /><span>Limitation</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Entitlement_Calculation" id="Entitlement_Calculation" /><span>Entitlement Calculation</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Method" id="Method" /><span>Method</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Requires_Seniority" id="Requires_Seniority" /><span>Requires Seniority</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Max_Entitled" id="Max_Entitled" /><span>Max Entitled</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Created_By" id="Created_By" /><span>Created By</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Created_At" id="Created_At" /><span>Created At</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Updated_By" id="Updated_By" /><span>Updated By</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Updated_At" id="Updated_At" /><span>Updated At</span></a></li>
+              </ul>
+            </div>
+          </div>
           <div class="p-2 bd-highlight"><a href="#" class="btn btn-danger" id="deleteAllLeaveDefinition"><i class="bi-dash-circle"></i> delete</a></div>
           <div class="p-2 bd-highlight"><a href="#" class="btn btn-danger" id="openCreateLeaveDefinition" data-bs-toggle="modal" data-bs-target="#createLeaveDefinition"><i class="bi bi-plus-circle-fill"></i> add</a></div>
         </div>
@@ -28,23 +60,11 @@
     </div>    
     <hr />
     <!-- TABLE -->
-    <table id="leaveDefinitionTable" class="display stripe" style="width:100%">
-        <thead>
-            <tr>
-              <th>Code</th>
-              <th>Description</th>
-              <th>Unpaid</th>
-              <th>Replacement</th>
-              <th>Attachment</th>
-              <th>Expiry</th>
-              <th>Gender</th>
-              <th>Limitation</th>
-              <th>Calculation</th>
-              <th>Seniority</th>
-              <th>Entitled</th>
-              <th></th>
-            </tr>
-        </thead>
+    <div id="processing" class="row my-3">
+      <div class="row text-center w-100"><div class="col">Processing data...</div></div>
+      <div class="row text-center w-100"><div class="col"><div class="loader"></div></div></div>
+    </div>
+    <table id="leaveDefinitionTable" class="table table-hover nowrap" style="width:100%">
         <tbody id="leaveDefinitionBody"></tbody>
     </table>
   </div>
@@ -262,6 +282,7 @@
 </script>
 
 <script src="/static/js/common/MainHelpers.js"></script>
+<script src="/static/js/common/JqueryDatables.js"></script>
 
 <script src="/static/js/leave/definition/LeaveDefinitionHelpers.js"></script>
 <script src="/static/js/leave/definition/LeaveDefinitionAPI.js"></script>

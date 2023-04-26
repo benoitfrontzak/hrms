@@ -31,3 +31,25 @@ type ctEntriesPayload struct {
 	Table         string   `json:"name,omitempty"`
 	ConnectedUser string   `json:"email,omitempty"`
 }
+
+type User struct {
+	ID            int    `json:"id,string"`
+	Email         string `json:"email"`
+	GenderID      int    `json:"genderID"`
+	ConnectedUser string `json:"connectedUser"`
+	UserID        int    `json:"userID,string"`
+}
+
+type Request struct {
+	URL  string
+	Data any
+}
+
+type MyResponse struct {
+	URL       string
+	Error     bool
+	Message   string
+	Data      any
+	CreatedAt string
+	CreatedBy string
+}

@@ -48,8 +48,8 @@ type Claim struct {
 	StatusID          int     `json:"statusid,string,omitempty"`
 	Status            string  `json:"status"`
 	ApprovedAt        string  `json:"approvedAt"`
-	ApprovedBy        int     `json:"approvedBy,string,omitempty"`
-	ApprovedAmount    float32 `json:"approvedAmount,string,omitempty"`
+	ApprovedBy        int     `json:"approvedBy,string"`
+	ApprovedAmount    float32 `json:"approvedAmount,string"`
 	ApprovedReason    string  `json:"approvedReason"`
 	EmployeeID        int     `json:"employeeid,string,omitempty"`
 	SoftDelete        int     `json:"softDelete,string,omitempty"`

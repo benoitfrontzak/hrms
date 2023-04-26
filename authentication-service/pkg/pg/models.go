@@ -95,7 +95,7 @@ func (u *User) GetOne(id int) (*User, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
-	query := `select id, email, fullname, nickname, password, active, role, employee_id from "USERS" where id = $1`
+	query := `select id, email, fullname, nickname, password, active, role, employee_id from "USERS" where employee_id = $1`
 
 	var user User
 	row := db.QueryRowContext(ctx, query, id)

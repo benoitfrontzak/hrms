@@ -8,6 +8,25 @@ type Models struct {
 	ConfigTables ConfigTables
 }
 
+// PayrollItem is the structure which holds one employee's payroll item details
+type PayrollItem struct {
+	ID          int     `json:"id,string,omitempty"`
+	Type        string  `json:"type"`
+	Code        string  `json:"code"`
+	Description string  `json:"description"`
+	PayEPF      int     `json:"payEPF"`
+	PaySOCSO    int     `json:"paySOCSO"`
+	PayHRDF     int     `json:"payHRDF"`
+	PayTax      int     `json:"payTax"`
+	Start       string  `json:"start"`
+	End         string  `json:"end"`
+	Amount      float64 `json:"amount"`
+	CreatedAt   string  `json:"createdAt,omitempty"`
+	CreatedBy   int     `json:"createdBy,string,omitempty"`
+	UpdatedAt   string  `json:"updatedAt,omitempty"`
+	UpdatedBy   int     `json:"updatedBy,string,omitempty"`
+}
+
 // Bank is the structure which holds one employee's bank details
 type Bank struct {
 	ID            int    `json:"id,string,omitempty"`
@@ -220,9 +239,9 @@ type Employee struct {
 	Role              int    `json:"role,string"`
 	ConnectedUser     string `json:"connectedUser,omitempty"`
 	CreatedAt         string `json:"createdAt,omitempty"`
-	CreatedBy         int    `json:"createdBy,omitempty"`
+	CreatedBy         int    `json:"createdBy,string,omitempty"`
 	UpdatedAt         string `json:"updatedAt,omitempty"`
-	UpdatedBy         int    `json:"updatedBy,omitempty"`
+	UpdatedBy         int    `json:"updatedBy,string,omitempty"`
 }
 
 // Employee is the structure which holds one employee full details
@@ -236,6 +255,7 @@ type EmployeeFull struct {
 	Statutory         *Statutory           `json:"Statutory,omitempty"`
 	StatutoryArchive  []*StatutoryArchive  `json:"StatutoryArchive"`
 	Bank              *Bank                `json:"Bank"`
+	PayrollItems      []*PayrollItem       `json:"PayrollItem"`
 }
 
 // EmployeeSummary is the structure which holds one employee summary
@@ -249,6 +269,10 @@ type EmployeeSummary struct {
 	Birthdate string
 	Race      string
 	Gender    int
+	CreatedAt string
+	CreatedBy int
+	UpdatedAt string
+	UpdatedBy int
 }
 
 // AllEmployeeSummary is the structure which holds all employees summary (active, inactive & deleted)

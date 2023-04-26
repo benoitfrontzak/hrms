@@ -93,7 +93,11 @@ func getAllByStatus(active int) ([]*EmployeeSummary, error) {
 						e.primary_phone AS mobile,
 						e.birthdate,
 						ccr."name" AS race,
-						e.gender_id AS gender
+						e.gender_id AS gender,
+						e.created_at,
+						e.created_by,
+						e.updated_at,
+						e.updated_by
 			  	FROM "EMPLOYEE" e, "CONFIG_COMMON_RACE" ccr
 				WHERE e.is_active = $1
 				AND e.ID <> 0
@@ -121,6 +125,10 @@ func getAllByStatus(active int) ([]*EmployeeSummary, error) {
 			&emp.Birthdate,
 			&emp.Race,
 			&emp.Gender,
+			&emp.CreatedAt,
+			&emp.CreatedBy,
+			&emp.UpdatedAt,
+			&emp.UpdatedBy,
 		)
 		if err != nil {
 			return nil, err
@@ -145,7 +153,11 @@ func getAllDeleted() ([]*EmployeeSummary, error) {
 						e.primary_phone AS mobile,
 						e.birthdate,
 						ccr."name" AS race,
-						e.gender_id AS gender
+						e.gender_id AS gender,
+						e.created_at,
+						e.created_by,
+						e.updated_at,
+						e.updated_by
 			  	FROM "EMPLOYEE" e, "CONFIG_COMMON_RACE" ccr
 				WHERE e.soft_delete = 1
 				AND e.ID <> 0
@@ -171,6 +183,10 @@ func getAllDeleted() ([]*EmployeeSummary, error) {
 			&emp.Birthdate,
 			&emp.Race,
 			&emp.Gender,
+			&emp.CreatedAt,
+			&emp.CreatedBy,
+			&emp.UpdatedAt,
+			&emp.UpdatedBy,
 		)
 		if err != nil {
 			return nil, err

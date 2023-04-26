@@ -22,11 +22,11 @@ type jsonResponse struct {
 
 // newEmployee is a struct which holds the information of the created employee
 type User struct {
-	ID            int    `json:"id"`
+	ID            int    `json:"id,string"`
 	Email         string `json:"email"`
-	GenderID      int    `json:"genderID,omitempty"`
-	ConnectedUser string `json:"connectedUser,omitempty"`
-	UserID        int    `json:"userID,string,omitempty"`
+	GenderID      int    `json:"genderID"`
+	ConnectedUser string `json:"connectedUser"`
+	UserID        int    `json:"userID,string"`
 }
 
 // employeeListID is the struct which holds the list of employee id to be deleted

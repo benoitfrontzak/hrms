@@ -1,4 +1,5 @@
 const Common  = new MainHelpers(),
+      DT      = new DataTableFeatures(),
       Helpers = new LeaveDefinitionHelpers(),
       API     = new LeaveDefinitionAPI()
 
@@ -11,12 +12,14 @@ let rowDetailsNumber = 1
 // store rowID of existing row details to be deleted
 const rowDetailsDelete = []
 
+
 // when DOM is loaded
 window.addEventListener('DOMContentLoaded', () => {
 
     // fetch all leave's definition & update DOM 
     API.getAllLeaveDefinition().then(resp => {
-        Helpers.generateDT(resp.data)
+        console.log(resp.data);
+        Helpers.insertRows(resp.data)
         // when edit icon is clicked
         Helpers.makeEditable()
     })
