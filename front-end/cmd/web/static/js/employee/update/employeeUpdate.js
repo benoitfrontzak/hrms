@@ -8,6 +8,9 @@ const myRIF = [ 'fullName', 'employeeCode',
                 'nationality', 'residence',
                 'primaryPhone', 'primaryEmail']
 
+// set sidenav items
+const menuItems = ['personal', 'spouse', 'employment', 'statutory', 'payrollItem']
+
 // set card's parameters to enable show|hide function
 const myCards  = ['identity', 'contact', 'bank', 'emergency', 'otherInformation',
                   'spouseIdentity', 'spouseWorking', 'spouseContact',
@@ -75,8 +78,7 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     })
     
-    // make menu clickable (personal | spouse | employment | statutory)
-    const menuItems = ['personal', 'spouse', 'employment', 'statutory']
+    // make menu clickable (personal | spouse | employment | statutory | payrollItem)    
     menuItems.forEach(element => {
         const myMenu            = document.querySelector('#'+element + 'Menu'),
               myContent         = document.querySelector('#'+element + 'Content'),
@@ -135,22 +137,6 @@ window.addEventListener('DOMContentLoaded', () => {
             Helpers.populateUploadFiles(wanted)
             uploadModal.toggle()
         })
-    });
-    
-    // // when upload ic button is clicked
-    // const myICBtn = document.querySelector('#uploadICButton')
-    // myICBtn.addEventListener('click', () => {
-    //     const wanted = 'ic'
-    //     Helpers.populateUploadFiles(wanted)
-    //     uploadModal.toggle()
-    // })
-
-    // // when upload ic button passport clicked
-    // const myPassportBtn = document.querySelector('#uploadPassportButton')
-    // myPassportBtn.addEventListener('click', () => {
-    //     const wanted = 'passport'
-    //     Helpers.populateUploadFiles(wanted)
-    //     uploadModal.toggle()
-    // })
+    })
 
 })

@@ -87,7 +87,7 @@ type LeaveDetails struct {
 	ID            int    `json:"rowid,string,omitempty"`
 	LeaveID       int    `json:"leaveID,string"`
 	RequestedDate string `json:"requestedDate"`
-	IsHalf        int    `json:"isHalf"`
+	IsHalf        int    `json:"isHalf,string"`
 	SoftDelete    int    `json:"softDelete,string"`
 	CreatedAt     string `json:"createdAt"`
 	CreatedBy     int    `json:"createdBy"`

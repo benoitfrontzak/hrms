@@ -463,3 +463,21 @@ func (ld *LeaveDefinition) CreateEntitledByDefinition(lid, eid int, entitled flo
 	}
 	return nil
 }
+
+// remove leave definition from all employees (leave_employee)
+func (ld *LeaveDefinition) RemoveEntitledByDefinition(lid int) error {
+	// canceling this context releases resources associated with it
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+	// SQL statement which update an employee (soft delete)
+	stmt := `DELETE FROM public."LEAVE_EMPLOYEE" WHERE leave_definition_id=$1;
+	`
+
+	// executes SQL query
+	_, err := db.ExecContext(ctx, stmt, lid)
+	if err != nil {
+		return err
+	}
+	return nil
+}

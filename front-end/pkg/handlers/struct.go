@@ -56,10 +56,11 @@ type jsonResponse struct {
 
 // attachments is the struct which holds the payload from upload files form
 type attachments struct {
-	Files    []*multipart.FileHeader
-	Filename string
-	Email    string
-	ID       string
+	Files         []*multipart.FileHeader
+	Filename      string
+	ApplicationID string
+	Email         string
+	ID            string
 }
 
 // uploadedFiles is the struct which holds all uploaded files of one employee

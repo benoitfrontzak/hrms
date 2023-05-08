@@ -49,9 +49,14 @@ class LeaveHelpers {
         return details
     }
         
+    // create attachments icon
+    createAttachments(appID){
+        return (myUploadedFiles.has(appID)) ? '<i class="bi-check-square pointer"></i>' : '<i class="bi-file-excel-fill not-allowed"></i>'
+    }
+
     // insert to datatable one row per element of data
     insertRows(data, action=true) {
-        // $('#myLeaveTable').DataTable().destroy
+        // $('#leaveApplicationTable').DataTable().destroy
         const target = document.querySelector('#myLeaveBody')
         target.innerHTML = ''
 
@@ -59,6 +64,7 @@ class LeaveHelpers {
             {title: "Employee"},
             {title: "Leave"},
             {title: "Description"},
+            {title: "Attachments"},
             {title: "Approved At"},
             {title: "Approved By"},
             {title: "Reason"},
@@ -71,18 +77,20 @@ class LeaveHelpers {
         ]
 
         if (data == null){
-            DT.initiateMyTable('myLeaveTable', myColumns)
-            $('#myLeaveTable').DataTable().clear().draw()
+            DT.initiateMyTable('leaveApplicationTable', myColumns)
+            $('#leaveApplicationTable').DataTable().clear().draw()
             return
         }
         
         data.forEach(element => { 
+            
             let details = this.createRowsLRD(element.details)
             let row = document.createElement('tr')
             row.id = 'leave' + element.rowid
             row.innerHTML = `<td class="row-data">${allEmployees.get(Number(element.employeeid))}</td>
                              <td class="row-data" data-id="${element.leaveDefinition}">${element.leaveDefinitionCode} - ${element.leaveDefinitionName}</td>
                              <td class="row-data">${element.description}</td>
+                             <td class="row-data myAttachments" data-appid=${element.rowid}>${element.employeeid}</td>
                              <td class="row-data">${this.formatDate(element.approvedAt)}</td>
                              <td class="row-data">${allEmployees.get(Number(element.approvedBy))}</td>
                              <td class="row-data">${element.rejectedReason}</td>
@@ -90,7 +98,7 @@ class LeaveHelpers {
                              <td class="row-data">${this.formatDate(element.createdAt)}</td>
                              <td class="row-data">${allEmployees.get(Number(element.createdBy))}</td>
                              <td class="row-data">${this.formatDate(element.updatedAt)}</td>
-                             <td class="row-data">${allEmployees.get(Number(element.createdBy))}</td>`
+                             <td class="row-data">${allEmployees.get(Number(element.updatedBy))}</td>`
             if (action){
                 Common.showDivByID('approveBtn')
                 Common.showDivByID('rejectBtn')
@@ -108,13 +116,61 @@ class LeaveHelpers {
                 Common.hideDivByID('rejectBtn')
                 row.innerHTML += `<td><i class="bi-lock"></i></td>`
             }
-            
+         
             target.appendChild(row)
         })
-        DT.initiateMyTable('myLeaveTable', myColumns)
+        DT.initiateMyTable('leaveApplicationTable', myColumns)
         
-    } 
+        // update attachments
+        const table = $('#leaveApplicationTable').DataTable(),
+              cells = table.cells('.myAttachments');
 
+         // loop over all cells
+         cells.every(function() {
+            const cell = this,
+                  employeeID = cell.data(),
+                  appID = $(cell.node()).attr('data-appid')
+            // fetch employee email
+            API.getEmployeeEmailByID(employeeID).then(resp => {
+                const email = resp.data
+                // set email attribute
+                $(cell.node()).attr('data-email', email);
+                API.getUploadedFiles(email).then(r => {
+                    let icon
+                    if (r.data.Files[appID] !== undefined) {
+                        // set entries attribute
+                        $(cell.node()).attr('data-entries', JSON.stringify(r.data.Files[appID], function replacer(key, value) { return value}))
+                        icon='<i class="bi-check-square pointer"></i>'
+                    }else{
+                        icon='<i class="bi-file-excel-fill not-allowed"></i>'
+                    } 
+                    cell.data(icon)
+                })
+                
+            })
+         });
+    } 
+    // populate attachments modal & open it
+    populateAttachments(appID, email, entries, icon){
+        if (icon != '<i class="bi-file-excel-fill not-allowed"></i>'){
+            const target = document.querySelector('#uploadedFilesModalBody'),
+                  myModal = new bootstrap.Modal(document.getElementById('uploadedFilesModal'), { 
+                    backdrop: 'static',
+                    keyboard: false 
+                  })
+            target.innerHTML = ''
+            JSON.parse(entries).forEach(element => {
+                const oneAttachment = document.createElement('div')
+                oneAttachment.classList = 'd-flex justify-content-center mb-3'
+                oneAttachment.innerHTML = `<div>
+                                                <div><img class="myPicture" src="/upload/${email}/leaves/${appID}/${element}" /></div>
+                                                <div class="text-end"><a href="/upload/${email}/leaves/${appID}/${element}" class="myLink" download="${element}"><i class="bi-download pointer"></i> download</a></div>
+                                           </div>`
+                target.appendChild(oneAttachment)
+            })
+            myModal.show()
+        }
+    }
     // returns list of selected leave id to be deleted
     selectedLeave(){
         const checked = document.querySelectorAll('input[name=leaves]:checked')

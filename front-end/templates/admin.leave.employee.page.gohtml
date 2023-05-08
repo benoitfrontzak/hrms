@@ -1,0 +1,65 @@
+{{template "base.admin" . }}
+
+{{define "content"}}
+
+<div class="container-fluid" style="width:100%">
+   <div class="zoomOut mt-3 p-3 borderRadiusTop borderRadiusBottom shadow">
+
+    <div class="alert alert-success hide" role="alert" id="successMessageDiv">Leave credits successfully updated!</div>
+
+    <div class="row">
+      <div class="col-8">
+        <h1 class="text-dark fw-bolder" id="employeeTitle">Leave Employee</h1>
+      </div>
+      <div class="col-4">
+        <label for="searchEmployee" class="form-label">Search Employee</label>
+        <div class="input-group rounded">
+          <input type="search" class="form-control rounded" list="datalistOptions" id="searchEmployee" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+          <span class="input-group-text border-0" id="search-addon">
+            <i class="bi-search"></i>
+          </span>
+        </div>
+        <datalist id="datalistOptions"></datalist>
+      </div>
+    </div>
+      
+    <hr />
+
+    <form class="hide" id="leaveEmployeeForm" name="leaveEmployeeForm">
+      <div class="row bg-light">
+        <div class="col-7 mt-3"><div class="p-3" id="chartLeaves"></div></div>
+        <div class="col-5 mt-3">
+          <div class="row my-3 border-bottom"> 
+            <div class="col-4 mt-3 myTint2TextColor text-start fw-bolder">Title</div> 
+            <div class="col-2 mt-3 myTint2TextColor text-start fw-bolder">Entitled</div> 
+            <div class="col-2 mt-3 myTint2TextColor text-start fw-bolder">Credits</div> 
+            <div class="col-2 mt-3 myTint2TextColor text-start fw-bolder">Taken</div> 
+            <div class="col-2 mt-3 myTint2TextColor text-start fw-bolder">Balance</div> 
+          </div>
+          <div id="leaveDetailsBody"></div>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="text-end"><a href="#" class="btn btn-danger" id="updateEmployeeLeave"><i class="bi bi-save2-fill"></i> Save</a></div>
+      </div>
+    </form>
+
+  </div>
+</div>
+
+{{end}}
+
+{{define "js"}}
+
+<script>
+  const connectedEmail = {{.User.Email}},
+        connectedID = '{{.User.EmployeeID}}'
+</script>
+
+<script src="/static/js/common/MainHelpers.js"></script>
+<script src="/static/js/common/JqueryDraggableModal.js"></script>
+
+<script src="/static/js/leave/employee/EmployeeLeaveHelpers.js"></script>
+<script src="/static/js/leave/employee/EmployeeLeaveAPI.js"></script>
+<script src="/static/js/leave/employee/employeeLeave.js"></script>
+{{end}}

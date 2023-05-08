@@ -25,21 +25,14 @@ func CreateMyLeave(w http.ResponseWriter, r *http.Request) {
 		errorJSON(w, err)
 		return
 	}
-	// decode answer.Data
-	// ct, err := extractResponseCT(answer.Data)
-	// if err != nil {
-	// 	errorJSON(w, err)
-	// 	return
-	// }
 
 	// log to employee-service collection
 	l := rpcPayload{
 		Collection: "leave",
-		Name:       "create definition",
-		// Data:       fmt.Sprintf("new entry successfully created for table %s with id %d", ct.Table, ct.RowID),
-		Data:      fmt.Sprintf("new entry successfully created for table with id"),
-		CreatedAt: answer.CreatedAt,
-		CreatedBy: answer.CreatedBy,
+		Name:       "application",
+		Data:       fmt.Sprintf("new entry successfully created for table with id"),
+		CreatedAt:  answer.CreatedAt,
+		CreatedBy:  answer.CreatedBy,
 	}
 	LogItemViaRPC(l)
 

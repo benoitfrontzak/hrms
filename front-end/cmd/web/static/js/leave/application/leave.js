@@ -17,7 +17,6 @@ window.addEventListener('DOMContentLoaded', () => {
      // fetch all employee information
      API.getAllEmployees().then(resp => {
         allEmployees = Common.updateEmployeeList(resp.data, allEmployees)
-
         // fetch all leaves & update DOM (data table)
         API.getAllLeaves().then(resp => {
             const approved = resp.data.Approved,
@@ -32,9 +31,9 @@ window.addEventListener('DOMContentLoaded', () => {
             dSource.forEach(element => {
                 // create capitalize function
                 const capitalize = element => (element && element[0].toUpperCase() + element.slice(1)) || ""
-    
+
                 document.querySelector('#'+element+'Btn').addEventListener('click', () => {
-                    $('#myLeaveTable').DataTable().destroy()
+                    $('#leaveApplicationTable').DataTable().destroy()
                     let ds
                     switch (element) {
                         case 'pending':
@@ -54,9 +53,19 @@ window.addEventListener('DOMContentLoaded', () => {
                     document.querySelector('#leaveTitle').innerHTML = capitalize(element) + ' Leave Applications'
                 })
             })
+  
+            // when attachments is clicked
+            $('#leaveApplicationTable').on('click', '.myAttachments', function (e) {
+                const appID = e.currentTarget.dataset.appid,
+                      email = e.currentTarget.dataset.email,
+                      entries = e.currentTarget.dataset.entries,
+                      icon = e.currentTarget.innerHTML
+                Helpers.populateAttachments(appID, email, entries, icon)
+            })
+
         })
     })
-
+    
     // initiate confirm approval modal
     const myApprovalConfirm = new bootstrap.Modal(document.getElementById('approveModal'), { 
         backdrop: 'static',
@@ -81,8 +90,7 @@ window.addEventListener('DOMContentLoaded', () => {
     // when confirm approval is clicked (submit)
     document.querySelector('#approveSubmit').addEventListener('click', () => {
         
-        const myAmount = document.querySelector('#amount'),
-              checked = Helpers.selectedLeave()
+        const checked = Helpers.selectedLeave()
 
         API.approveLeaves(checked, connectedEmail, connectedID).then(resp => {
             if (!resp.error) location.reload()
@@ -126,9 +134,6 @@ window.addEventListener('DOMContentLoaded', () => {
              element.checked = false
          })
 
-         Common.insertInputValue('', 'amount')
-         Common.insertHTML('', 'amountError')
-
      })
     document.getElementById('rejectModal').addEventListener('hidden.bs.modal', function () {
 
@@ -141,4 +146,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
      })
 
+    // make modals draggable
+    Draggable.draggableModal('approveModal')
+    Draggable.draggableModal('rejectModal')
 })

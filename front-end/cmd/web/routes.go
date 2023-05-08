@@ -32,9 +32,10 @@ func multiplexer() http.Handler {
 	mux.Handle("/information/", handlers.Middleware(http.HandlerFunc(handlers.Repo.Information)))
 
 	// Maintenance: Admin only
-	mux.Handle("/employee/", handlers.Middleware(http.HandlerFunc(handlers.Repo.Employee))) // CRUD operation
-	mux.Handle("/claim/", handlers.Middleware(http.HandlerFunc(handlers.Repo.Claim)))       // Approve | reject claim
-	mux.Handle("/leave/", handlers.Middleware(http.HandlerFunc(handlers.Repo.Leave)))       // Approve | reject leave
+	mux.Handle("/employee/", handlers.Middleware(http.HandlerFunc(handlers.Repo.Employee)))            // CRUD operation
+	mux.Handle("/claim/", handlers.Middleware(http.HandlerFunc(handlers.Repo.Claim)))                  // Approve | reject claim
+	mux.Handle("/leave/", handlers.Middleware(http.HandlerFunc(handlers.Repo.Leave)))                  // Approve | reject leave
+	mux.Handle("/leave/employee/", handlers.Middleware(http.HandlerFunc(handlers.Repo.LeaveEmployee))) // update employee's leave (credits)
 
 	// My profile
 	mux.Handle("/myclaim/", handlers.Middleware(http.HandlerFunc(handlers.Repo.MyClaim))) // my claim applications (CRUD)
@@ -51,7 +52,9 @@ func multiplexer() http.Handler {
 	mux.Handle("/definition/leave/", handlers.Middleware(http.HandlerFunc(handlers.Repo.LeaveDefinition)))
 
 	// API with middleware (upload)
-	mux.Handle("/api/v1/employee/upload/", handlers.Middleware(http.HandlerFunc(handlers.Repo.UploadFiles)))
+	mux.Handle("/api/v1/leave/upload/", handlers.Middleware(http.HandlerFunc(handlers.Repo.UploadLeaveFiles)))
+	mux.Handle("/api/v1/leave/getUploadedFiles/", handlers.Middleware(http.HandlerFunc(handlers.Repo.GetLeaveUploadedFiles)))
+	mux.Handle("/api/v1/employee/upload/", handlers.Middleware(http.HandlerFunc(handlers.Repo.UploadEmployeeFiles)))
 	mux.Handle("/api/v1/employee/getUploadedFiles/", handlers.Middleware(http.HandlerFunc(handlers.Repo.GetUploadedFiles)))
 
 	return mux

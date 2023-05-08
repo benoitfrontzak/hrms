@@ -24,6 +24,25 @@ func (rep *Repository) RejectLeave(w http.ResponseWriter, r *http.Request) {
 			rep.errorJSON(w, err)
 			return
 		}
+		// get leave definition id of leave application id
+		lid, err := rep.App.Models.Leave.GetLeaveDefinitionID(rowID)
+		if err != nil {
+			rep.errorJSON(w, err)
+			return
+		}
+		// calculate number of days to be removed to taken
+		n, err := rep.App.Models.Leave.GetRequestedDatesNumber(rowID)
+		if err != nil {
+			rep.errorJSON(w, err)
+			return
+		}
+
+		// decrement employee's leave taken
+		err = rep.App.Models.Leave.DecrementTakenLeave(lid, p.UserID, n)
+		if err != nil {
+			rep.errorJSON(w, err)
+			return
+		}
 	}
 
 	// response to be sent

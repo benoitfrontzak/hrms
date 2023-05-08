@@ -135,53 +135,67 @@ table.dataTable thead tr>.dtfc-fixed-right{border-color: #DC0015;}
 
 /* bootstrap datepicker */
 .table-condensed {
-  width: 340px;
-  height: auto;
+  width: 100% !important;
+  height: auto !important;
 }
 .table-condensed>thead{
-  background: #E66E7A;
-  color:white;
+  background: #E66E7A !important;
+  color:white !important;
 }
-.table-condensed>tbody>tr>td:hover{
-  background-color: #DC0015 !important; 
-  background: #DC0015 !important; 
+/* .table-condensed>tbody>tr>td:hover{
+  background-color: #DC0015; 
+  background: #DC0015; 
   background-image: none;
+} */
+.datepicker, .datepicker-inline{
+  width: 100% !important;
+  height: auto !important;
 }
 .datepicker-switch:hover,
 .prev:hover,
 .next:hover{
-  background-color: #DC0015 !important; 
-  background: #DC0015 !important; 
-  background-image: none;
+  background-color: none !important; 
+  background: none !important; 
+  background-image: none !important;
+  font-weight: bolder;
+  color:#000 !important;
 }
 .datepicker table tr td.highlighted {
-  background: #F5C5C9;
-  border-radius: 0;
+  background: #F5C5C9 !important;
+  border-radius: 0 !important;
+}
+.datepicker table tr td.highlighted:hover {
+  background: #DC0015 !important;
+  border-radius: 0 !important;
+}
+.datepicker table tr td.disabled,
+.datepicker table tr td.disabled:hover {
+    background: none !important;
+    background-color: #F5C5C9 !important; 
+    /* color: #FAFAFA !important; */
+    color: transparent !important; 
+    text-shadow: 0 0 3px #DC0015 !important;
+    cursor: not-allowed;
+    border-radius: 0 !important;
 }
 .datepicker table tr td.today,
 .datepicker table tr td.today.disabled,
 .datepicker table tr td.today.disabled:hover,
 .datepicker table tr td.today:hover {
-  color: white;
-  background-color: #DC3545;
-  background-image: none;
+  color: white !important;
+  border: 1px solid #DC3545 !important; 
+  background-image: none !important;
 }
 .datepicker table tr td.active,
 .datepicker table tr td.active.disabled,
 .datepicker table tr td.active.disabled:hover,
 .datepicker table tr td.active:hover {
-    background-color: #DC3545;
-    background-image: -moz-linear-gradient(to bottom, #DC3545, #F5C5C9);
-    background-image: -ms-linear-gradient(to bottom, #DC3545, #F5C5C9);
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#DC3545), to(#F5C5C9));
-    background-image: -webkit-linear-gradient(to bottom, #DC3545, #F5C5C9);
-    background-image: -o-linear-gradient(to bottom, #DC3545, #F5C5C9);
-    background-image: linear-gradient(to bottom, #DC3545, #F5C5C9);
-    background-repeat: repeat-x;
-    border-color: #F5C5C9 #F5C5C9 #DC3545;
-    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-    color: #fff;
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    background-color: #DC3545 !important;
+    background-repeat: repeat-x !important;
+    border-color: #F5C5C9 #F5C5C9 #DC3545 !important;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25) !important;
+    color: #fff !important;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25) !important;
 }
 .clear:hover{
   background-color: white !important; 
@@ -208,9 +222,11 @@ table.dataTable thead tr>.dtfc-fixed-right{border-color: #DC0015;}
 .space{
   min-height: 2em;
 }
+.not-allowed {cursor: not-allowed;}
 .pointer{
   cursor: pointer;
 }
+.not-allowed:hover,
 .pointer:hover{
   color: #DC0015;
   font-weight: bold;
@@ -269,7 +285,10 @@ table.dataTable thead tr>.dtfc-fixed-right{border-color: #DC0015;}
   right: 0;
   content: "\00d7"; /* This will render the 'X' */
 }
-
+.transparentInput{
+  background: transparent;
+  border: none;
+}
 /* Theme colors */
 .shadow{
   border-radius: 5px;

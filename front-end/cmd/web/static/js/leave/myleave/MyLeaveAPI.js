@@ -1,6 +1,16 @@
-const broker = 'http://localhost:8088/'
+const broker = 'http://localhost:8088/',
+      fileServer = 'http://localhost/'
 
 class MyLeaveAPI {
+
+  // fetch all employee's uploaded files
+  async getUploadedFiles(email){
+    const url = fileServer + 'api/v1/leave/getUploadedFiles/'+email,
+          response = await fetch(url),
+          result = await response.json()
+
+    return result
+  }
 
   // fetch all required information at once
   async getAllInformationsMyLeave(connectedID, connectedEmail){
@@ -18,38 +28,6 @@ class MyLeaveAPI {
     const result = await response.json();
     return result;
   }
-  // // fetch all employees
-  // async getAllEmployees() {
-  //   const url = broker + 'route/employee/get/all'
-  //   const response = await fetch(url);
-  //   const result = await response.json();
-  //   return result;
-  // }
-
-  // // fetch all my leave
-  // async getAllMyLeave(connectedID, connectedEmail) {
-  //   const url = broker + 'route/myleave/get/all';
-  //   const payload = {
-  //     id : connectedID,
-  //     email : connectedEmail
-  //   }
-
-  //   const body = {
-  //     method: 'POST',
-  //     body: JSON.stringify(payload),
-  //   }
-  //   const response = await fetch(url, body)
-  //   const result = await response.json();
-  //   return result;
-  // }
-
-  // // fetch all leave definition
-  // async getAllleaveDefinition() {
-  //   const url = broker + 'route/leave/definition/get/all';
-  //   const response = await fetch(url);
-  //   const result = await response.json();
-  //   return result;
-  // }
 
   // create new leave definition   
   async createLeave(stringifiedJSON) {
@@ -76,12 +54,13 @@ class MyLeaveAPI {
   }
 
   // soft delete all leave definition
-  async softDeleteLeave(leaveList, connectedUser) {
+  async softDeleteLeave(leaveList, connectedUser, userID) {
     const url = broker + 'route/myleave/softDelete'
 
     const payload = {
       list : leaveList,
-      connectedUser : connectedUser
+      connectedUser : connectedUser,
+      userID : userID
     }
     const body = {
       method: 'POST',

@@ -5,24 +5,44 @@
   <!-- DataTables -->
   <script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
   <script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+  <!-- Fixed columns -->
   <script type="text/javascript" src="https://cdn.datatables.net/fixedcolumns/4.2.2/js/dataTables.fixedColumns.min.js"></script>
+  <!-- Export buttons -->
+  <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+  <!-- Reorder columns -->
+  <script src="https://cdn.datatables.net/colreorder/1.6.2/js/dataTables.colReorder.min.js"></script>
+  <!-- Draggable feature (modal) -->
+  <script type="text/javascript" src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+
+
   <link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet"/>
+  <link href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.dataTables.min.css" rel="stylesheet"/> 
 {{end}}
 
 {{define "content"}}
 
 <div class="container-fluid" style="width:100%">
-  <div class="zoomOut">
+  <div class="zoomOut mt-3 p-3 borderRadiusTop borderRadiusBottom shadow">
+    <!-- TITLE & BUTTONS -->
     <div class="row">
-      <div class="col my-3">
-        <h4 id="leaveTitle">Leave Definitions</h4>
+      <div class="col-10">
+        <h1 class="text-dark fw-bolder" id="leaveTitle">Leave Definitions</h1>
       </div>
-      <div class="col">
+      <div class="col-2">
         <!-- ACTION BUTTON -->
-        <div class="d-flex flex-row-reverse my-3">
-          <div class="p-2 bd-highlight">
-              <div class="dropdown">
-              <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi-card-checklist"></i></button>
+        <div class="d-flex justify-content-end mb-1">
+          <div><a href="#" class="btn btn-secondary myButton" id="openCreateLeaveDefinition" data-bs-toggle="modal" data-bs-target="#createLeaveDefinition" data-bs-toggle="tooltip" title="Add"><i class="bi-plus-lg largeIcon"></i></a></div>
+          <div>&nbsp;</div>
+          <div><a href="#" class="btn btn-secondary myButton" id="deleteAllLeaveDefinition" data-bs-toggle="tooltip" title="Delete"><i class="bi-x-lg largeIcon"></i></a></div>
+        </div>
+        <div class="d-flex justify-content-end">
+          <div class="dropdown" data-bs-toggle="tooltip" title="Show/Hide Columns">
+              <button type="button" class="btn btn-secondary myButton dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi-card-checklist largeIcon"></i></button>
               <ul class="dropdown-menu">
                 <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Code" id="Code" /><span>Code</span></a></li>
                 <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Description" id="Description" /><span>Description</span></a></li>
@@ -42,12 +62,10 @@
                 <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Updated_At" id="Updated_At" /><span>Updated At</span></a></li>
               </ul>
             </div>
-          </div>
-          <div class="p-2 bd-highlight"><a href="#" class="btn btn-danger" id="deleteAllLeaveDefinition"><i class="bi-dash-circle"></i> delete</a></div>
-          <div class="p-2 bd-highlight"><a href="#" class="btn btn-danger" id="openCreateLeaveDefinition" data-bs-toggle="modal" data-bs-target="#createLeaveDefinition"><i class="bi bi-plus-circle-fill"></i> add</a></div>
         </div>
       </div>
     </div>
+    <!-- TITLE & BUTTONS -->
     <!-- WARNING DELETE MESSAGE -->
     <div class="alert alert-warning mt-3 hide" role="alert" id="deleteWarningMessageDiv">
       <div class="d-flex justify-content-between">
@@ -59,11 +77,13 @@
       <p class="mb-0 smaller">Please check in on some of those fields below...</p>
     </div>    
     <hr />
-    <!-- TABLE -->
+    <!-- DATATABLE PROCESSING -->
     <div id="processing" class="row my-3">
       <div class="row text-center w-100"><div class="col">Processing data...</div></div>
       <div class="row text-center w-100"><div class="col"><div class="loader"></div></div></div>
     </div>
+    <!-- DATATABLE PROCESSING -->
+    <!-- TABLE -->
     <table id="leaveDefinitionTable" class="table table-hover nowrap" style="width:100%">
         <tbody id="leaveDefinitionBody"></tbody>
     </table>
@@ -278,11 +298,12 @@
 
 <script>
   const connectedEmail = {{.User.Email}},
-        connectedID = {{.User.EmployeeID}}
+        connectedID = '{{.User.EmployeeID}}'
 </script>
 
 <script src="/static/js/common/MainHelpers.js"></script>
 <script src="/static/js/common/JqueryDatables.js"></script>
+<script src="/static/js/common/JqueryDraggableModal.js"></script>
 
 <script src="/static/js/leave/definition/LeaveDefinitionHelpers.js"></script>
 <script src="/static/js/leave/definition/LeaveDefinitionAPI.js"></script>

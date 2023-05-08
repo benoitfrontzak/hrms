@@ -2,29 +2,66 @@
 
 <!-- We use css marker to load specific script of the page -->
 {{define "css"}}
-  <!-- Bootstrap Datepicker -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <!-- DataTables -->
   <script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
   <script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+  <!-- Fixed columns -->
   <script type="text/javascript" src="https://cdn.datatables.net/fixedcolumns/4.2.2/js/dataTables.fixedColumns.min.js"></script>
+  <!-- Export buttons -->
+  <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+  <!-- Reorder columns -->
+  <script src="https://cdn.datatables.net/colreorder/1.6.2/js/dataTables.colReorder.min.js"></script>
+  <!-- Draggable feature (modal) -->
+  <script type="text/javascript" src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+
+
   <link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet"/>
+  <link href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.dataTables.min.css" rel="stylesheet"/>
+
+  <!-- Bootstrap Datepicker -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
 {{end}}
 
 {{define "content"}}
 
 <div class="container-fluid" style="width:100%">
-   <div class="zoomOut">
+   <div class="zoomOut mt-3 p-3 borderRadiusTop borderRadiusBottom shadow">
     <div class="row">
-      <div class="col my-3">
-        <h4 id="leaveTitle">My Leaves</h4>
+      <div class="col-10">
+        <h1 class="text-dark fw-bolder" id="leaveTitle">My Leaves</h1>
       </div>
-      <div class="col">
+      <div class="col-2">
         <!-- ACTION BUTTON -->
-        <div class="d-flex flex-row-reverse mt-3">
-          <div class="p-2 bd-highlight"><a href="#" class="btn btn-danger" id="deleteAllMyLeave"><i class="bi-dash-circle"></i> delete</a></div>
-          <div class="p-2 bd-highlight"><a href="#" class="btn btn-danger" id="openCreateMyLeave" data-bs-toggle="modal" data-bs-target="#myLeave"><i class="bi bi-plus-circle-fill"></i> add</a></div>
+        <div class="d-flex justify-content-end mb-1">
+          <div><a href="#" class="btn btn-secondary myButton" id="openCreateMyLeave" data-bs-toggle="modal" data-bs-target="#myLeave" data-bs-toggle="tooltip" title="Add"><i class="bi-plus-lg largeIcon"></i></a></div>
+          <div>&nbsp;</div>
+          <div><a href="#" class="btn btn-secondary myButton" id="deleteAllMyLeave" data-bs-toggle="tooltip" title="Delete"><i class="bi-x-lg largeIcon"></i></a></div>
+        </div>
+        <div class="d-flex justify-content-end">
+          <div class="dropdown" data-bs-toggle="tooltip" title="Show/Hide Columns">
+              <button type="button" class="btn btn-secondary myButton dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi-card-checklist largeIcon"></i></button>
+              <ul class="dropdown-menu">
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Leave" id="Leave" /><span> Leave</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Description" id="Description" /><span> Description</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Approved_At" id="Approved_At" /><span> Approved At</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Approved_By" id="Approved_By" /><span> Approved By</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Reason" id="Reason" /><span> Reason</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Requested_dates" id="Requested_dates" /><span> Requested dates</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Attachments" id="Attachments" /><span> Attachments</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Created_By" id="Created_By" /><span> Created By</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Created_At" id="Created_At" /><span> Created At</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Updated_By" id="Updated_By" /><span> Updated By</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Updated_At" id="Updated_At" /><span> Updated At</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Action" id="Action" /><span> Action</span></a></li>
+              </ul>
+            </div>
         </div>
       </div>
     </div>    
@@ -39,22 +76,18 @@
       <p class="mb-0 smaller">Please check in on some of those fields below...</p>
     </div>    
     <hr />
+    <!-- DATATABLE PROCESSING -->
+    <div id="processing" class="row my-3">
+      <div class="row text-center w-100"><div class="col">Processing data...</div></div>
+      <div class="row text-center w-100"><div class="col"><div class="loader"></div></div></div>
+    </div>
+    <!-- DATATABLE PROCESSING -->
     <!-- TABLE -->
-    <table id="myLeaveTable" class="table table-hover" style="width:100%">
-        <thead>
-            <tr>
-              <th>Leave</th>
-              <th>Description</th>
-              <th>Status</th>
-              <th>Approved at</th>
-              <th>Approved by</th>
-              <th>Reason</th>
-              <th>Requested dates</th>
-            <th></th>
-            </tr>
-        </thead>
+    <table id="myLeaveTable" class="table table-hover nowrap" style="width:100%">
+        <thead></thead>
         <tbody id="myLeaveBody"></tbody>
     </table>
+    <!-- TABLE -->
   </div>
 </div>
 
@@ -99,7 +132,7 @@
 
         <div class="space"></div>
        
-        <form id="leaveForm" name="leaveForm">
+        <form id="leaveForm" name="leaveForm" method="POST" enctype="multipart/form-data">
           <!-- Hidden fields -->
           <input type="hidden" name="employeeid" id="employeeid"   value="{{.User.EmployeeID}}" />
 
@@ -123,27 +156,47 @@
             </div>          
           </div>
 
-           <div class="text-secondary hide" id="myAuthorizationDiv"></div>
+          <div class="text-secondary hide text-end small" id="myAuthorizationDiv"></div>
 
           <br />
-          <hr>
+          <hr />
 
           <!-- 2n row (calendar) -->
+          <div class="hide" id="calendarDatePicker">
           <div class="row mb-3">            
             <!-- Leave details: datepicker -->
-            <div class="col-sm-8">
+            <div class="col-sm-6">
               <h6 class="text-warning">select requested dates</h6>
-              <div id="datepicker"></div>
+              <div class="borderRadiusTop borderRadiusBottom shadow myTint2BG" id="datepicker"></div>
               <input type="hidden" id="requestedDates" name="requestedDates" />
               <div class="fw-bolder text-danger fst-italic smaller" id="requestedDatesError"></div>
             </div>
             <!-- Leave details: selected dates -->
-            <div class="col-sm-4">
+            <div class="col-sm-6">
               <div class="row">
                 <div class="col"><h6 class="text-warning">dates</h6></div>
-                <div class="col">half day</div>
+                <div class="col"><h6 class="text-warning">half day</h6></div>
               </div>              
-              <div id="selectedDatesDiv"></div>
+              <div class="borderRadiusTop borderRadiusBottom shadow p-3" id="selectedDatesDiv"></div>
+            </div>
+          </div>
+          </div>         
+
+        </form>
+        <form action="http://localhost/api/v1/leave/upload/" id="uploadedFilesForm" name="uploadedFilesForm"  method="POST" enctype="multipart/form-data">
+          <input type="hidden" id="applicationID" name="applicationID" value="" />
+          <input type="hidden" id="uploadedFilename" name="uploadedFilename" value="" />
+          <input type="hidden" id="employeeEmail" name="employeeEmail" value="" />
+          <input type="hidden" id="employeeID" name="employeeID" value="" />
+          <!-- 3rd row (attachment -->
+          <div class="hide" id="myAttachmentDiv">
+            <hr />
+            <div class="text-secondary text-end small">Attachment is required for this leave</div>
+            <div class="mb-3">
+              <label for="formFileMultiple" class="form-label">Select Files</label>
+              <input class="form-control" type="file" id="uploadedFiles" name="uploadedFiles" multiple />
+              <div class="fw-bolder text-warning fst-italic smaller">We accept only "JPG", "GIF", "PNG", "BMP", "PDF"</div>
+              <div class="fw-bolder text-danger fst-italic smaller" id="uploadedFilesError"></div>
             </div>
           </div>
         </form>
@@ -156,16 +209,33 @@
   </div>
 </div>
 
+<!-- Modal: Uploaded files -->
+<div class="modal fade" id="uploadedFilesModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="uploadedFilesModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="uploadedFilesModalLabel">Leave Attachments</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="uploadedFilesModalBody"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 {{end}}
 
 {{define "js"}}
 
 <script>
-  const connectedEmail = `{{.User.Email}}`,
-        connectedID = `{{.User.EmployeeID}}`
+  const connectedEmail = {{.User.Email}},
+        connectedID = '{{.User.EmployeeID}}'
 </script>
 
 <script src="/static/js/common/MainHelpers.js"></script>
+<script src="/static/js/common/JqueryDatables.js"></script>
+<script src="/static/js/common/JqueryDraggableModal.js"></script>
 
 <script src="/static/js/leave/myleave/MyLeaveHelpers.js"></script>
 <script src="/static/js/leave/myleave/MyLeaveAPI.js"></script>

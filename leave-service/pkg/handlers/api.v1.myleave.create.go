@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"leave/pkg/pg"
-	"log"
 	"net/http"
 	"time"
 )
@@ -21,14 +20,26 @@ func (rep *Repository) CreateMyLeave(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	rep.App.Models.Leave = p
-	log.Println("payload received", p)
+
 	// insert payload to employee's config table DB
 	rowID, err := rep.App.Models.Leave.Insert()
 	if err != nil {
 		rep.errorJSON(w, err)
 		return
 	}
-	// p.RowID = rowID
+	// calculate number of days to be added to taken
+	n, err := rep.App.Models.Leave.GetRequestedDatesNumber(rowID)
+	if err != nil {
+		rep.errorJSON(w, err)
+		return
+	}
+
+	// increment employee's leave taken
+	err = rep.App.Models.Leave.IncrementTakenLeave(p.LeaveDefinitionID, p.EmployeeID, n)
+	if err != nil {
+		rep.errorJSON(w, err)
+		return
+	}
 
 	// response to be sent
 	answer := jsonResponse{

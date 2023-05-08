@@ -30,6 +30,7 @@
   <a class="side-nav-link" href="#" id="spouseMenu"><i class="bi-person-bounding-box"></i> Spouse</a>
   <a class="side-nav-link" href="#" id="employmentMenu"><i class="bi-person-bounding-box"></i> Employment</a>
   <a class="side-nav-link" href="#" id="statutoryMenu"><i class="bi-person-bounding-box"></i> Statutory</a>
+  <a class="side-nav-link" href="#" id="payrollItemMenu"><i class="bi-person-bounding-box"></i> Addition/Deduction</a>
 </div>
 
 <!--FORM UPDATE EMPLOYEE -->
@@ -1238,6 +1239,21 @@
                     </div>
                     <div class="space"></div>
                   </div>
+                </div>
+                <!-- ADDITION/DEDUCTION -->
+                <div class="hide content" id="payrollItemContent">
+                  <table id="payrollItemTable" class="table table-hover nowrap" style="width:100%">
+                    <thead>
+                      <th>Type</th>
+                      <th>Code</th>
+                      <th>Description</th>
+                      <th>Start</th>
+                      <th>End</th>
+                      <th>Amount</th>
+                      <th>Action</th>
+                    </thead>
+                    <tbody id="payrollItemBody"></tbody>
+                  </table>
                 </div>
                 <!-- Content -->
             </div>

@@ -2,6 +2,65 @@ package pg
 
 import "context"
 
+// fetch employee seniority by id
+func (e *Employee) GetSeniorityByID(id int) (int, error) {
+	// canceling this context releases resources associated with it
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+	// SQL statement which fetch employee summary
+	query := `SELECT date_part('year', age(e2.join_date))as joined
+			  FROM public."EMPLOYEE" e, "EMPLOYMENT" e2 
+			  WHERE e.id = $1
+			  AND e2.employee_id = e.id;`
+
+	// executes SQL query
+	row := db.QueryRowContext(ctx, query, id)
+
+	var seniority int
+
+	// populate returned row to total
+	err := row.Scan(
+		&seniority,
+	)
+	if err != nil {
+		return 0, err
+	}
+
+	// return all employee summary rows
+	return seniority, nil
+
+}
+
+// fetch employee seniority by id
+func (e *Employee) FindEmployeeEmail(id int) (string, error) {
+	// canceling this context releases resources associated with it
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+	// SQL statement which fetch employee summary
+	query := `SELECT primary_email
+			  FROM public."EMPLOYEE" e
+			  WHERE e.id = $1`
+
+	// executes SQL query
+	row := db.QueryRowContext(ctx, query, id)
+
+	var email string
+
+	// populate returned row to total
+	err := row.Scan(
+		&email,
+	)
+	if err != nil {
+		return "", err
+	}
+
+	// return all employee summary rows
+	return email, nil
+
+}
+
 // fetch all employee info by id
 func (e *Employee) GetAllEmployeeInfo(id int) (*EmployeeFull, error) {
 	employee, err := getEmployeeFullByID(id)

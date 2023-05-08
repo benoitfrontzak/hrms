@@ -1,7 +1,8 @@
-const Common  = new MainHelpers(),
-      DT      = new DataTableFeatures(),
-      Helpers = new LeaveDefinitionHelpers(),
-      API     = new LeaveDefinitionAPI()
+const Common    = new MainHelpers(),
+      DT        = new DataTableFeatures(),
+      Draggable = new DraggableModal(),
+      Helpers   = new LeaveDefinitionHelpers(),
+      API       = new LeaveDefinitionAPI()
 
 // set form's parameters (Required Input Fields...)
 const myRIF = [ 'code', 'description', 'expiry', 'gender', 'limitation', 'calculation', 'seniority0', 'entitled0']
@@ -12,16 +13,25 @@ let rowDetailsNumber = 1
 // store rowID of existing row details to be deleted
 const rowDetailsDelete = []
 
+// store all employees (active, inactive & deleted) 
+let allEmployees = new Map()
+allEmployees.set(0, 'not defined')
+
+// store all leave definition by id (since columns can be hide...)
+let allLeaveDefinition = new Map()
 
 // when DOM is loaded
 window.addEventListener('DOMContentLoaded', () => {
 
-    // fetch all leave's definition & update DOM 
-    API.getAllLeaveDefinition().then(resp => {
-        console.log(resp.data);
-        Helpers.insertRows(resp.data)
-        // when edit icon is clicked
-        Helpers.makeEditable()
+    // fetch all employee information
+    API.getAllEmployees().then(resp => {
+        allEmployees = Common.updateEmployeeList(resp.data, allEmployees)
+        // fetch all leave's definition & update DOM 
+        API.getAllLeaveDefinition().then(resp => {
+            Helpers.insertRows(resp.data)
+            // when edit icon is clicked
+            Helpers.makeEditable()
+        })
     })
 
     // fetch leave CT & update DOM (form dropdown)
@@ -75,6 +85,7 @@ window.addEventListener('DOMContentLoaded', () => {
     
     // initiate delete confirm modal
     const myConfirm = new bootstrap.Modal(document.getElementById('confirmDelete'), { 
+        backdrop: 'static',
         keyboard: false 
     })
 
@@ -115,5 +126,8 @@ window.addEventListener('DOMContentLoaded', () => {
         })
 
     })
-    
+
+    // make modals draggable
+    Draggable.draggableModal('createLeaveDefinition')
+    Draggable.draggableModal('confirmDelete')
 })

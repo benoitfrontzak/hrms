@@ -17,10 +17,19 @@ func (rep *Repository) SoftDeleteLeaveDefinition(w http.ResponseWriter, r *http.
 		return
 	}
 
-	// soft delete employee one by one
+	// soft delete leave definition one by one
+	// remove leave definition from employees leave
 	for _, eid := range p.List {
 		id, _ := strconv.Atoi(eid)
+		// soft delete definition
 		err = rep.App.Models.LeaveDefinition.Delete(id)
+		if err != nil {
+			rep.errorJSON(w, err)
+			return
+		}
+
+		// remove entitled leave definition from employees
+		err = rep.App.Models.LeaveDefinition.RemoveEntitledByDefinition(id)
 		if err != nil {
 			rep.errorJSON(w, err)
 			return

@@ -27,14 +27,21 @@ type listID struct {
 	List          []string `json:"list,omitempty"`
 	Reason        string   `json:"reason,omitempty"`
 	ConnectedUser string   `json:"connectedUser,omitempty"`
-	UserID        int      `json:"userID,omitempty"`
+	UserID        int      `json:"userID,string,omitempty"`
 }
 
 // User holds the connected user information (id, email)
 type User struct {
-	ID            int    `json:"id,omitempty"`
+	ID            int    `json:"id,string,omitempty"`
 	Email         string `json:"email,omitempty"`
 	GenderID      int    `json:"genderID,omitempty"`
 	ConnectedUser string `json:"connectedUser,omitempty"`
 	UserID        int    `json:"userID,string,omitempty"`
+}
+
+type ListCredits struct {
+	RowID         int     `json:"rowid,string"`
+	Credits       float32 `json:"credits,string"`
+	ConnectedUser string  `json:"connectedUser,omitempty"`
+	UserID        int     `json:"userID,string,omitempty"`
 }

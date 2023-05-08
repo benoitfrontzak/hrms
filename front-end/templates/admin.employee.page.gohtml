@@ -57,15 +57,13 @@
               </ul>
             </div>
             <div>&nbsp;</div>
-            <div>
-              <div class="dropdown" data-bs-toggle="tooltip" title="Data Source">
-                <button class="btn btn-secondary myButton dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi-funnel-fill largeIcon"></i></button>
-                <ul class="dropdown-menu" aria-labelledby="DropdownMenuButton1">
-                  <li><a class="dropdown-item" href="#" id="activeBtn">Active</a></li>
-                  <li><a class="dropdown-item" href="#" id="inactiveBtn">Inactive</a></li>
-                  <li><a class="dropdown-item" href="#" id="deletedBtn">Deleted</a></li>
-                </ul>
-              </div>
+            <div class="dropdown" data-bs-toggle="tooltip" title="Data Source">
+              <button class="btn btn-secondary myButton dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi-funnel-fill largeIcon"></i></button>
+              <ul class="dropdown-menu" aria-labelledby="DropdownMenuButton1">
+                <li><a class="dropdown-item" href="#" id="activeBtn">Active</a></li>
+                <li><a class="dropdown-item" href="#" id="inactiveBtn">Inactive</a></li>
+                <li><a class="dropdown-item" href="#" id="deletedBtn">Deleted</a></li>
+              </ul>
             </div>
           </div>
         </div>
@@ -479,7 +477,7 @@
 {{define "js"}}
 <script>
   const connectedEmail = {{.User.Email}},
-        connectedID = {{.User.EmployeeID}}
+        connectedID = '{{.User.EmployeeID}}'
 </script>
 
 <script src="/static/js/common/MainHelpers.js"></script>

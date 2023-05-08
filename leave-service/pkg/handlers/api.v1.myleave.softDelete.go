@@ -17,10 +17,30 @@ func (rep *Repository) SoftDeleteMyLeave(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	// soft delete employee one by one
+	// soft delete my leaves one by one
 	for _, eid := range p.List {
 		id, _ := strconv.Atoi(eid)
-		err = rep.App.Models.Leave.Delete(id)
+		// soft delete leave application
+		err = rep.App.Models.Leave.Delete(id, p.UserID)
+		if err != nil {
+			rep.errorJSON(w, err)
+			return
+		}
+		// get leave definition id of leave application id
+		lid, err := rep.App.Models.Leave.GetLeaveDefinitionID(id)
+		if err != nil {
+			rep.errorJSON(w, err)
+			return
+		}
+		// calculate number of days to be removed to taken
+		n, err := rep.App.Models.Leave.GetRequestedDatesNumber(id)
+		if err != nil {
+			rep.errorJSON(w, err)
+			return
+		}
+
+		// decrement employee's leave taken
+		err = rep.App.Models.Leave.DecrementTakenLeave(lid, p.UserID, n)
 		if err != nil {
 			rep.errorJSON(w, err)
 			return

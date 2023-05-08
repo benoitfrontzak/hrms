@@ -255,6 +255,31 @@ class EmployeeUpdateHelpers{
         // update upload hidden fields        
         Common.insertInputValue(data.Employee.primaryEmail, 'employeeEmail')
         Common.insertInputValue(eid, 'employeeID')
+
+        // update payroll items
+        this.insertPayrollItems(data.PayrollItem)
+    }
+    // insert payroll items
+    insertPayrollItems(data){
+        const target = document.querySelector('#payrollItemBody')
+        target.innerHTML = ''
+        data.forEach(element => {
+            let row = document.createElement('tr')
+            row.id = element.ID
+            row.innerHTML = `<td class="pointer"><a href="#" class="link-dark myLink">${element.type}</a></td>
+                            <td class="pointer"><a href="#" class="link-dark myLink">${element.code}</a></td>
+                            <td class="pointer"><a href="#" class="link-dark myLink">${element.description}</a></td>
+                            <td class="pointer"><a href="#" class="link-dark myLink">${this.convertToDate(element.start)}</a></td>
+                            <td class="pointer"><a href="#" class="link-dark myLink">${this.convertToDate(element.end)}</a></td>
+                            <td class="pointer"><a href="#" class="link-dark myLink">${element.amount}</a></td>
+                            <td>
+                                <div class="form-check">
+                                    <input class="form-check-input deleteCheckboxes"  type="checkbox" value="${element.ID}" name="softDelete">
+                                    <label class="form-check-label fw-lighter fst-italic smaller" for="softDelete"><i class="bi-trash2-fill largeIcon pointer deleteEmployee"></i></label>
+                                </div>                                
+                            </td>`
+            target.appendChild(row)
+          })
     }
 
     // insert payroll rows

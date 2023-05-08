@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"log"
 	"net/http"
 	"strconv"
 	"time"
@@ -9,7 +8,6 @@ import (
 
 // ApproveLeave is the handler which approve leave application
 func (rep *Repository) ApproveLeave(w http.ResponseWriter, r *http.Request) {
-	log.Println("ApproveLeave hit")
 	// extract payload from request
 	var p listID
 	err := rep.readJSON(w, r, &p)
@@ -18,7 +16,7 @@ func (rep *Repository) ApproveLeave(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// approve each claim to DB
+	// approve each leave to DB
 	for _, rid := range p.List {
 		rowID, _ := strconv.Atoi(rid)
 		err := rep.App.Models.Leave.Approve(rowID, p.UserID)

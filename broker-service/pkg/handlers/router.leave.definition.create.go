@@ -59,7 +59,6 @@ func createNewLeaveEmployeeEntitled(leaveID, calculationMethodID int) {
 	if err != nil {
 		log.Println(err)
 	}
-	log.Println(allEmployees)
 
 	// select all leave definition details (max entitled per seniority per year)
 	// for earned calculation method (calculation_method_id = 2)
@@ -67,7 +66,6 @@ func createNewLeaveEmployeeEntitled(leaveID, calculationMethodID int) {
 	if err != nil {
 		log.Println(err)
 	}
-	log.Println(&lDef)
 
 	genderEmployees := []*employeeList{}
 	// when gender is not for both (gender_id = 2)

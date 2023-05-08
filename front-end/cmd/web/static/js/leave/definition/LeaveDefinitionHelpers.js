@@ -10,25 +10,25 @@ class LeaveDefinitionHelpers {
         Common.insertInputValue(rowID, 'rowid')
 
         // update default values
-        Common.insertInputValue(data[0].innerHTML, 'code')
-        Common.insertInputValue(data[1].innerHTML, 'description')
-        Common.checkRadio(data[2].dataset.id, 'unpaid')
-        Common.checkRadio(data[3].dataset.id, 'replacement')
-        Common.checkRadio(data[4].dataset.id, 'attachment')
-        Common.selectBoxOptionSelected(data[5].dataset.id, 'expiry')
-        Common.selectBoxOptionSelected(data[6].dataset.id, 'gender')
-        Common.selectBoxOptionSelected(data[7].dataset.id, 'limitation')
-        Common.selectBoxOptionSelected(data[8].dataset.id, 'calculation')
+        Common.insertInputValue(data.code, 'code')
+        Common.insertInputValue(data.description, 'description')
+        Common.checkRadio(data.unpaid, 'unpaid')
+        Common.checkRadio(data.replacementRequired, 'replacement')
+        Common.checkRadio(data.docRequired, 'attachment')
+        Common.selectBoxOptionSelected(data.expiry, 'expiry')
+        Common.selectBoxOptionSelected(data.genderid, 'gender')
+        Common.selectBoxOptionSelected(data.limitationid, 'limitation')
+        Common.selectBoxOptionSelected(data.calculationid, 'calculation')
 
         // reset default details row
         Common.insertHTML('', 'defaultDetailRow')
 
         // set details rows number to 1
         rowDetailsNumber = 0
-
+ 
         // insert existing details rows
-        const myJson = this.parseJson(data[8].dataset.entries)
-        myJson.forEach(element => {
+        // const myJson = this.parseJson(data[9].dataset.entries)
+        data.details.forEach(element => {
             this.insertExistingDetailsRow(element.seniority, element.entitled, element.rowid)
         })
 
@@ -38,22 +38,16 @@ class LeaveDefinitionHelpers {
     makeEditable(){
         document.querySelectorAll('.editLeave').forEach(element => {
             element.addEventListener('click', (e) => {
-                const rowID = e.target.dataset.id,
-                      rowData = document.getElementById('LD'+rowID).querySelectorAll('.row-data')
-   
-                Helpers.populateFormEdit(rowData, rowID)
+                const rowID = e.target.dataset.id
+                document.querySelector('#existingDetailRows').innerHTML = ''
+                Helpers.populateFormEdit(allLeaveDefinition.get(rowID), rowID)
                 const myModalForm = new bootstrap.Modal(document.getElementById('createLeaveDefinition'), { 
+                    backdrop: 'static',
                     keyboard: false 
                 })
                 myModalForm.show()
             })
         })
-    }
-    
-    // convert stringify json to object
-    parseJson(stringifiedJSON){
-        let myObj = JSON.parse(stringifiedJSON, (key, value) => { return value })
-        return myObj
     }
 
     // insert one existing row details
@@ -289,7 +283,15 @@ class LeaveDefinitionHelpers {
         }
         return month
     }
-    
+    // remove timestamp from date yyyy-mm-dd
+    removeTimestamp(t){
+        let myDate
+        // get only the 10 first characters of the string
+        const d = t.substring(0,10)
+  
+        // the zero value of a date is 0001-01-01
+        return (d == '0001-01-01') ? myDate = '' : myDate = d
+    }
     // create rows leave definition details (modal)
     createSeniorityRows(entries){
         let details =`<div>N/A</div>`
@@ -317,90 +319,76 @@ class LeaveDefinitionHelpers {
     insertRows(data) {
         const target = document.querySelector('#leaveDefinitionBody')
         target.innerHTML = ''
-        
-        if (data != null){
-            data.forEach(element => {
-                let seniority = this.createSeniorityRows(element.details),
-                    entitled = this.createEntitledRows(element.details)
-                let row = document.createElement('tr')
-                row.id = 'LD' + element.rowid
-                row.innerHTML = `<td class="row-data">${element.code}</td>
-                                 <td class="row-data">${element.description}</td>
-                                 <td class="row-data" data-id=${element.unpaid}>${this.myBooleanIcons(element.unpaid)}</td>
-                                 <td class="row-data" data-id=${element.replacementRequired}>${this.myBooleanIcons(element.replacementRequired)}</td>
-                                 <td class="row-data" data-id=${element.docRequired}>${this.myBooleanIcons(element.docRequired)}</td>
-                                 <td class="row-data" data-id=${element.expiry}>${this.myMonth(element.expiry)}</td>
-                                 <td class="row-data" data-id=${element.genderid}>${element.gender}</td>
-                                 <td class="row-data" data-id=${element.limitationid}>${element.limitation}</td>
-                                 <td class="row-data" data-id=${element.calculationid}>${element.calculation}</td>
-                                 <td class="row-data">${seniority}</td>
-                                 <td class="row-data">${entitled}</td>
-                                 <td class="row-data">${element.createdBy}</td>
-                                 <td class="row-data">${element.createdAt}</td>
-                                 <td class="row-data">${element.updatedBy}</td>
-                                 <td class="row-data">${element.updatedAt}</td>
-                                 <td>
-                                    <div class="row">
-                                        <div class="col">
-                                            <div class="form-check">
-                                                <label class="form-check-label fw-lighter fst-italic smaller"><i class="bi-pencil-fill largeIcon pointer editLeave" data-id=${element.rowid}></i></label>
-                                            </div>
-                                        </div>
-                                        <div class="col">
-                                            <div class="form-check">
-                                                <label class="form-check-label fw-lighter fst-italic smaller" for="softDelete"><i class="bi-trash2-fill largeIcon pointer deleteLeave"></i></label>
-                                                <input class="form-check-input deleteCheckboxes"  type="checkbox" value="${element.rowid}" name="softDelete">                                    
-                                            </div> 
-                                        </div>
-                                    </div>                                                 
-                                </td>`
-                target.appendChild(row)
-            })
-       
-            const table = $('#leaveDefinitionTable').DataTable({
-                columns:[
-                    {title: "Code"},
-                    {title: "Description"},
-                    {title: "Is Unpaid"},
-                    {title: "Requires Replacement"},
-                    {title: "Requires Attachment"},
-                    {title: "Expiry"},
-                    {title: "Gender"},
-                    {title: "Limitation"},
-                    {title: "Entitlement Calculation Method"},
-                    {title: "Requires Seniority"},
-                    {title: "Max Entitled"},
-                    {title: "Created By"},
-                    {title: "Created At"},
-                    {title: "Updated By"},
-                    {title: "Updated At"},
-                    {title: "Action"}
-                  ],
-                scrollX:        true,
-                scrollCollapse: true,
-                fixedColumns:   {
-                    left: 1,
-                    right: 1
-                },        
-                colReorder: true,
-                lengthMenu: [
-                    [10, 25, 50, -1],
-                    ['10 rows', '25 rows', '50 rows', 'Show all']
-                ],
-                "bInfo" : false,
-                "initComplete": () => {
-                    $('#processing').remove()
-                }
-            })
-            //Default columns to display
-            const defaultConf = ['Code','Description','Is_Unpaid','Requires_Replacement','Requires_Attachment','Expiry','Gender','Limitation','Entitlement_Calculation Method','Requires_Seniority','Max_Entitled','Created_By','Created_At','Updated_By','Updated_At', 'Action']
-            DT.showHideColumnsDT(table, defaultConf, 'columnsLeaveDefinition', 'columnMenu')
-            // DT.draggableColumn('leaveDefinitionTable')
-        }else{
-            $('#leaveDefinitionTable').DataTable()
-            $('#leaveDefinitionTable').DataTable().clear().draw()
+
+        const myColumns = [
+            {title: "Code"},
+            {title: "Description"},
+            {title: "Is Unpaid"},
+            {title: "Requires Replacement"},
+            {title: "Requires Attachment"},
+            {title: "Expiry"},
+            {title: "Gender"},
+            {title: "Limitation"},
+            {title: "Entitlement Calculation Method"},
+            {title: "Requires Seniority"},
+            {title: "Max Entitled"},
+            {title: "Created By"},
+            {title: "Created At"},
+            {title: "Updated By"},
+            {title: "Updated At"},
+            {title: "Action"}
+        ]
+    
+        // when no data
+        if (data == null){
+          DT.initiateMyTable('leaveDefinitionTable', myColumns)
+          $('#leaveDefinitionTable').DataTable().clear().draw()
+          return
         }
+
+        data.forEach(element => {
+            // update all leave definition map to retrieve information when edit
+            allLeaveDefinition.set(element.rowid, element)
+
+            let seniority = this.createSeniorityRows(element.details),
+                entitled = this.createEntitledRows(element.details)
+            let row = document.createElement('tr')
+            row.id = 'LD' + element.rowid
+            row.innerHTML = `<td class="row-data">${element.code}</td>
+                             <td class="row-data">${element.description}</td>
+                             <td class="row-data" data-id=${element.unpaid}>${this.myBooleanIcons(element.unpaid)}</td>
+                             <td class="row-data" data-id=${element.replacementRequired}>${this.myBooleanIcons(element.replacementRequired)}</td>
+                             <td class="row-data" data-id=${element.docRequired}>${this.myBooleanIcons(element.docRequired)}</td>
+                             <td class="row-data" data-id=${element.expiry}>${this.myMonth(element.expiry)}</td>
+                             <td class="row-data" data-id=${element.genderid}>${element.gender}</td>
+                             <td class="row-data" data-id=${element.limitationid}>${element.limitation}</td>
+                             <td class="row-data" data-id=${element.calculationid}>${element.calculation}</td>
+                             <td class="row-data" data-entries=${JSON.stringify(element.details)}>${seniority}</td>
+                             <td class="row-data">${entitled}</td>
+                             <td class="row-data">${allEmployees.get(Number(element.createdBy))}</td>
+                             <td class="row-data">${this.removeTimestamp(element.createdAt)}</td>
+                             <td class="row-data">${allEmployees.get(Number(element.updatedBy))}</td>
+                             <td class="row-data">${this.removeTimestamp(element.updatedAt)}</td>
+                             <td>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-check">
+                                            <label class="form-check-label fw-lighter fst-italic smaller"><i class="bi-pencil-fill largeIcon pointer editLeave" data-id=${element.rowid}></i></label>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-check">
+                                            <label class="form-check-label fw-lighter fst-italic smaller" for="softDelete"><i class="bi-trash2-fill largeIcon pointer deleteLeave"></i></label>
+                                            <input class="form-check-input deleteCheckboxes"  type="checkbox" value="${element.rowid}" name="softDelete">                                    
+                                        </div> 
+                                    </div>
+                                </div>                                                 
+                            </td>`
+            target.appendChild(row)
+        })
         
+        // initiate datatable & show/hide columns
+        DT.initiateMyTable('leaveDefinitionTable', myColumns)
     } 
 
     // returns list of selected claim definition id to be deleted
@@ -415,6 +403,7 @@ class LeaveDefinitionHelpers {
             return allChecked
         }        
     }
+
     // populate confirm detele message
     populateConfirmDelete(nb){
         let msg

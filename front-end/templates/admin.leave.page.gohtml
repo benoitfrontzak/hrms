@@ -44,13 +44,13 @@
                 <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Employee" id="Employee" /><span> Employee</span></a></li>
                 <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Leave" id="Leave" /><span> Leave</span></a></li>
                 <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Description" id="Description" /><span> Description</span></a></li>
-                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Status" id="Status" /><span> Status</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Attachments" id="Attachments" /><span> Attachments</span></a></li>
                 <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="ApprovedAt" id="ApprovedAt" /><span> Approved At</span></a></li>
                 <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="ApprovedBy" id="ApprovedBy" /><span> Approved By</span></a></li>
                 <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Reason" id="Reason" /><span> Reason</span></a></li>
                 <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Dates" id="Dates" /><span> Dates</span></a></li>
                 <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="CreatedAt" id="CreatedAt" /><span> Created At</span></a></li>
-                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="CreatedBy" id="CreatedBy" /><span> Create By</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="CreatedBy" id="CreatedBy" /><span> Created By</span></a></li>
                 <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="UpdatedAt" id="UpdatedAt" /><span> Updated At</span></a></li>
                 <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="UpdatedBy" id="UpdatedBy" /><span> Updated By</span></a></li>
                 <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Action" id="Action" /><span> Action</span></a></li>
@@ -90,7 +90,7 @@
 
     <!-- TABLE -->
     <div class="text-warning hide" id="noData">No data to display</div>
-    <table id="myLeaveTable" class="table table-hover nowrap" style="width:100%">
+    <table id="leaveApplicationTable" class="table table-hover nowrap" style="width:100%">
         <thead></thead>
         <tbody id="myLeaveBody"></tbody>
     </table>
@@ -145,13 +145,28 @@
   </div>
 </div>
 
+<!-- Modal: Uploaded files -->
+<div class="modal fade" id="uploadedFilesModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="uploadedFilesModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="uploadedFilesModalLabel">Leave Attachments</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="uploadedFilesModalBody"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 {{end}}
 
 {{define "js"}}
 
 <script>
   const connectedEmail = {{.User.Email}},
-        connectedID = {{.User.EmployeeID}}
+        connectedID = '{{.User.EmployeeID}}'
 </script>
 
 <script src="/static/js/common/MainHelpers.js"></script>

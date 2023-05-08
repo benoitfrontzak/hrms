@@ -1,7 +1,14 @@
 const broker = 'http://localhost:8088/'
 
 class LeaveDefinitionAPI {
-
+  // fetch all employees
+  async getAllEmployees() {
+    const url = broker + 'route/employee/get/all'
+    const response = await fetch(url);
+    const result = await response.json();
+    return result;
+  }
+  
   // fetch all leave definition
   async getAllLeaveDefinition() {
     const url = broker + 'route/leave/definition/get/all';

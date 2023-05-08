@@ -35,6 +35,7 @@ func multiplexer() http.Handler {
 	mux.HandleFunc("/api/v1/leave/get/today", handlers.Repo.GetAllLeaveToday)
 	mux.HandleFunc("/api/v1/leave/approve", handlers.Repo.ApproveLeave)
 	mux.HandleFunc("/api/v1/leave/reject", handlers.Repo.RejectLeave)
+	mux.HandleFunc("/api/v1/leave/update/credits", handlers.Repo.UpdateCredits)
 
 	return mux
 }

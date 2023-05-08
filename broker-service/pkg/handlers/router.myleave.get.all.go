@@ -18,6 +18,7 @@ func AllMyLeave(w http.ResponseWriter, r *http.Request) {
 	type allNeeded struct {
 		MyEntitled          interface{}
 		MyLeaves            interface{}
+		MySeniority         interface{}
 		AllLeaveDefinitions interface{}
 		AllEmployees        interface{}
 	}
@@ -27,6 +28,7 @@ func AllMyLeave(w http.ResponseWriter, r *http.Request) {
 	postRequests := []Request{
 		{URL: leaveService + "api/v1/myleave/get/today", Data: p},
 		{URL: leaveService + "api/v1/myleave/get/all", Data: p},
+		{URL: employeeService + "api/v1/employee/get/seniority", Data: p},
 	}
 
 	// create a channel to receive responses and errors
@@ -46,6 +48,9 @@ func AllMyLeave(w http.ResponseWriter, r *http.Request) {
 		}
 		if p.URL == leaveService+"api/v1/myleave/get/all" {
 			all.MyLeaves = p.Data
+		}
+		if p.URL == employeeService+"api/v1/employee/get/seniority" {
+			all.MySeniority = p.Data
 		}
 	}
 	// create all get requests
