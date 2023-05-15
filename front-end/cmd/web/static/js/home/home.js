@@ -24,10 +24,9 @@ window.addEventListener('DOMContentLoaded', () => {
       Helpers.populateTodayAndTomorrowLeaves(resp.data)
     })
   })
-
+  
   // fetch & populate connected user leaves (entitled)
   API.getEmployeeLeaveDetailsByID(connectedID).then(resp => {
-    console.log(resp);
     Helpers.populateMyLeaveDetails(resp.data)
     Helpers.populateMyLeaveDetailsProgress(resp.data)
   })
@@ -39,7 +38,7 @@ window.addEventListener('DOMContentLoaded', () => {
   })
 
   // fetch & populate connected user claims (details)
-  API.getEmployeeClaimDetailsByID(connectedID).then(resp => {       
+  API.getEmployeeClaimDetailsByID(connectedID).then(resp => {      
       Helpers.populateMyClaimDetails(resp.data)        
   })
 

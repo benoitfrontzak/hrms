@@ -50,12 +50,13 @@ class HomeHelpers{
         document.querySelector('#claimsTotalApproved').innerHTML = data.Approved      
          
     }
-
+    
     // update connected user claims (details)
     populateMyClaimDetails(data){
         // populate main card with total claims (default 0)
         document.querySelector('#myClaimsPending').innerHTML = 0
         document.querySelector('#myClaimsRequested').innerHTML = 0
+        
         // populate main card with total claims (with data if exists)
         if (data.Pending != null)
             document.querySelector('#myClaimsPending').innerHTML = data.Pending.length

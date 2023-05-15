@@ -406,7 +406,6 @@ class EmployeeUpdateHelpers{
         }
         
         if (statutory != null){
-            console.log('go fucking inside');
             this.insertEPF(statutory)
             this.triggerDT('epfArchivedDT')
             this.insertSOCSO(statutory)

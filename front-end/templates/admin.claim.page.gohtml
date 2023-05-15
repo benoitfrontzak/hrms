@@ -19,7 +19,6 @@
   <!-- Draggable feature (modal) -->
   <script type="text/javascript" src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 
-
   <link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet"/>
   <link href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.dataTables.min.css" rel="stylesheet"/>
 {{end}}
@@ -45,19 +44,17 @@
                 <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Employee" id="Employee" /><span> Employee</span></a></li>
                 <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Allowance" id="Allowance" /><span> Allowance</span></a></li>
                 <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Category" id="Category" /><span> Category</span></a></li>
-                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Name" id="Name" /><span> Name</span></a></li>
                 <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Description" id="Description" /><span> Description</span></a></li>
                 <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Amount" id="Amount" /><span> Amount</span></a></li>
-                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Status" id="Status" /><span> Status</span></a></li>
-                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="ApprovedAt" id="ApprovedAt" /><span> Approved At</span></a></li>
-                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="ApprovedBy" id="ApprovedBy" /><span> Approved By</span></a></li>
-                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="ApprovedAmount" id="ApprovedAmount" /><span> Approved Amount</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Approved_At" id="Approved_At" /><span> Approved At</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Approved_By" id="Approved_By" /><span> Approved By</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Approved_Amount" id="Approved_Amount" /><span> Approved Amount</span></a></li>
                 <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Reason" id="Reason" /><span> Reason</span></a></li>
-                
-                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="CreatedAt" id="CreatedAt" /><span> Created At</span></a></li>
-                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="CreatedBy" id="CreatedBy" /><span> Create By</span></a></li>
-                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="UpdatedAt" id="UpdatedAt" /><span> Updated At</span></a></li>
-                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="UpdatedBy" id="UpdatedBy" /><span> Updated By</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Attachments" id="Attachments" /><span> Attachments</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Created_At" id="Created_At" /><span> Created At</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Created_By" id="Created_By" /><span> Created By</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Updated_At" id="Updated_At" /><span> Updated At</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Updated_By" id="Updated_By" /><span> Updated By</span></a></li>
                 <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Action" id="Action" /><span> Action</span></a></li>
               </ul>
           </div>
@@ -72,8 +69,7 @@
           </div>
         </div>
       </div>
-    </div>
-   
+    </div>   
     <!-- WARNING MODAL MESSAGE -->
     <div class="alert alert-warning mt-3 hide" role="alert" id="modalWarningMessageDiv">
       <div class="d-flex justify-content-between">
@@ -85,24 +81,21 @@
       <p class="mb-0 smaller">Please check in on some of those fields below...</p>
     </div>    
     <hr />
-
     <!-- DATATABLE PROCESSING -->
     <div id="processing" class="row my-3">
       <div class="row text-center w-100"><div class="col">Processing data...</div></div>
       <div class="row text-center w-100"><div class="col"><div class="loader"></div></div></div>
     </div>
     <!-- DATATABLE PROCESSING -->
-
     <!-- TABLE -->
-    <table id="myClaimTable" class="table table-hover nowrap" style="width:100%">
-        <thead></thead>
+    <table id="claimApplicationsTable" class="table table-hover nowrap" style="width:100%">
         <tbody id="myClaimBody"></tbody>
     </table>
   </div>
 </div>
 
 <!-- modal: Reject claims -->
-<div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="rejectModal" aria-hidden="true">
+<div class="modal fade" id="rejectModal" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -131,7 +124,7 @@
 </div>
 
 <!-- modal: Approve claims -->
-<div class="modal fade" id="approveModal" tabindex="-1" aria-labelledby="approveModal" aria-hidden="true">
+<div class="modal fade" id="approveModal" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -158,6 +151,21 @@
   </div>
 </div>
 
+<!-- Modal: Uploaded files -->
+<div class="modal fade" id="uploadedFilesModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="uploadedFilesModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="uploadedFilesModalLabel">Claim Attachments</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="uploadedFilesModalBody"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 {{end}}
 
 {{define "js"}}

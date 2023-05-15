@@ -112,19 +112,14 @@ class GoogleDT{
         for (const [location, employeesNumber] of Object.entries(locationEmployees)) {
             const oneRow = []
             oneRow.push(`${location}`)
-            console.log('location');
-            console.log(location);
             oneRow.push(`${employeesNumber}`)
             geoChartWorldMap.push(oneRow)
         }
         const data = google.visualization.arrayToDataTable(geoChartWorldMap)
-        console.log(countryCode);
+
         // Prepare options for countryMap
         let options = {}
         if (countryCode != ""){
-            // const code = countryCode[Object.keys(countryCode)[0]]
-            // console.log('code');
-            // console.log(code);
             options = {
                 region: countryCode,
                 displayMode: 'markers',

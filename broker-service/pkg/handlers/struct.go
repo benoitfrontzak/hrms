@@ -13,7 +13,7 @@ type rpcPayload struct {
 type jsonResponse struct {
 	Error     bool   `json:"error"`
 	Message   string `json:"message"`
-	Data      any    `json:"data,omitempty"`
+	Data      any    `json:"data"`
 	CreatedAt string `json:"createdAt,omitempty"`
 	CreatedBy string `json:"createdBy,omitempty"`
 }

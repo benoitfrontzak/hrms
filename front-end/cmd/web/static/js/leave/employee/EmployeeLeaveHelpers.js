@@ -1,4 +1,5 @@
 class EmployeeLeaveHelpers {
+
     // populate option list with active employee
     populateEmployeeList(data){
         const target = document.querySelector('#datalistOptions')
@@ -96,4 +97,129 @@ class EmployeeLeaveHelpers {
         return JSON.stringify(allCredits, function replacer(key, value) { return value})
     }
 
+    // convert isHalf
+    leaveDay(isHalf){
+        let result
+        return (isHalf == 1) ? result = 'Half <i class="bi-square-half"></i>' : result = 'Full <i class="bi-square-fill"></i>'
+    }
+
+    // create rows leave details
+    createRowsLD(entries){
+        let details = `<div class="d-flex justify-content-between">
+                            <div>${this.formatDate(entries[0].requestedDate)}</div>
+                            <div>&nbsp;</div>
+                            <div>${this.leaveDay(entries[0].isHalf)}</div>
+                        </div>`
+
+        if (entries.length > 1){
+            details =``
+            entries.forEach(e => {
+                details += `<div class="d-flex justify-content-between">
+                              <div>${this.formatDate(e.requestedDate)}</div>
+                              <div>&nbsp;</div>
+                              <div>${this.leaveDay(e.isHalf)}</div>
+                            </div>`
+            })
+        }
+
+        return details
+    }
+    // create attachments icon
+    createAttachments(appID){
+       return (myUploadedFiles.has(appID)) ? '<i class="bi-check-square pointer"></i>' : '<i class="bi-file-excel-fill not-allowed"></i>'
+    }
+    // populate attachments modal & open it
+    populateAttachments(appID, employeeEmail){
+        if (myUploadedFiles.has(appID)){
+            const myFiles = myUploadedFiles.get(appID),
+                  target = document.querySelector('#uploadedFilesModalBody'),
+                  myModal = new bootstrap.Modal(document.getElementById('uploadedFilesModal'), { 
+                    backdrop: 'static',
+                    keyboard: false 
+                  })
+            target.innerHTML = ''
+            myFiles.forEach(element => {
+                const oneAttachment = document.createElement('div')
+                oneAttachment.classList = 'd-flex justify-content-center mb-3'
+                oneAttachment.innerHTML = `<div>
+                                                <div><img class="myPicture" src="/upload/${employeeEmail}/leaves/${appID}/${element}" /></div>
+                                                <div class="text-end"><a href="/upload/${employeeEmail}/leaves/${appID}/${element}" class="myLink" download="${element}"><i class="bi-download pointer"></i> download</a></div>
+                                           </div>`
+                target.appendChild(oneAttachment)
+            })
+            myModal.show()
+        }
+    }
+
+    // insert to datatable one row per element of data
+    insertRows(data) {
+        const target = document.querySelector('#employeeLeaveBody')
+        target.innerHTML = ''
+        
+        const myColumns = [
+            {title: "Leave"},
+            {title: "Description"},
+            {title: "Status"},
+            {title: "Approved At"},
+            {title: "Approved By"},
+            {title: "Reason"},
+            {title: "Requested dates"},
+            {title: "Attachment"},
+            {title: "Created At"},
+            {title: "Created By"},
+            {title: "Updated At"},
+            {title: "Updated By"}
+        ]
+        
+        // can initiate DT only one time
+        if ( $.fn.dataTable.isDataTable( '#employeeLeaveTable' ) ) {
+            $('#employeeLeaveTable').DataTable().destroy()
+        }
+
+        if (data == null){
+            DT.initiateMyTable('employeeLeaveTable', myColumns)
+            $('#employeeLeaveTable').DataTable().clear().draw()
+            return
+        }
+
+        data.forEach(element => { 
+            let details = this.createRowsLD(element.details)
+            let attachments = this.createAttachments(element.rowid)
+            let row = document.createElement('tr')
+            row.id = 'myLeave' + element.rowid
+            row.innerHTML = `<td class="row-data" data-id=${element.leaveDefinition}>${element.leaveDefinitionCode} - ${element.leaveDefinitionName}</td>
+                             <td class="row-data">${element.description}</td>
+                             <td class="row-data" data-id=${element.statusid}>${element.status}</td>
+                             <td class="row-data">${this.formatDate(element.approvedAt)}</td>
+                             <td class="row-data" data-id=${element.approvedBy}>${allEmployees.get(Number(element.approvedBy))}</td>
+                             <td class="row-data">${element.rejectedReason}</td>
+                             <td class="row-data pointer" data-entries=${JSON.stringify(element.details, function replacer(key, value) { return value})}>${details}</td>
+                             <td class="row-data myAttachments text-center" data-id=${element.rowid}>${attachments}</td>
+                             <td class="row-data">${this.formatDate(element.createdAt)}</td>
+                             <td class="row-data">${allEmployees.get(Number(element.createdBy))}</td>
+                             <td class="row-data">${this.formatDate(element.updatedAt)}</td>
+                             <td class="row-data">${allEmployees.get(Number(element.updatedBy))}</td>`
+                                       
+            target.appendChild(row)
+        })
+
+        DT.initiateMyTable('employeeLeaveTable', myColumns)
+    }
+
+    // convert timestamp (remove timestamp)
+    formatDate(t){
+        let b
+        // get only the 10 first characters of the string
+        const d = t.substring(0,10)
+        // the zero value of a date is 0001-01-01
+        return (d == '0001-01-01') ? b = '' : b = d
+    }
+
+    // populate all uploaded files map
+    populateUploadedFilesMap(data, uploadedFiles){
+        for (const [key, value] of Object.entries(data)) {
+            uploadedFiles.set(key, value)
+        }
+        return uploadedFiles
+    }
 }

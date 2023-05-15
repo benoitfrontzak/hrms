@@ -30,7 +30,6 @@ window.addEventListener('DOMContentLoaded', () => {
                         const rowID = e.target.dataset.id,
                               ctName = document.querySelector('#configTableTitle').innerHTML,
                               ctValue = document.querySelector('#editValue'+rowID).value
-                        console.log(ctName, ctValue, rowID);
                         API.updateConfigTableEntry(ctName,ctValue,rowID,connectedEmail).then(resp => {
                             if (!resp.error) location.reload()
                         })

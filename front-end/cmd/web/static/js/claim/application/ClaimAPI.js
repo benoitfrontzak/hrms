@@ -1,6 +1,15 @@
 const broker = 'http://localhost:8088/'
+const fileServer = 'http://localhost/'
 
 class ClaimAPI {
+  // fetch all employee's uploaded files
+  async getUploadedFiles(email){
+    const url = fileServer + 'api/v1/claim/getUploadedFiles/'+email,
+          response = await fetch(url),
+          result = await response.json()
+
+    return result
+  }
 
   // fetch all employees
   async getAllEmployees() {
@@ -18,17 +27,25 @@ class ClaimAPI {
     return result;
   }
 
-  // fetch all config tables
-  async getClaimCT() {
-    const url = broker + 'route/claim/configTables/get'
-    const response = await fetch(url);
-    const result = await response.json();
-    return result;
+  // fetch employee by id
+  async getEmployeeEmailByID(id) {
+    const url = broker + 'route/employee/find/email'
+    
+    const payload = {
+      id : id
+    }
+    const body = {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }
+
+    const response = await fetch(url, body)
+    const result = await response.json()
+    return result
   }
-
-
-   // approve claims   
-   async approveClaims(claimList, amount, email, id) {
+  
+  // approve claims   
+  async approveClaims(claimList, amount, email, id) {
     const url = broker + 'route/claim/approve'
 
     const payload = {

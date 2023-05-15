@@ -26,7 +26,7 @@ func (rep *Repository) GetLeaveUploadedFiles(w http.ResponseWriter, r *http.Requ
 		// response to be sent
 		answer := jsonResponse{
 			Error:   false,
-			Message: "employee's uploaded files'",
+			Message: "leave's uploaded files'",
 			Data:    myFiles,
 		}
 		rep.writeJSON(w, http.StatusAccepted, answer)

@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"claim/pkg/pg"
+	"log"
 	"net/http"
 	"time"
 )
@@ -15,6 +16,7 @@ func (rep *Repository) UpdateClaimDefinition(w http.ResponseWriter, r *http.Requ
 
 	err := rep.readJSON(w, r, &p)
 	if err != nil {
+		log.Println("error in UPdate readjson", err)
 		rep.errorJSON(w, err)
 		return
 	}
@@ -23,6 +25,7 @@ func (rep *Repository) UpdateClaimDefinition(w http.ResponseWriter, r *http.Requ
 	rep.App.Models.ClaimDefinition = p
 	err = rep.App.Models.ClaimDefinition.Update()
 	if err != nil {
+		log.Println("error at update", err)
 		rep.errorJSON(w, err)
 		return
 	}

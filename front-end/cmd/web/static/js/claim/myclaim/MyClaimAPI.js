@@ -1,34 +1,17 @@
 const broker = 'http://localhost:8088/'
+const fileServer = 'http://localhost/'
 
 class MyClaimAPI {
+  // fetch all employee's uploaded files
+  async getUploadedFiles(email){
+    const url = fileServer + 'api/v1/claim/getUploadedFiles/'+email,
+          response = await fetch(url),
+          result = await response.json()
 
-  // fetch connected user information
-  async getUserInformation(connectedID, connectedEmail) {
-    const url = broker + 'route/employee/get/leave';
-    const payload = {
-      id : connectedID,
-      email : connectedEmail
-    }
-
-    const body = {
-      method: 'POST',
-      body: JSON.stringify(payload),
-    }
-    const response = await fetch(url, body)
-    const result = await response.json();
-    return result;
+    return result
   }
-
-  // fetch all employees
-  async getAllEmployees() {
-    const url = broker + 'route/employee/get/all'
-    const response = await fetch(url);
-    const result = await response.json();
-    return result;
-  }
-
   // fetch all my claim
-  async getAllMyClaim(connectedID, connectedEmail) {
+  async getAllInformationsMyClaims(connectedID, connectedEmail) {
     const url = broker + 'route/myclaim/get/all';
     const payload = {
       id : connectedID,
@@ -40,22 +23,6 @@ class MyClaimAPI {
       body: JSON.stringify(payload),
     }
     const response = await fetch(url, body)
-    const result = await response.json();
-    return result;
-  }
-
-  // fetch all claim definition
-  async getAllClaimDefinition() {
-    const url = broker + 'route/claim/definition/get/all';
-    const response = await fetch(url);
-    const result = await response.json();
-    return result;
-  }
-  
-  // fetch all config tables
-  async getClaimCT() {
-    const url = broker + 'route/claim/configTables/get'
-    const response = await fetch(url);
     const result = await response.json();
     return result;
   }

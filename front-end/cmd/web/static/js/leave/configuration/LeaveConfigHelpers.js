@@ -68,7 +68,7 @@ class LeaveConfigTablesHelpers{
             checked.forEach(element => {
                 allChecked.push(element.value)
             })
-            console.log(allChecked);
+            
             return allChecked
         }        
     }

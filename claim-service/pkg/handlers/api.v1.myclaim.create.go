@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"claim/pkg/pg"
+	"log"
 	"net/http"
 	"time"
 )
@@ -16,6 +17,7 @@ func (rep *Repository) CreateMyClaim(w http.ResponseWriter, r *http.Request) {
 
 	err := rep.readJSON(w, r, &p)
 	if err != nil {
+		log.Println("err is ", err)
 		rep.errorJSON(w, err)
 		return
 	}

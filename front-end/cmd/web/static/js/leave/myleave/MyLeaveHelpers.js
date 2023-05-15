@@ -17,7 +17,6 @@ class MyLeaveHelpers {
     makeEditable(){
         document.querySelectorAll('.editClaim').forEach(element => {
             element.addEventListener('click', (e) => {
-                console.log(e.target);
                 const rowID = e.target.dataset.id,
                       rowData = document.getElementById('CD'+rowID).querySelectorAll('.row-data'),
                       viewData = document.querySelector('#dataView').value
@@ -73,7 +72,6 @@ class MyLeaveHelpers {
         if (entries.length > 1){
             details =``
             entries.forEach(e => {
-                console.log(e.requestedDate+' '+e.isHalf);
                 details += `<div class="d-flex justify-content-between">
                               <div>${this.formatDate(e.requestedDate)}</div>
                               <div>&nbsp;</div>
@@ -186,7 +184,7 @@ class MyLeaveHelpers {
             checked.forEach(element => {
                 allChecked.push(element.value)
             })
-            console.log('allChecked: '+allChecked);
+            
             return allChecked
         }        
     }
@@ -327,10 +325,9 @@ class MyLeaveHelpers {
         var fileInput = document.getElementById('uploadedFiles'); // Get the file input element
         var files = fileInput.files; // Get the selected files from the file input
         for (var i = 0; i < files.length; i++) {
-            console.log(files[i]);
           formData.push(files[i]); // Append each file to the FormData object with the field name 'files[]'
         }
-        console.log(formData);
+        
         return formData
     }
 
@@ -365,7 +362,7 @@ class MyLeaveHelpers {
         return allLeaveDefinition
     }
 
-    // populate all leave definition map
+    // populate my leave entitled map
     populateMyEntitledLeaveMap(data, myEntitled){
         data.forEach(element => {
             myEntitled.set(element.leaveDefinition, element)

@@ -1,7 +1,14 @@
 const broker = 'http://localhost:8088/'
 
 class ClaimDefinitionAPI {
-
+  // fetch all employees
+  async getAllEmployees() {
+    const url = broker + 'route/employee/get/all'
+    const response = await fetch(url);
+    const result = await response.json();
+    return result;
+  }
+  
   // fetch all claim definition
   async getAllClaimDefinition() {
     const url = broker + 'route/claim/definition/get/all';

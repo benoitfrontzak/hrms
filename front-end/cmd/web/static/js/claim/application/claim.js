@@ -1,11 +1,11 @@
 const Common    = new MainHelpers(),
-      Helpers   = new ClaimHelpers(),
       DT        = new DataTableFeatures(),
       Draggable = new DraggableModal(),
+      Helpers   = new ClaimHelpers(),
       API       = new ClaimAPI()
 
 // set form's parameters (Required Input Fields...)
-const myRIF = [ 'name', 'description', 'category']
+const myRIF = ['name', 'description', 'category']
 
 // store all employees (active, inactive & deleted) 
 let allEmployees = new Map()
@@ -13,16 +13,17 @@ allEmployees.set(0, 'not defined')
 
 // when DOM is loaded
 window.addEventListener('DOMContentLoaded', () => {
-    let action = false
-     // fetch all employee information
-     API.getAllEmployees().then(resp => {
-        // update map all employees by id
+    const noAction = false
+    // fetch all employee information
+    API.getAllEmployees().then(resp => {
         allEmployees = Common.updateEmployeeList(resp.data, allEmployees)
+
         // fetch all claims & update DOM (data table)
         API.getAllClaims().then(resp => {
             const approved = resp.data.Approved,
                   rejected = resp.data.Rejected,
                   pending  = resp.data.Pending
+
             // display by default pending request
             Helpers.insertRows(pending)
             // create listener when data source changed (pending | approved | rejected)
@@ -30,9 +31,9 @@ window.addEventListener('DOMContentLoaded', () => {
             dSource.forEach(element => {
                 // create capitalize function
                 const capitalize = element => (element && element[0].toUpperCase() + element.slice(1)) || ""
-    
+
                 document.querySelector('#'+element+'Btn').addEventListener('click', () => {
-                    $('#myClaimTable').DataTable().destroy()
+                    $('#leaveApplicationTable').DataTable().destroy()
                     let ds
                     switch (element) {
                         case 'pending':
@@ -52,29 +53,34 @@ window.addEventListener('DOMContentLoaded', () => {
                     document.querySelector('#claimTitle').innerHTML = capitalize(element) + ' Claim Applications'
                 })
             })
+
+            // when attachments is clicked
+            $('#claimApplicationsTable').on('click', '.myAttachments', function (e) {
+                const appID = e.currentTarget.dataset.appid,
+                      email = e.currentTarget.dataset.email,
+                      entries = e.currentTarget.dataset.entries,
+                      icon = e.currentTarget.innerHTML
+                Helpers.populateAttachments(appID, email, entries, icon)
+            })
         })
     })
 
-    // make modals draggable
-    Draggable.draggableModal('rejectModal')
-    Draggable.draggableModal('approveModal')
-
     // initiate confirm approval modal
-    const myApprovalConfirm = new bootstrap.Modal(document.getElementById('approveModal'), { 
+    const myApprovalConfirm = new bootstrap.Modal(document.getElementById('approveModal'), {
         backdrop: 'static',
-        keyboard: false 
+        keyboard: false
     })
-     // initiate confirm rejection modal
-     const myRejectionConfirm = new bootstrap.Modal(document.getElementById('rejectModal'), { 
+    // initiate confirm rejection modal
+    const myRejectionConfirm = new bootstrap.Modal(document.getElementById('rejectModal'), {
         backdrop: 'static',
-        keyboard: false 
+        keyboard: false
     })
 
     // when approve button is clicked (open modal)
     document.querySelector('#approveBtn').addEventListener('click', () => {
-       const checked = Helpers.selectedClaim()
+        const checked = Helpers.selectedClaim()
 
-       if (typeof checked != 'undefined' && checked.length > 0){
+        if (typeof checked != 'undefined' && checked.length > 0) {
             Helpers.populateSelectedClaimsNumber(checked.length, 'selectedClaimsApproval', 'approve', 'amount')
             myApprovalConfirm.show()
         }
@@ -82,9 +88,9 @@ window.addEventListener('DOMContentLoaded', () => {
     })
     // when confirm approval is clicked (submit)
     document.querySelector('#approveSubmit').addEventListener('click', () => {
-        
+
         const myAmount = document.querySelector('#amount'),
-              checked = Helpers.selectedClaim()
+            checked = Helpers.selectedClaim()
 
         if (myAmount.value == '') Common.insertHTML('amount is required', 'amountError')
         if (myAmount.value != '') API.approveClaims(checked, myAmount.value, connectedEmail, connectedID).then(resp => {
@@ -96,9 +102,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // when reject button is clicked (open modal)
     document.querySelector('#rejectBtn').addEventListener('click', () => {
-       const checked = Helpers.selectedClaim()
+        const checked = Helpers.selectedClaim()
 
-       if (typeof checked !== 'undefined' && checked.length > 0){
+        if (typeof checked !== 'undefined' && checked.length > 0) {
             Helpers.populateSelectedClaimsNumber(checked.length, 'selectedClaimsRejection', 'reject', 'reason')
             myRejectionConfirm.show()
         }
@@ -108,7 +114,7 @@ window.addEventListener('DOMContentLoaded', () => {
     // when confirm rejection is clicked (submit)
     document.querySelector('#rejectSubmit').addEventListener('click', () => {
         const myReason = document.querySelector('#reject'),
-              checked = Helpers.selectedClaim()
+            checked = Helpers.selectedClaim()
 
         if (myReason.value == '') Common.insertHTML('reject reason is required', 'rejectError')
         if (myReason.value != '') API.rejectClaims(checked, myReason.value, connectedEmail, connectedID).then(resp => {
@@ -126,22 +132,26 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('approveModal').addEventListener('hidden.bs.modal', function () {
 
         document.querySelectorAll('.claimsCheckboxes').forEach(element => {
-             element.checked = false
-         })
+            element.checked = false
+        })
 
-         Common.insertInputValue('', 'amount')
-         Common.insertHTML('', 'amountError')
+        Common.insertInputValue('', 'amount')
+        Common.insertHTML('', 'amountError')
 
-     })
+    })
     document.getElementById('rejectModal').addEventListener('hidden.bs.modal', function () {
 
         document.querySelectorAll('.claimsCheckboxes').forEach(element => {
-             element.checked = false
-         })
+            element.checked = false
+        })
 
-         Common.insertInputValue('', 'reject')
-         Common.insertHTML('', 'rejectError')
+        Common.insertInputValue('', 'reject')
+        Common.insertHTML('', 'rejectError')
 
-     })
+    })
 
+    // make modals draggable
+    Draggable.draggableModal('approveModal')
+    Draggable.draggableModal('rejectModal')
+    Draggable.draggableModal('uploadedFilesModal')
 })

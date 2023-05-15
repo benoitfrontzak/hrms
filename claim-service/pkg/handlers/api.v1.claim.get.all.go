@@ -4,7 +4,7 @@ import (
 	"net/http"
 )
 
-// GetAllClaimDefinition is the handler which returns all claim definition
+// GetAllClaim is the handler which returns all claim definition
 func (rep *Repository) GetAllClaim(w http.ResponseWriter, r *http.Request) {
 	// get claim definition (active, inactive, deleted)
 	all, err := rep.App.Models.Claim.GetAllClaim()

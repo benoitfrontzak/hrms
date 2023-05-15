@@ -2,7 +2,6 @@ const broker = 'http://localhost:8088/',
       fileServer = 'http://localhost/'
 
 class MyLeaveAPI {
-
   // fetch all employee's uploaded files
   async getUploadedFiles(email){
     const url = fileServer + 'api/v1/leave/getUploadedFiles/'+email,

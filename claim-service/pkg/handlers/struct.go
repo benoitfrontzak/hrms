@@ -4,7 +4,7 @@ package handlers
 type jsonResponse struct {
 	Error     bool   `json:"error"`
 	Message   string `json:"message"`
-	Data      any    `json:"data,omitempty"`
+	Data      any    `json:"data"`
 	CreatedAt string `json:"createdAt,omitempty"`
 	CreatedBy string `json:"createdBy,omitempty"`
 }
@@ -28,7 +28,7 @@ type listID struct {
 	Amount        int      `json:"amount,string,omitempty"`
 	Reason        string   `json:"reason,omitempty"`
 	ConnectedUser string   `json:"connectedUser,omitempty"`
-	UserID        int      `json:"userID,omitempty"`
+	UserID        int      `json:"userID,string,omitempty"`
 }
 
 // User holds the connected user information (id, email)

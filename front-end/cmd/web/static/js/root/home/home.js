@@ -3,5 +3,5 @@ const Helpers = new HomeHelpers(),
 
 // when DOM is loaded
 window.addEventListener('DOMContentLoaded', () => {
-    console.log('au boulot');
+   
 })

@@ -42,7 +42,6 @@ window.addEventListener('DOMContentLoaded', () => {
     
     // fetch all needed informations  
     API.getAllInformationsMyLeave(connectedID, connectedEmail).then(resp => {
-
         // update variables
         allEmployees        = Common.updateEmployeeList(resp.AllEmployees, allEmployees)
         allLeaveDefinition  = Helpers.populateLeaveDefinitionMap(resp.AllLeaveDefinitions, allLeaveDefinition)
@@ -88,7 +87,7 @@ window.addEventListener('DOMContentLoaded', () => {
             Helpers.populateAttachments(appID)
         })
     })
-     
+ 
     // when form is submitted (save button)
     document.querySelector('#leaveFormSubmit').addEventListener('click', () => {
         const checkError = Helpers.validateForm(myRIF)
@@ -174,11 +173,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // TODO : Fixed bug when click on clear dates (it don't remove first row)
     // $('#datepicker').on('clearDate', function(e) {
-    //     console.log('inside')
-    //     console.log($('#selectedDatesDiv')[0])
     //     document.querySelector('#selectedDatesDiv').innerHTML = ''
     //     // $('#selectedDatesDiv')[0].html('')
-    //     console.log($('#selectedDatesDiv')[0])
     // })
 
     // make modals draggable

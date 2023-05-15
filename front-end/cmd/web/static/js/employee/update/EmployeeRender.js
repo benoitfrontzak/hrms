@@ -1,7 +1,6 @@
 class EmployeeRender{
     // UPDATE EMPLOYEE SKELETON PAGE
     updateEmployeePage(employeeInfo, uploadedFiles){
-      console.log(employeeCT);
       const employeeID = employeeInfo.Employee.id
         return `
         <form name="updateEmployeeForm${employeeID}" id="updateEmployeeForm${employeeID}" method="POST">

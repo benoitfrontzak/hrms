@@ -1,7 +1,7 @@
 const Common    = new MainHelpers(),
-      Helpers   = new LeaveHelpers(),
       DT        = new DataTableFeatures(),
       Draggable = new DraggableModal(),
+      Helpers   = new LeaveHelpers(),
       API       = new LeaveAPI()
 
 // set form's parameters (Required Input Fields...)
@@ -17,6 +17,7 @@ window.addEventListener('DOMContentLoaded', () => {
      // fetch all employee information
      API.getAllEmployees().then(resp => {
         allEmployees = Common.updateEmployeeList(resp.data, allEmployees)
+
         // fetch all leaves & update DOM (data table)
         API.getAllLeaves().then(resp => {
             const approved = resp.data.Approved,
@@ -149,4 +150,5 @@ window.addEventListener('DOMContentLoaded', () => {
     // make modals draggable
     Draggable.draggableModal('approveModal')
     Draggable.draggableModal('rejectModal')
+    Draggable.draggableModal('uploadedFilesModal')
 })

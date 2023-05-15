@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"log"
 	"net/http"
 	"time"
 )
@@ -33,7 +32,7 @@ func (rep *Repository) GetAllMyClaim(w http.ResponseWriter, r *http.Request) {
 		CreatedAt: time.Now().Format("02-Jan-2006 15:04:05"),
 		CreatedBy: p.Email,
 	}
-	log.Println("answer:", answer)
+
 	rep.writeJSON(w, http.StatusAccepted, answer)
 
 }

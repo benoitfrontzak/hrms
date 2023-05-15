@@ -37,8 +37,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // fetch all requires information
     API.getAllRequiresInfo(eid, connectedID, connectedEmail).then(resp => {
-        console.log('employee info');
-        console.log(resp);
         if(!resp.error){
             const employeeEmail = resp.EmployeeInfo.Employee.primaryEmail
 
@@ -66,12 +64,8 @@ window.addEventListener('DOMContentLoaded', () => {
         const error = Common.validateRequiredFields(myRIF)
         if (error == '0'){
             myData = Helpers.getForm('updateEmployeeForm', eid, connectedEmail, connectedID)
-           
-            
-            console.log(myData);
             
             API.updateEmployee(myData).then(resp => {
-                console.log(resp);
                 if (! resp.error) window.location.href = sPage + resp.data.id
             })   
 

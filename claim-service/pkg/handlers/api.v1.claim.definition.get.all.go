@@ -8,6 +8,7 @@ import (
 func (rep *Repository) GetAllClaimDefinition(w http.ResponseWriter, r *http.Request) {
 	// get claim definition (active, inactive, deleted)
 	all, err := rep.App.Models.ClaimDefinition.GetClaimDefinition()
+
 	if err != nil {
 		rep.errorJSON(w, err)
 		return

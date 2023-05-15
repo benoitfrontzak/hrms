@@ -67,7 +67,6 @@ window.addEventListener('DOMContentLoaded', () => {
         if (error == '0' && formAction == 'edit'){
             myData = Helpers.getForm('createLeaveDefinitionForm')
             API.updateLeaveDefinition(myData).then(resp => {
-                console.log(resp);
                 if (! resp.error) location.reload()
             })            
         }
@@ -130,4 +129,5 @@ window.addEventListener('DOMContentLoaded', () => {
     // make modals draggable
     Draggable.draggableModal('createLeaveDefinition')
     Draggable.draggableModal('confirmDelete')
+    
 })

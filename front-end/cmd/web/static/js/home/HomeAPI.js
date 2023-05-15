@@ -32,7 +32,7 @@ class HomeAPI{
         const result = await response.json()
         return result
     }
-
+    
     // fetch connected employee's claims information (details)
     async getEmployeeClaimDetailsByID(eid) {
         const url = broker + 'route/myclaim/get/thisYearDetails'

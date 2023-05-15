@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 )
@@ -21,11 +22,14 @@ func UpdateLeaveDefinition(w http.ResponseWriter, r *http.Request) {
 	var answer jsonResponse
 	dec := json.NewDecoder(resp.Body)
 	err = dec.Decode(&answer)
-	if err != nil || answer.Error {
+	if err != nil {
 		errorJSON(w, err)
 		return
 	}
-
+	if answer.Error {
+		errorJSON(w, errors.New(answer.Message))
+		return
+	}
 	// log to employee-service collection
 	l := rpcPayload{
 		Collection: "leave",
