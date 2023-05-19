@@ -26,20 +26,7 @@ services:
       replicas: 1
     environment:
       DSN: "host=backend port=5432 user=postgres password=rootroot dbname=AUTHENTICATION sslmode=disable timezone=UTC connect_timeout=5"
-    
-  logger-service:
-    build:
-      context: ./../logger-service
-      dockerfile: ./../logger-service/logger-service.dockerfile
-    restart: always
-    ports:
-      - "8080:8080"
-    deploy:
-      mode: replicated
-      replicas: 1
-    environment:
-      DSN: "mongodb://backend:27017"
-  
+ 
   leave-service:
     build:
       context: ./../leave-service
@@ -78,16 +65,3 @@ services:
       replicas: 1
     environment:
       DSN: "host=backend port=5432 user=postgres password=rootroot dbname=CLAIM sslmode=disable timezone=UTC connect_timeout=5"
-  
-  information-service:
-    build:
-      context: ./../information-service
-      dockerfile: ./../information-service/information-service.dockerfile
-    restart: always
-    ports:
-      - "8181:8181"
-    deploy:
-      mode: replicated
-      replicas: 1
-    environment:
-      DSN: "mongodb://backend:27017"

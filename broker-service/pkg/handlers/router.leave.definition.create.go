@@ -3,7 +3,6 @@ package handlers
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"log"
 	"net/http"
 )
@@ -38,16 +37,6 @@ func CreateLeaveDefinition(w http.ResponseWriter, r *http.Request) {
 
 	// update LEAVE_EMPLOYEE DB with new leave definition
 	createNewLeaveEmployeeEntitled(leaveID, calculationMethodID)
-
-	// log to leave-service collection
-	l := rpcPayload{
-		Collection: "leave",
-		Name:       "create definition",
-		Data:       fmt.Sprintf("new leave definition successfully created for table with id %d", leaveID),
-		CreatedAt:  answer.CreatedAt,
-		CreatedBy:  answer.CreatedBy,
-	}
-	LogItemViaRPC(l)
 
 	// send response to front-end
 	writeJSON(w, http.StatusAccepted, answer)

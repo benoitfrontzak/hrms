@@ -3,7 +3,6 @@ package handlers
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"net/http"
 )
 
@@ -30,15 +29,6 @@ func CreateMyLeave(w http.ResponseWriter, r *http.Request) {
 		errorJSON(w, errors.New(answer.Message))
 		return
 	}
-	// log to employee-service collection
-	l := rpcPayload{
-		Collection: "leave",
-		Name:       "application",
-		Data:       fmt.Sprintf("new entry successfully created for table with id"),
-		CreatedAt:  answer.CreatedAt,
-		CreatedBy:  answer.CreatedBy,
-	}
-	LogItemViaRPC(l)
 
 	// send response to front-end
 	writeJSON(w, http.StatusAccepted, answer)

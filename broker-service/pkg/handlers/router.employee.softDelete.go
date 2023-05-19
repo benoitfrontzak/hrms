@@ -3,7 +3,6 @@ package handlers
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"net/http"
 )
 
@@ -30,15 +29,6 @@ func SoftDeleteEmployee(w http.ResponseWriter, r *http.Request) {
 		errorJSON(w, errors.New(answer.Message))
 		return
 	}
-	// log to employee-service collection
-	l := rpcPayload{
-		Collection: "employee",
-		Name:       "deleted",
-		Data:       fmt.Sprintf("%s", answer.Data),
-		CreatedAt:  answer.CreatedAt,
-		CreatedBy:  answer.CreatedBy,
-	}
-	LogItemViaRPC(l)
 
 	// send response to front-end
 	writeJSON(w, http.StatusAccepted, answer)

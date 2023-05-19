@@ -50,13 +50,11 @@ func (rep *Repository) extractToken(r *http.Request) (*token.TokenData, error) {
 	// Decode encoded cookie (holds paseto Token)
 	t, err := token.DecodeCookie(sc)
 	if err != nil {
-		log.Printf("Request Failed: %s", err)
 		return nil, err
 	}
 	// Decode paseto into token.Payload
 	p, err := rep.App.Paseto.DecryptToken(t)
 	if err != nil {
-		log.Printf("Request Failed: %s", err)
 		return nil, err
 	}
 

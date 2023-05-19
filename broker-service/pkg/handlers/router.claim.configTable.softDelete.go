@@ -3,7 +3,6 @@ package handlers
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"net/http"
 )
 
@@ -30,22 +29,6 @@ func ClaimConfigTableSoftDelete(w http.ResponseWriter, r *http.Request) {
 		errorJSON(w, errors.New(answer.Message))
 		return
 	}
-	// decode answer.Data
-	ct, err := extractResponseDeleteCT(answer.Data)
-	if err != nil {
-		errorJSON(w, err)
-		return
-	}
-
-	// log to employee-service collection
-	l := rpcPayload{
-		Collection: "claim",
-		Name:       "config table",
-		Data:       fmt.Sprintf("entries %s successfully deleted from table %s", ct.List, ct.Table),
-		CreatedAt:  answer.CreatedAt,
-		CreatedBy:  answer.CreatedBy,
-	}
-	LogItemViaRPC(l)
 
 	// send response to front-end
 	writeJSON(w, http.StatusAccepted, answer)

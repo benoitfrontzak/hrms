@@ -6,6 +6,7 @@ package pg
 type Models struct {
 	Leave           Leave
 	LeaveDefinition LeaveDefinition
+	PublicHoliday   PublicHoliday
 	ConfigTables    ConfigTables
 }
 
@@ -138,4 +139,27 @@ type LeaveDefinitionEntitled struct {
 	ID            int
 	Entitled      int
 	CalculationID int
+}
+
+// Structure holding one Public Holiday
+type PublicHoliday struct {
+	ID          int    `json:"id,string,omitempty"`
+	Date        string `json:"date"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	CreatedAt   string `json:"createdAt"`
+	CreatedBy   int    `json:"createdBy,string,omitempty"`
+	UpdatedAt   string `json:"updatedAt"`
+	UpdatedBy   int    `json:"updatedBy,string,omitempty"`
+}
+
+type PublicHolidayCSV struct {
+	Date        string `json:"Date"`
+	Name        string `json:"Name"`
+	Description string `json:"Description"`
+}
+
+type CSV struct {
+	PublicHolidays []PublicHolidayCSV `json:"PublicHolidays"`
+	CreatedBy      int                `json:"CreatedBy,string,omitempty"`
 }

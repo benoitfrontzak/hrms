@@ -37,5 +37,10 @@ func multiplexer() http.Handler {
 	mux.HandleFunc("/api/v1/leave/reject", handlers.Repo.RejectLeave)
 	mux.HandleFunc("/api/v1/leave/update/credits", handlers.Repo.UpdateCredits)
 
+	// API v1 public holidays
+	mux.HandleFunc("/api/v1/publicHoliday/create", handlers.Repo.CreatePH)
+	mux.HandleFunc("/api/v1/publicHoliday/create/csv", handlers.Repo.CreateCSV)
+	mux.HandleFunc("/api/v1/publicHoliday/get/all", handlers.Repo.GetAllPublicHoliday)
+	mux.HandleFunc("/api/v1/publicHoliday/softDelete", handlers.Repo.SoftDeletePublicHoliday)
 	return mux
 }

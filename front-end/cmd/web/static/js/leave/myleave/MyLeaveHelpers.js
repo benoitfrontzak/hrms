@@ -379,26 +379,44 @@ class MyLeaveHelpers {
         return uploadedFiles
     }
 
+    // sort array
+    sortArray(arr){
+        arr.sort(function(a,b) {
+            a = a.split('/').reverse().join('')
+            b = b.split('/').reverse().join('')
+            return a.localeCompare(b)
+            // return a > b ? 1 : a < b ? -1 : 0; // <-- alternative   
+        })
+        return arr
+    }
+
     // populate dates for disable calendar (already requested dates: pending & approved)
-    populateDatesForDisable(myLeaves, datesForDisable){
+    populateDatesForDisable(myLeaves){
+        let myLeaveDatesTaken = []
+
         // get requested dates pending & approved (to disable it)
         myLeaves.forEach(element => {
             if (element.statusid != 3){
                 // requested dates
                 let rd = element.details
                 rd.forEach(e => {
-                    datesForDisable.push(this.formatDate(e.requestedDate))
+                    myLeaveDatesTaken.push(this.formatDate(e.requestedDate))
                 });
             }
         })
+
         // sort dates
-        datesForDisable.sort(function(a,b) {
-            a = a.split('/').reverse().join('')
-            b = b.split('/').reverse().join('')
-            return a.localeCompare(b)
-            // return a > b ? 1 : a < b ? -1 : 0; // <-- alternative   
-        })
-        return datesForDisable
+        return this.sortArray(myLeaveDatesTaken) 
+    }
+    // populate all public holidays array (and sort it)
+    populatePublicHolidays(data, ph){
+         // get ph dates
+        data.forEach(element => {
+            ph.push(this.formatDate(element.date))
+        });
+
+        // sort dates
+        return this.sortArray(ph)
     }
 
     // define gender connected user

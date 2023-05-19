@@ -1,0 +1,211 @@
+{{template "base.admin" . }}
+
+<!-- We use css marker to load specific script of the page -->
+{{define "css"}}
+  <!-- DataTables -->
+  <script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+  <!-- Fixed columns -->
+  <script type="text/javascript" src="https://cdn.datatables.net/fixedcolumns/4.2.2/js/dataTables.fixedColumns.min.js"></script>
+  <!-- Export buttons -->
+  <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+  <!-- Reorder columns -->
+  <script src="https://cdn.datatables.net/colreorder/1.6.2/js/dataTables.colReorder.min.js"></script>
+  <!-- Draggable feature (modal) -->
+  <script type="text/javascript" src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+
+  <link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet"/>
+  <link href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.dataTables.min.css" rel="stylesheet"/>
+{{end}}
+
+{{define "content"}}
+
+<div class="container-fluid" style="width:100%">
+  <div class="zoomOut mt-3 p-3 borderRadiusTop borderRadiusBottom shadow">
+    <!-- TITLE & ACTION BUTTONS -->
+    <div class="row">
+      <div class="col-10">
+        <h1 class="text-dark fw-bolder" id="claimTitle">Public Holidays</h1>
+      </div>
+      <div class="col-2">
+        <div class="d-flex justify-content-end mb-1">
+          <div><a href="#" class="btn btn-secondary myButton" id="openCreatePublicHoliday" data-bs-toggle="modal" data-bs-target="#createPublicHoliday" data-bs-toggle="tooltip" title="Add"><i class="bi-plus-lg largeIcon"></i></a></div>
+          <div>&nbsp;</div>
+          <div><a href="#" class="btn btn-secondary myButton" id="deleteAllPublicHoliday" data-bs-toggle="tooltip" title="Delete"><i class="bi-x-lg largeIcon"></i></a></div>
+        </div>
+        <div class="d-flex justify-content-end mb-1">
+          <div><a href="#" class="btn btn-secondary myButton" id="addCSV" data-bs-toggle="modal" data-bs-target="#loadCSV" data-bs-toggle="tooltip" title="Load from CSV"><i class="bi-file-earmark-plus largeIcon"></i></a></div>
+          <div>&nbsp;</div>
+          <div class="dropdown" data-bs-toggle="tooltip" title="Show/Hide Columns">
+              <button type="button" class="btn btn-secondary myButton dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi-card-checklist largeIcon"></i></button>
+              <ul class="dropdown-menu">
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Date" id="Date" /><span> Date</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Name" id="Name" /><span> Name</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Description" id="Description" /><span> Description</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Created_At" id="Created_At" /><span> Created At</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Created_By" id="Created_By" /><span> Created By</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Updated_At" id="Updated_At" /><span> Updated At</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Updated_By" id="Updated_By" /><span> Updated By</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Action" id="Action" /><span> Action</span></a></li>
+              </ul>
+          </div>
+        </div>
+      </div>
+    </div>   
+    <!-- TITLE & ACTION BUTTONS -->
+
+    <!-- WARNING DELETE MESSAGE -->
+    <div class="alert alert-warning mt-3 hide" role="alert" id="deleteWarningMessageDiv">
+      <div class="d-flex justify-content-between">
+        <div class="flex-grow-1"><h4 class="alert-heading"><i class="bi-exclamation-diamond-fill"></i> Warning!</h4></div>
+        <div class="flex-shrink-1"><i class="bi-x-circle-fill pointer" id="hidedeleteWarningMessage"></i></div>
+      </div>      
+      <p>You must select at least one entry before deleting...</p>
+      <hr>
+      <p class="mb-0 smaller">Please check in on some of those fields below...</p>
+    </div>
+    <!-- WARNING DELETE MESSAGE -->
+
+    <hr />
+
+    <!-- DATATABLE PROCESSING -->
+    <div id="processing" class="row my-3">
+      <div class="row text-center w-100"><div class="col">Processing data...</div></div>
+      <div class="row text-center w-100"><div class="col"><div class="loader"></div></div></div>
+    </div>
+    <!-- DATATABLE PROCESSING -->
+
+    <!-- TABLE -->
+    <table id="publicHolidayTable" class="table table-hover nowrap" style="width:100%">
+        <tbody id="publicHolidayBody"></tbody>
+    </table>
+    <!-- TABLE -->
+  </div>
+</div>
+
+<!-- Modal: Confirm employee deletion -->
+<div class="modal fade" id="confirmDelete" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirm Delete</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p id="confirmDeleteBody"></p>
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="btn btn-danger" id="confirmDeleteSubmit"><i class="bi bi-save2-fill"></i> Confirm</a>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Add new Public Holiday -->
+<div class="modal fade" id="createPublicHoliday" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="createPublicHolidayLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="createPublicHolidayLabel">Public Holiday</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="createPublicHolidayBody">
+        <!-- WARNING MESSAGE -->
+        <div class="alert alert-warning mt-3 hide" role="alert" id="warningMessageDiv">
+          <div class="d-flex justify-content-between">
+            <div class="flex-grow-1"><h4 class="alert-heading"><i class="bi-exclamation-diamond-fill"></i> Warning!</h4></div>
+            <div class="flex-shrink-1"><i class="bi-x-circle-fill pointer" id="hideWarningMessage"></i></div>
+          </div>      
+          <p id="warningMessageBody">Please you must fill those fields</p>
+          <hr>
+          <p class="mb-0 smaller">Please check in on some of those fields below...</p>
+        </div>
+        <!-- WARNING MESSAGE -->
+        <div class="row mb-3">
+          <div class="col-sm-6">
+            <div class="form-floating">
+              <input type="date" class="form-control" id="datePublicHoliday" name="datePublicHoliday" />
+              <label for="datePublicHoliday"><i class="bi-shield-fill-exclamation"></i> Date Public Holiday</label>
+              <div class="fw-bolder text-danger fst-italic smaller" id="datePublicHolidayError"></div>
+            </div>       
+          </div>
+          <div class="col-sm-6">
+            <div class="form-floating">
+              <input type="text" class="form-control" id="namePublicHoliday" name="namePublicHoliday" />
+              <label for="namePublicHoliday"><i class="bi-shield-fill-exclamation"></i> Name</label>
+              <div class="fw-bolder text-danger fst-italic smaller" id="namePublicHolidayError"></div>
+            </div>
+          </div>
+        </div>
+        <!-- Leave description -->
+        <div class="row mb-3">
+          <div class="col-sm-12">
+             <div class="form-floating">
+              <textarea class="form-control" name="description" id="description" style="height: 100px"></textarea>
+              <label for="description">Description</label>
+            </div>
+            <div class="fw-bolder text-danger fst-italic smaller" id="descriptionError"></div>       
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="btn btn-danger" id="phSubmit"><i class="bi bi-save2-fill"></i> Save</a>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Load from CSV -->
+<div class="modal fade" id="loadCSV" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+  <div class="modal-dialog">
+    <form id="csvForm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Load Public Holidays from CSV</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">        
+            <div class="row mb-3">
+              <div class="col-sm-12">
+                <input class="form-control" type="file" id="csvFile" accept=".csv" />
+                <div class="fw-bolder text-danger fst-italic smaller" id="csvFileError"></div>
+              </div>
+            </div>
+            <div class="row myTint4BG"><div class="col-sm-12 text-danger smaller">We accept only .csv file</div></div>
+            <div class="row myTint4BG"><div class="col-sm-12 text-danger smaller">Any malformatted date will be skipped</div></div>
+            <div class="row myTint4BG mb-3"><div class="col-sm-12 text-danger smaller">Any already existing date will be skipped</div></div>
+            <div class="row"><div class="col-sm-12 smaller">The date must be formatted as follow: yyyy/mm/dd or yyyy-mm-dd</div></div>
+            <div class="row"><div class="col-sm-12 smaller">Name & Description can't content any comma</div></div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-danger"><i class="bi-upload largeIcon"></i> Load</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+{{end}}
+
+{{define "js"}}
+
+<script>
+  const connectedEmail = {{.User.Email}},
+        connectedID = '{{.User.EmployeeID}}'
+</script>
+
+<script src="/static/js/common/MainHelpers.js"></script>
+<script src="/static/js/common/JqueryDatables.js"></script>
+<script src="/static/js/common/JqueryDraggableModal.js"></script>
+
+<script src="/static/js/publicHolidays/PublicHolidaysHelpers.js"></script>
+<script src="/static/js/publicHolidays/PublicHolidaysAPI.js"></script>
+<script src="/static/js/publicHolidays/publicHolidays.js"></script>
+{{end}}

@@ -3,6 +3,7 @@ package handlers
 import (
 	"authentication/pkg/pg"
 	"net/http"
+	"time"
 )
 
 // CreateUser creates a new user to authentication-service
@@ -24,9 +25,11 @@ func (rep *Repository) CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	// send response
 	resp := jsonResponse{
-		Error:   false,
-		Message: "user successfully created",
-		Data:    rowID,
+		Error:     false,
+		Message:   "user successfully created",
+		Data:      rowID,
+		CreatedAt: time.Now().Format("02-Jan-2006 15:04:05"),
+		CreatedBy: "",
 	}
 	noToken := ""
 	rep.writeJSON(w, http.StatusAccepted, resp, noToken)

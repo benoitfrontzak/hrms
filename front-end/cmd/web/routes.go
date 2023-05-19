@@ -32,11 +32,12 @@ func multiplexer() http.Handler {
 	mux.Handle("/information/", handlers.Middleware(http.HandlerFunc(handlers.Repo.Information)))
 
 	// Maintenance: Admin only
-	mux.Handle("/employee/", handlers.Middleware(http.HandlerFunc(handlers.Repo.Employee)))            // CRUD operation
-	mux.Handle("/claim/", handlers.Middleware(http.HandlerFunc(handlers.Repo.Claim)))                  // Approve | reject claim
-	mux.Handle("/claim/employee/", handlers.Middleware(http.HandlerFunc(handlers.Repo.ClaimEmployee))) // view employee's claims
-	mux.Handle("/leave/", handlers.Middleware(http.HandlerFunc(handlers.Repo.Leave)))                  // Approve | reject leave
-	mux.Handle("/leave/employee/", handlers.Middleware(http.HandlerFunc(handlers.Repo.LeaveEmployee))) // update employee's leave (credits)
+	mux.Handle("/employee/", handlers.Middleware(http.HandlerFunc(handlers.Repo.Employee)))             // CRUD operation
+	mux.Handle("/claim/", handlers.Middleware(http.HandlerFunc(handlers.Repo.Claim)))                   // Approve | reject claim
+	mux.Handle("/claim/employee/", handlers.Middleware(http.HandlerFunc(handlers.Repo.ClaimEmployee)))  // view employee's claims
+	mux.Handle("/leave/", handlers.Middleware(http.HandlerFunc(handlers.Repo.Leave)))                   // Approve | reject leave
+	mux.Handle("/leave/employee/", handlers.Middleware(http.HandlerFunc(handlers.Repo.LeaveEmployee)))  // update employee's leave (credits)
+	mux.Handle("/publicHolidays/", handlers.Middleware(http.HandlerFunc(handlers.Repo.PublicHolidays))) // update employee's leave (credits)
 
 	// My profile
 	mux.Handle("/myclaim/", handlers.Middleware(http.HandlerFunc(handlers.Repo.MyClaim))) // my claim applications (CRUD)

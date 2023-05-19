@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"log"
 	"net/http"
 	"time"
 )
@@ -9,7 +8,6 @@ import (
 // GetAllMyLeave is the handler which receives a payload from the broker
 // and fetch all my leaves by employee ID
 func (rep *Repository) GetAllMyLeave(w http.ResponseWriter, r *http.Request) {
-	log.Println("GetAllMyLeave")
 	// extract payload from request
 	var p User
 

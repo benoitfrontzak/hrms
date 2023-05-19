@@ -80,6 +80,67 @@ func getAllRowsCountryTable(t string) ([]configC, error) {
 	return myCC, nil
 }
 
+// fetch all rows of CONFIG_COMMON_COUNTRY and returns it as []configC
+func getAllRowsPayrollItem() ([]PayrollItem, error) {
+	// canceling this context releases resources associated with it
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+	// SQL statement which fetch config_country_common
+	query := `SELECT cpi.id,
+				  	 cpt.name as payroll_type,
+				  	 cpi.code,
+				  	 cpi.description,
+				  	 cpi.start_period,
+				  	 cpi.end_period,
+				  	 cpi.amount,
+				  	 cpi.pay_epf,
+				  	 cpi.pay_socso_eif,
+				  	 cpi.pay_hrdf,
+				  	 cpi.pay_tax,
+				  	 cpi.is_fixed 
+			  FROM "CONFIG_PAYROLL_ITEM" cpi, "CONFIG_PAYROLL_TYPE" cpt 
+			  WHERE cpi.payroll_type_id = cpt.id
+			  ORDER by id`
+
+	// executes SQL query
+	rows, err := db.QueryContext(ctx, query)
+	if err != nil {
+		log.Println("reached rows ", rows)
+		return nil, err
+	}
+	defer rows.Close()
+
+	// populate each row to configC
+	var myPI []PayrollItem
+	for rows.Next() {
+		var pi PayrollItem
+		err := rows.Scan(
+			&pi.ID,
+			&pi.Type,
+			&pi.Code,
+			&pi.Description,
+			&pi.Start,
+			&pi.End,
+			&pi.Amount,
+			&pi.PayEPF,
+			&pi.PaySOCSO,
+			&pi.PayHRDF,
+			&pi.PayTax,
+			&pi.IsFixed,
+		)
+		if err != nil {
+			log.Println("Error scanning", err)
+			return nil, err
+		}
+
+		myPI = append(myPI, pi)
+	}
+
+	// return all country rows
+	return myPI, nil
+}
+
 // fetch all config tables
 func (ct *ConfigTables) GetAllConfigTables() (*ConfigTables, error) {
 	var err error
@@ -160,6 +221,14 @@ func (ct *ConfigTables) GetAllConfigTables() (*ConfigTables, error) {
 		return nil, err
 	}
 	ct.StatutoryTaxStatus, err = getAllRowsConfigTable("CONFIG_STATUTORY_TAX_BRANCH")
+	if err != nil {
+		return nil, err
+	}
+	ct.PayrollType, err = getAllRowsConfigTable("CONFIG_PAYROLL_TYPE")
+	if err != nil {
+		return nil, err
+	}
+	ct.PayrollItem, err = getAllRowsPayrollItem()
 	if err != nil {
 		return nil, err
 	}

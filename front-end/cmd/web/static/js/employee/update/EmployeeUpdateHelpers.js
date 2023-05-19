@@ -1,4 +1,37 @@
 class EmployeeUpdateHelpers{
+    // cleaned checked checkboxes when modal is close
+    clearSelectedEmployee(){
+        document.getElementById('confirmDelete').addEventListener('hidden.bs.modal', function () {
+            const myDeleteCheckboxes = document.querySelectorAll('.deleteCheckboxes')
+    
+            myDeleteCheckboxes.forEach(element => {
+                element.checked = false
+            })
+    
+        })
+    }
+
+    // returns list of selected employee id to be deleted
+    selectedEmployee(myDeleteWarning){
+        const checked = document.querySelectorAll('input[name=softDelete]:checked')
+        if (checked.length == 0) document.querySelector('#'+myDeleteWarning).style.display = 'block'
+        if (checked.length > 0){
+            let allChecked = []
+            checked.forEach(element => {
+                allChecked.push(element.value)
+            })
+            return allChecked
+        }        
+    }
+
+    // populate confirm detele message
+    populateConfirmDelete(id, nb){
+        let msg
+        (nb == 1)? msg = 'Do you really want to delete this payroll item?' : msg = `Do you really want to delete ${nb} payroll items?`
+
+        const myBody = document.querySelector('#'+id)
+        myBody.innerHTML = msg
+    }
 
     // Populate config tables for nationality, residence country, race, religion, country, relationship
     populateConfigTables(ct){
@@ -30,6 +63,8 @@ class EmployeeUpdateHelpers{
         this.insertOptions('taxStatus', ct.StatutoryTaxStatus)
         this.insertOptions('taxBranch', ct.StatutoryTaxBranch)
         this.insertOptions('foreignWorkerLevy', ct.StatutoryForeignLevy)
+        // payroll time        
+        this.insertOptionsPI('payrollItem', ct.PayrollItem)
     }
     // Insert to selectID one option per element of data.Nationality
     insertNationalityOptions(id, data){
@@ -42,6 +77,7 @@ class EmployeeUpdateHelpers{
             target.appendChild(opt)
         })
     }
+
     // Insert to selectID one option per element of data.Name
     insertOptions(id, data){
         const target = document.querySelector('#'+id)
@@ -53,7 +89,17 @@ class EmployeeUpdateHelpers{
             target.appendChild(opt)
         })
     }
-
+    // Insert payroll item's option
+    insertOptionsPI(id, data){
+        const target = document.querySelector('#'+id)
+        target.innerHTML = '<option selected hidden value=""></option>'
+        data.forEach(element => {
+            let opt = document.createElement('option')
+            opt.value = element.id
+            opt.innerHTML = element.code
+            target.appendChild(opt)
+        })
+    }
     // Insert to superior, supervisor employee list
     insertEmployee(id, data){
         const target = document.querySelector('#'+id)
@@ -89,6 +135,10 @@ class EmployeeUpdateHelpers{
         if (day.length < 2) day = '0' + day;
 
         return [year, month, day].join('-');
+    }
+    // customize boolean (0|1) with icons
+    myBooleanIcons(value) {
+        return (value == 1) ? '<i class="bi-check2-square"></i>' : '<i class="bi-x-square"></i>'
     }
     // calculate numbers of days between date and now (round up)
     daysDifferenceNow(date){
@@ -264,22 +314,73 @@ class EmployeeUpdateHelpers{
         const target = document.querySelector('#payrollItemBody')
         target.innerHTML = ''
         data.forEach(element => {
+            let tooltips = this.createTooltipsPI(element.id)
             let row = document.createElement('tr')
-            row.id = element.ID
-            row.innerHTML = `<td class="pointer"><a href="#" class="link-dark myLink">${element.type}</a></td>
-                            <td class="pointer"><a href="#" class="link-dark myLink">${element.code}</a></td>
-                            <td class="pointer"><a href="#" class="link-dark myLink">${element.description}</a></td>
-                            <td class="pointer"><a href="#" class="link-dark myLink">${this.convertToDate(element.start)}</a></td>
-                            <td class="pointer"><a href="#" class="link-dark myLink">${this.convertToDate(element.end)}</a></td>
-                            <td class="pointer"><a href="#" class="link-dark myLink">${element.amount}</a></td>
-                            <td>
+            row.id = element.id
+            row.innerHTML = `<td class="pointer" data-bs-toggle="tooltip" data-bs-html="true" title='${tooltips}'><a href="#" class="link-dark myLink">${element.type}</a></td>
+                             <td class="pointer" data-bs-toggle="tooltip" data-bs-html="true" title='${tooltips}'><a href="#" class="link-dark myLink">${element.code}</a></td>
+                             <td class="pointer" data-bs-toggle="tooltip" data-bs-html="true" title='${tooltips}'><a href="#" class="link-dark myLink">${element.description}</a></td>
+                             <td class="pointer" data-bs-toggle="tooltip" data-bs-html="true" title='${tooltips}'><a href="#" class="link-dark myLink">${this.convertToDate(element.start)}</a></td>
+                             <td class="pointer" data-bs-toggle="tooltip" data-bs-html="true" title='${tooltips}'><a href="#" class="link-dark myLink">${this.convertToDate(element.end)}</a></td>
+                             <td class="pointer" data-bs-toggle="tooltip" data-bs-html="true" title='${tooltips}'><a href="#" class="link-dark myLink">${element.amount}</a></td>
+                             <td>
                                 <div class="form-check">
-                                    <input class="form-check-input deleteCheckboxes"  type="checkbox" value="${element.ID}" name="softDelete">
+                                    <input class="form-check-input deleteCheckboxes"  type="checkbox" value="${element.id}" name="softDelete">
                                     <label class="form-check-label fw-lighter fst-italic smaller" for="softDelete"><i class="bi-trash2-fill largeIcon pointer deleteEmployee"></i></label>
                                 </div>                                
-                            </td>`
+                             </td>`
             target.appendChild(row)
           })
+    }
+    // create payroll item tooltips
+    createTooltipsPI(id){
+        const myPI = allPI.get(id)
+        let myTooltips = `<div class="row">
+                            <div class="col-8 text-start">Start</div>  
+                            <div class="col-4">${this.convertToDate(myPI.start)}</div>  
+                          </div>
+                          <div class="row">
+                            <div class="col-8 text-start">End</div>  
+                            <div class="col-4">${this.convertToDate(myPI.end)}</div>  
+                          </div>
+                          <div class="row">
+                            <div class="col-8 text-start">Amount</div>  
+                            <div class="col-4">${myPI.amount}</div>  
+                          </div>
+                          <div class="row">
+                            <div class="col-8 text-start">Pay EPF</div>  
+                            <div class="col-4">${this.myBooleanIcons(myPI.payEPF)}</div>  
+                          </div>
+                          <div class="row">
+                            <div class="col-8 text-start">Pay SOCSO</div>  
+                            <div class="col-4">${this.myBooleanIcons(myPI.paySOCSO)}</div>  
+                          </div>
+                          <div class="row">
+                            <div class="col-8 text-start">Pay EIF</div>  
+                            <div class="col-4">${this.myBooleanIcons(myPI.paySOCSO)}</div>  
+                          </div>
+                          <div class="row">
+                            <div class="col-8 text-start">Pay HRDF</div>  
+                            <div class="col-4">${this.myBooleanIcons(myPI.payHRDF)}</div>  
+                          </div>
+                          <div class="row">
+                            <div class="col-8 text-start">Pay Tax</div>  
+                            <div class="col-4">${this.myBooleanIcons(myPI.payTax)}</div>  
+                          </div>
+                          <div class="row">
+                            <div class="col-8 text-start">Is Fixed</div>  
+                            <div class="col-4">${this.myBooleanIcons(myPI.isFixed)}</div>  
+                          </div>`
+
+        return myTooltips
+    }
+
+    // populate all payroll items map
+    updatePayrollItemsMap(data, allPI){
+        data.forEach(element => {
+            allPI.set(element.id, element)
+        })
+        return allPI
     }
 
     // insert payroll rows
@@ -566,10 +667,6 @@ class EmployeeUpdateHelpers{
         var daysDisplay = days > 0 ? days + (days == 1 ? " day" : " days") : "";
         return yearsDisplay + monthsDisplay + daysDisplay; 
     }
-    // customize boolean (0|1) with icons
-    myBooleanIcons(value){
-        return (value == 1) ? '<i class="bi-check2-square"></i> true' : '<i class="bi-x-square"></i> false'
-    }
     // convert gender_id
     gender(id){
         let g
@@ -813,4 +910,66 @@ class EmployeeUpdateHelpers{
 
         return bank
     }
+
+    // populate fields add payroll item form
+    populateFormPI(data){
+        document.querySelector('#piType').value = data.type
+        document.querySelector('#piDescription').value = data.description
+        document.querySelector('#piStart').value = this.formatDate(data.start)
+        document.querySelector('#piEnd').value = this.formatDate(data.end)
+        document.querySelector('#piAmount').value = data.amount
+    }
+
+    // clear add payroll item form
+    clearPI(){
+        // reset error message
+        document.querySelector('#payrollItemError').innerHTML = ''
+        document.querySelector('#piAmountError').innerHTML = ''
+        // reset value
+        document.querySelector('#payrollItem').value = ''
+        document.querySelector('#piType').value = ''
+        document.querySelector('#piDescription').value = ''
+        document.querySelector('#piStart').value = ''
+        document.querySelector('#piEnd').value = ''
+        document.querySelector('#piAmount').value = ''
+    }
+
+    checkFormPI(){
+        let notValid = []
+        
+        // validate payroll item is selected
+        if (document.querySelector('#payrollItem').value == ''){
+            document.querySelector('#payrollItemError').innerHTML = 'Payroll item is required'
+            notValid.push('Payroll item is required')
+        }
+
+        // validate amount is set
+        if (document.querySelector('#piAmount').value == ''){
+            document.querySelector('#piAmountError').innerHTML = 'Amount is required'
+            notValid.push('Amount is required')
+        }
+
+        return notValid.length
+    }
+
+    // get add payroll item form data
+    getFormPI(eid){
+        const myjson = {}
+        
+        let myStart = '0001-01-01',
+            myEnd = '0001-01-01'
+        
+        if (document.querySelector('#piStart').value != '') myStart = document.querySelector('#piStart').value
+        if (document.querySelector('#piEnd').value != '') myEnd = document.querySelector('#piEnd').value
+
+        myjson['id']     = document.querySelector('#payrollItem').value
+        myjson['start']  = myStart
+        myjson['end']    = myEnd
+        myjson['amount'] = document.querySelector('#piAmount').value
+        myjson['employeeID'] = eid
+        myjson['createdBy'] = connectedID
+
+        return JSON.stringify(myjson, function replacer(key, value) { return value})
+    }
+
 }

@@ -50,4 +50,36 @@ class EmployeeUpdateAPI{
     return result
   }
   
+  // add payroll item   
+  async addPayrollItem(stringifiedJSON) {
+    const url = broker + 'route/employee/payrollItem/create'
+
+    const body = {
+      method: 'POST',
+      body: stringifiedJSON,
+    }
+
+    const response = await fetch(url, body)
+    const result = await response.json()
+
+    return result
+  }
+
+  // soft delete all selected employee
+  async softDeletePayrollItem(piList, connectedUser) {
+    const url = broker + 'route/employee/payrollItem/softDelete'
+
+    const payload = {
+      list : piList,
+      connectedUser : connectedUser
+    }
+    const body = {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }
+
+    const response = await fetch(url, body)
+    const result = await response.json()
+    return result
+  }
 }

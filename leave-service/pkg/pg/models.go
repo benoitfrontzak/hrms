@@ -17,6 +17,7 @@ func New(dbPool *sql.DB) Models {
 	return Models{
 		Leave:           Leave{},
 		LeaveDefinition: LeaveDefinition{},
+		PublicHoliday:   PublicHoliday{},
 		ConfigTables:    ConfigTables{},
 	}
 }

@@ -23,9 +23,11 @@ type AuthPayload struct {
 
 // jsonResponse is a struct which holds the response to be sent back
 type jsonResponse struct {
-	Error   bool   `json:"error"`
-	Message string `json:"message"`
-	Data    any    `json:"data,omitempty"`
+	Error     bool   `json:"error"`
+	Message   string `json:"message"`
+	Data      any    `json:"data,omitempty"`
+	CreatedAt string `json:"createdAt,omitempty"`
+	CreatedBy string `json:"createdBy,omitempty"`
 }
 
 // VerifyCookieResponse is the response send back to front-end

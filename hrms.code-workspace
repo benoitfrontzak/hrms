@@ -10,9 +10,6 @@
 			"path": "authentication-service"
 		},
 		{
-			"path": "logger-service"
-		},
-		{
 			"path": "broker-service"
 		},
 		{
@@ -23,9 +20,6 @@
 		},
 		{
 			"path": "leave-service"
-		},
-		{
-			"path": "information-service"
 		}
 	],
 	"settings": {}

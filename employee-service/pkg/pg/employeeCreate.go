@@ -2,6 +2,36 @@ package pg
 
 import "context"
 
+// inserts a new payroll item for a specific employee into the database, and returns the ID of the newly inserted row
+func (e *Employee) InsertPI(p PayrollItem) (int, error) {
+	// canceling this context releases resources associated with it
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+	// SQL statement which insert a new employee
+	stmt := `INSERT INTO public."ADDITION_DEDUCTION" (payroll_item_id, start_period, end_period, amount, employee_id, created_at, created_by, updated_at, updated_by) 
+			 VALUES($1, $2, $3, $4, $5, now(), $6, now(), $7) returning id;`
+
+	// executes SQL query (set SQL parameters and cacth rowID)
+	var newID int
+
+	err := db.QueryRowContext(ctx, stmt,
+		p.ID,
+		p.Start,
+		p.End,
+		p.Amount,
+		p.EmployeeID,
+		p.CreatedBy,
+		p.CreatedBy,
+	).Scan(&newID)
+	if err != nil {
+		return 0, err
+	}
+
+	// return rowID of created new employee
+	return newID, nil
+}
+
 // inserts a new employee into the database, and returns the ID of the newly inserted row
 func (e *Employee) Insert() (int, error) {
 	// canceling this context releases resources associated with it

@@ -11,6 +11,14 @@ class MyLeaveAPI {
     return result
   }
 
+  // fetch all public holidays
+  async getAllPublicHolidays(){
+    const url = broker + 'route/publicHoliday/get/all';
+    const response = await fetch(url)
+    const result = await response.json();
+    return result;
+  }
+
   // fetch all required information at once
   async getAllInformationsMyLeave(connectedID, connectedEmail){
     const url = broker + 'route/myleave/get/all';

@@ -3,7 +3,6 @@ package handlers
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"net/http"
 )
 
@@ -30,18 +29,6 @@ func CreateEmployee(w http.ResponseWriter, r *http.Request) {
 		errorJSON(w, errors.New(answer.Message))
 		return
 	}
-	// new employee email
-	nee := answer.Data.(map[string]interface{})["Email"]
-
-	// log to employee-service collection
-	l := rpcPayload{
-		Collection: "employee",
-		Name:       "created",
-		Data:       fmt.Sprintf("employee %s successfully created", nee),
-		CreatedAt:  answer.CreatedAt,
-		CreatedBy:  answer.CreatedBy,
-	}
-	LogItemViaRPC(l)
 
 	// send response to front-end
 	writeJSON(w, http.StatusAccepted, answer)

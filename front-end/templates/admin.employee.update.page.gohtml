@@ -1242,18 +1242,48 @@
                 </div>
                 <!-- ADDITION/DEDUCTION -->
                 <div class="hide content" id="payrollItemContent">
-                  <table id="payrollItemTable" class="table table-hover nowrap" style="width:100%">
-                    <thead>
-                      <th>Type</th>
-                      <th>Code</th>
-                      <th>Description</th>
-                      <th>Start</th>
-                      <th>End</th>
-                      <th>Amount</th>
-                      <th>Action</th>
-                    </thead>
-                    <tbody id="payrollItemBody"></tbody>
-                  </table>
+                    <div class="d-flex justify-content-end mb-1">
+                      <div><a href="#" class="btn btn-secondary myButton" id="openPayrollItem" data-bs-toggle="modal" data-bs-target="#payrollItems" data-bs-toggle="tooltip" title="Add Payroll Item"><i class="bi-plus-lg largeIcon"></i></a></div>
+                      <div>&nbsp;</div>
+                      <div><a href="#" class="btn btn-secondary myButton" id="deleteAllPayrollItem" data-bs-toggle="tooltip" title="Delete Payroll Item(s)"><i class="bi-x-lg largeIcon"></i></a></div>
+                    </div>
+                    <!-- WARNING DELETE MESSAGE -->
+                    <div class="alert alert-warning mt-3 hide" role="alert" id="deleteWarningMessageDiv">
+                      <div class="d-flex justify-content-between">
+                        <div class="flex-grow-1"><h4 class="alert-heading"><i class="bi-exclamation-diamond-fill"></i> Warning!</h4></div>
+                        <div class="flex-shrink-1"><i class="bi-x-circle-fill pointer" id="hidedeleteWarningMessage"></i></div>
+                      </div>      
+                      <p>You must select at least one entry before deleting...</p>
+                      <hr>
+                      <p class="mb-0 smaller">Please check in on some of those fields below...</p>
+                    </div>
+                    <hr />
+                    <!-- WARNING DELETE MESSAGE -->
+                    <!-- Card: ADDITION/DEDUCTION -->
+                    <div class="card">
+                      <!-- Card Header: ADDITION/DEDUCTION  -->
+                      <div class="card-header myTint2BG fw-bolder text-white pointer">
+                        <div class="d-flex justify-content-between" id="payrollItemAccordion">
+                          <div class="flex-grow-1"><i class="bi-person-lines-fill"></i> Payroll Items</div>
+                          <div class="flex-shrink-1"><span class="fw-bolder fst-italic"><small><i class="bi-x-circle-fill" id="payrollItemHide"></i><i class="bi-fullscreen hide" id="payrollItemShow"></i></small></span></div>
+                        </div>
+                      </div>
+                      <!-- Card Body: ADDITION/DEDUCTION  -->
+                      <div class="card-body" id="payrollItemBodyCard">
+                        <table id="payrollItemTable" class="table table-hover nowrap" style="width:100%">
+                          <thead>
+                            <th>Type</th>
+                            <th>Code</th>
+                            <th>Description</th>
+                            <th>Start</th>
+                            <th>End</th>
+                            <th>Amount</th>
+                            <th>Action</th>
+                          </thead>
+                          <tbody id="payrollItemBody"></tbody>
+                        </table>
+                      </div>
+                    </div>                  
                 </div>
                 <!-- Content -->
             </div>
@@ -1294,6 +1324,70 @@
     </div>
   </div>
 </form>
+
+<!-- MODAL ADD PAYROLL ITEMS -->
+<div class="modal fade" id="payrollItems" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="payrollItemsLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="payrollItemsLabel">Payroll items</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="payrollItemsBody">
+        <div class="row mb-3">
+          <div class="col-sm-4">
+            <div class="form-floating">
+              <select class="form-select" id="payrollItem" name="payrollItem"></select>
+              <label for="payrollItem"><i class="bi-shield-fill-exclamation"></i>  Payroll Item</label>
+            </div>
+            <div class="fw-bolder text-danger fst-italic smaller" id="payrollItemError"></div>
+          </div>
+          <div class="col-sm-4">
+            <div class="form-floating">
+              <input type="text" class="form-control" id="piType" name="piType" disabled />
+              <label for="piType">Type</label>
+            </div>
+            <div class="fw-bolder text-danger fst-italic smaller" id="piTypeError"></div>
+          </div>
+          <div class="col-sm-4">
+            <div class="form-floating">
+              <input type="text" class="form-control" id="piDescription" name="piDescription" disabled />
+              <label for="piDescription">Description</label>
+            </div>
+            <div class="fw-bolder text-danger fst-italic smaller" id="piDescriptionError"></div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-4">
+            <div class="form-floating">
+              <input type="date" class="form-control" value=NULL id="piStart" name="piStart" />
+              <label for="piStart">Start</label>
+            </div>
+            <div class="fw-bolder text-danger fst-italic smaller" id="piStartError"></div>
+          </div>
+          <div class="col-sm-4">
+            <div class="form-floating">
+              <input type="date" class="form-control" value=NULL id="piEnd" name="piEnd" />
+              <label for="piEnd">End</label>
+            </div>
+            <div class="fw-bolder text-danger fst-italic smaller" id="piEndError"></div>
+          </div>
+          <div class="col-sm-4">
+            <div class="form-floating">
+              <input type="number" step="0.01" class="form-control" id="piAmount" name="piAmount" />
+              <label for="piAmount">Amount</label>
+            </div>
+            <div class="fw-bolder text-danger fst-italic smaller" id="piAmountError"></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" id="savePI">Save</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- MODAL ARCHIVED Profile FILES -->
 <div class="modal fade" id="archivedProfile" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="archivedProfileLabel" aria-hidden="true">
@@ -1620,14 +1714,36 @@
     </div>
   </div>
 </div>
+
+<!-- modal: Confirm payroll item deletion -->
+<div class="modal fade" id="confirmDelete" tabindex="-1" aria-labelledby="confirmDelete" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirm Delete</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p id="confirmDeleteBody"></p>
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="btn btn-danger" id="confirmDeleteSubmit"><i class="bi bi-save2-fill"></i> Confirm</a>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 {{end}}
 
 {{define "js"}}
+
 <script>
   const connectedEmail = {{.User.Email}}
   const connectedID = '{{.User.EmployeeID}}'
 </script>
+
 <script src="/static/js/common/MainHelpers.js"></script>
+<script src="/static/js/common/JqueryDraggableModal.js"></script>
 
 <script src="/static/js/employee/update/EmployeeUpdateAPI.js"></script>
 <script src="/static/js/employee/update/EmployeeUpdateHelpers.js"></script>

@@ -29,16 +29,6 @@ func RejectLeave(w http.ResponseWriter, r *http.Request) {
 		errorJSON(w, errors.New(answer.Message))
 		return
 	}
-	// log to leave-service collection
-	l := rpcPayload{
-		Collection: "leave",
-		Name:       "rejection",
-		// Data:       fmt.Sprintf("new entry successfully created for table %s with id %d", ct.Table, ct.RowID),
-		Data:      "leave successfully reject",
-		CreatedAt: answer.CreatedAt,
-		CreatedBy: answer.CreatedBy,
-	}
-	LogItemViaRPC(l)
 
 	// send response to front-end
 	writeJSON(w, http.StatusAccepted, answer)

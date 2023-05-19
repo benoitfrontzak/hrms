@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"log"
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
@@ -52,7 +51,6 @@ func (u *User) GetAll() ([]*User, error) {
 			&user.EmployeeID,
 		)
 		if err != nil {
-			log.Println("Error scanning", err)
 			return nil, err
 		}
 
@@ -199,7 +197,7 @@ func (u *User) Insert(user User) (int, error) {
 func (u *User) UpdatePassword() error {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
-	log.Println("password to be hashed is ", u.Password)
+
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(u.Password), 12)
 	if err != nil {
 		return err
@@ -236,8 +234,6 @@ func (u *User) PasswordMatches(plainText string) (bool, error) {
 func (u *User) GetPassword(id int) (string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
-
-	log.Println("employeeID is ", id)
 
 	stmt := `SELECT password FROM "USERS" WHERE employee_id = $1`
 	row := db.QueryRowContext(ctx, stmt, id)

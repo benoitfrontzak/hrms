@@ -661,7 +661,8 @@ func getEmployeePayrollItemsByID(id int) ([]*PayrollItem, error) {
 				FROM "ADDITION_DEDUCTION" ad, "CONFIG_PAYROLL_ITEM" cpi, "CONFIG_PAYROLL_TYPE" cpt 
 				WHERE ad.employee_id = $1 
 				AND ad.payroll_item_id = cpi.id 
-				AND cpi.payroll_type_id = cpt.id `
+				AND cpi.payroll_type_id = cpt.id 
+				AND ad.soft_delete=0`
 
 	// executes SQL query
 	rows, err := db.QueryContext(ctx, query, id)

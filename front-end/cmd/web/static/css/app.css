@@ -6,6 +6,17 @@
   font-size: medium;
 }
 
+/* Override Bootstrap tooltip styles */
+.tooltip-inner {
+  max-width: none; /* Remove the maximum width limit */
+  width: auto !important; /* Set the width to auto */
+  white-space: nowrap; /* Prevent line breaks */
+}
+
+.tooltip.show {
+  max-width: none !important; /* Remove the maximum width limit for the shown tooltip */
+}
+
 /* Bootstrap customization */
 :root {
   --nav-height: 70px; /*You HAVE To Give A Default Fallback Value*/

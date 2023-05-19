@@ -1,4 +1,5 @@
 class EmployeeRender{
+
     // UPDATE EMPLOYEE SKELETON PAGE
     updateEmployeePage(employeeInfo, uploadedFiles){
       const employeeID = employeeInfo.Employee.id
@@ -242,6 +243,7 @@ class EmployeeRender{
                 <div class="row pointer ms-3 border p-3 myOthers"> <div class="col-10">Others</div> <div class="col-2 text-end disabled"><i class="bi-caret-down"></i></div> </div>
                 <div class="row pointer ms-3 border p-3 myOthersContent hide"> <div class="col">${Render.myOthersCard(data, employeeID)}</div> </div>`
     }
+    
     /*
     STATUTORY HELPERS
     */

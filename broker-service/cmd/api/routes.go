@@ -11,6 +11,7 @@ func multiplexer() http.Handler {
 
 	// authentication-service routes
 	mux.HandleFunc("/route/authentication/update/password", handlers.UpdatePassword) // update employee's password
+
 	// employee-service routes
 	mux.HandleFunc("/route/employee/get/all", handlers.AllEmployees)         // return all employee by status (active, inactive, deleted)
 	mux.HandleFunc("/route/employee/get/id", handlers.EmployeeByID)          // return employee information by id
@@ -21,6 +22,9 @@ func multiplexer() http.Handler {
 	mux.HandleFunc("/route/employee/create", handlers.CreateEmployee)         // create new employee
 	mux.HandleFunc("/route/employee/update", handlers.UpdateEmployee)         // update employee
 	mux.HandleFunc("/route/employee/softDelete", handlers.SoftDeleteEmployee) // delete employee
+
+	mux.HandleFunc("/route/employee/payrollItem/create", handlers.CreatePayrollItem)         // create new payroll item for specific employee
+	mux.HandleFunc("/route/employee/payrollItem/softDelete", handlers.SoftDeletePayrollItem) // delete payroll item for specific employee
 
 	mux.HandleFunc("/route/employee/configTables/get", handlers.EmployeeCT)                 // return all employee's config table
 	mux.HandleFunc("/route/employee/configTable/create", handlers.CreateEmployeeCT)         // create new config table entry
@@ -71,5 +75,12 @@ func multiplexer() http.Handler {
 	mux.HandleFunc("/route/leave/configTable/create", handlers.LeaveConfigTableCreate)         // create new config table entry
 	mux.HandleFunc("/route/leave/configTable/update", handlers.LeaveConfigTableUpdate)         // update one config table entry
 	mux.HandleFunc("/route/leave/configTable/softDelete", handlers.LeaveConfigTableSoftDelete) // delete list of config table entries
+
+	// public holidays
+	mux.HandleFunc("/route/publicHoliday/create", handlers.CreatePublicHolidays)         // create new public holiday
+	mux.HandleFunc("/route/publicHoliday/create/csv", handlers.CreatePublicHolidaysCSV)  // create new public holidays
+	mux.HandleFunc("/route/publicHoliday/get/all", handlers.AllPublicHolidays)           // return all public holidays
+	mux.HandleFunc("/route/publicHoliday/softDelete", handlers.SoftDeletePublicHolidays) // delete public holidays
+
 	return mux
 }

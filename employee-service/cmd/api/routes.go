@@ -13,6 +13,10 @@ func multiplexer() http.Handler {
 	mux.HandleFunc("/api/v1/employee/update", handlers.Repo.Update)         // update employee
 	mux.HandleFunc("/api/v1/employee/softDelete", handlers.Repo.SoftDelete) // delete employee
 
+	// EMPLOYEE PAYROLL ITEM
+	mux.HandleFunc("/api/v1/employee/payrollItem/create", handlers.Repo.CreatePI)         // create new payroll item for specific employee
+	mux.HandleFunc("/api/v1/employee/payrollItem/softDelete", handlers.Repo.SoftDeletePI) // delete payroll item for specific employee
+
 	// EMPLOYEE GET
 	mux.HandleFunc("/api/v1/employee/get/seniority", handlers.Repo.GetSeniorityByID) // return seniority of employee id (year int)
 	mux.HandleFunc("/api/v1/employee/get/all", handlers.Repo.GetAll)                 // return all employee by status (active, inactive, deleted)

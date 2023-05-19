@@ -26,11 +26,15 @@ let myUploadedFiles = new Map()
 // store dates to be disabled from calendar (all pending & approved leave applications)
 let datesForDisable = []
 
+// store public holidays 
+let ph = []
+
 // store requested leave max entitled days allowed
 let maxEntitledAllow = 0.0
 
 // store if requested leave attachment is required or not
 let attachmentRequired = 0
+
 
 // when DOM is loaded
 window.addEventListener('DOMContentLoaded', () => {
@@ -40,15 +44,19 @@ window.addEventListener('DOMContentLoaded', () => {
             if (Object.keys(resp.data.Files).length > 0) myUploadedFiles = Helpers.populateUploadedFilesMap(resp.data.Files, myUploadedFiles)            
     })
     
+    // fetch all public holidays
+    API.getAllPublicHolidays().then(resp => {
+        Helpers.populatePublicHolidays(resp.data, ph)
+    })
+
     // fetch all needed informations  
     API.getAllInformationsMyLeave(connectedID, connectedEmail).then(resp => {
         // update variables
         allEmployees        = Common.updateEmployeeList(resp.AllEmployees, allEmployees)
         allLeaveDefinition  = Helpers.populateLeaveDefinitionMap(resp.AllLeaveDefinitions, allLeaveDefinition)
         myEntitled          = Helpers.populateMyEntitledLeaveMap(resp.MyEntitled, myEntitled)
-        datesForDisable     = Helpers.populateDatesForDisable(resp.MyLeaves, datesForDisable)
-
-        
+        myLeaveDatesTaken   = Helpers.populateDatesForDisable(resp.MyLeaves)
+        datesForDisable     = Helpers.sortArray([...ph, ...myLeaveDatesTaken])
 
         // connected employee information
         const mySeniority   = Number(resp.MySeniority),
@@ -128,7 +136,7 @@ window.addEventListener('DOMContentLoaded', () => {
         backdrop: 'static',
         keyboard: false 
     })
-
+    
     // cleaned checked checkboxes when modal is close
     document.getElementById('confirmDelete').addEventListener('hidden.bs.modal', function () {
        document.querySelectorAll('.deleteCheckboxes').forEach(element => {

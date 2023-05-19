@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"employee/pkg/pg"
 	"encoding/json"
-	"log"
 	"net/http"
 	"time"
 )
@@ -17,17 +16,13 @@ func (rep *Repository) Update(w http.ResponseWriter, r *http.Request) {
 	var p pg.EmployeeFull
 	err := rep.readJSON(w, r, &p)
 	if err != nil {
-		log.Println("while decoding: ", err)
 		rep.errorJSON(w, err)
 		return
 	}
-	log.Println("payload: ", p)
-	log.Println("payload: ", p.Employee.UpdatedBy)
 
 	// update employee's information to DB
 	err = rep.App.Models.Employee.UpdateAllEmployeeInformation(p)
 	if err != nil {
-		log.Println("while DB: ", err)
 		rep.errorJSON(w, err)
 		return
 	}

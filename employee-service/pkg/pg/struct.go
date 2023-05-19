@@ -20,7 +20,9 @@ type PayrollItem struct {
 	PayTax      int     `json:"payTax"`
 	Start       string  `json:"start"`
 	End         string  `json:"end"`
-	Amount      float64 `json:"amount"`
+	Amount      float64 `json:"amount,string"`
+	IsFixed     int     `json:"isFixed"`
+	EmployeeID  int     `json:"employeeID,string,omitempty"`
 	CreatedAt   string  `json:"createdAt,omitempty"`
 	CreatedBy   int     `json:"createdBy,string,omitempty"`
 	UpdatedAt   string  `json:"updatedAt,omitempty"`
@@ -304,6 +306,8 @@ type ConfigTables struct {
 	StatutorySOCSOStatus   []configT
 	StatutoryTaxBranch     []configT
 	StatutoryTaxStatus     []configT
+	PayrollType            []configT
+	PayrollItem            []PayrollItem
 }
 
 // configT holds one config table struct
