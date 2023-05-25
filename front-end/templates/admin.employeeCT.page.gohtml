@@ -1,93 +1,261 @@
 {{template "base.admin" . }}
 
+<!-- We use css marker to load specific script of the page -->
+{{define "css"}}
+  <!-- Draggable feature (modal) -->
+  <script type="text/javascript" src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+{{end}}
+
 {{define "content"}}
+  <!-- SIDEBAR -->
+  <div class="sidenav my-1 bg-light shadow  borderRadiusTop borderRadiusBottom">
+    <a class="side-nav-link myConfigT" href="#" id="EmploymentBank"><i class="bi-person-bounding-box"></i> Bank</a>
+    <a class="side-nav-link myConfigT" href="#" id="EmploymentBranch"><i class="bi-person-bounding-box"></i> Branch</a>
+    <a class="side-nav-link myConfigT" href="#" id="EmploymentDepartment"><i class="bi-person-bounding-box"></i> Department</a>
+    <a class="side-nav-link myConfigT" href="#" id="EmploymentGroup"><i class="bi-person-bounding-box"></i> Group</a>
+    <a class="side-nav-link myConfigT" href="#" id="EmploymentOT"><i class="bi-person-bounding-box"></i> OT</a>
+    <a class="side-nav-link myConfigT" href="#" id="EmploymentPayFrequency"><i class="bi-person-bounding-box"></i> Pay Frequency</a>
+    <a class="side-nav-link myConfigT" href="#" id="EmploymentPaymentBy"><i class="bi-person-bounding-box"></i> Payment By</a>
+    <a class="side-nav-link myConfigT" href="#" id="EmploymentProject"><i class="bi-person-bounding-box"></i> Project</a>
+    <a class="side-nav-link myConfigT" href="#" id="EmploymentType"><i class="bi-person-bounding-box"></i> Type</a>
+    <a class="side-nav-link myConfigT" href="#" id="EmploymentWages"><i class="bi-person-bounding-box"></i> Wages</a>
+    <a class="side-nav-link myConfigT" href="#" id="PayrollItem"><i class="bi-person-bounding-box"></i> Payroll Item</a>
+    <a class="side-nav-link myConfigT" href="#" id="StatutoryEPF"><i class="bi-person-bounding-box"></i> EPF</a>
+    <a class="side-nav-link myConfigT" href="#" id="StatutoryForeignLevy"><i class="bi-person-bounding-box"></i> Foreign Levy</a>
+    <a class="side-nav-link myConfigT" href="#" id="StatutorySOCSOCategory"><i class="bi-person-bounding-box"></i> SOCSO Category</a>
+    <a class="side-nav-link myConfigT" href="#" id="StatutorySOCSOStatus"><i class="bi-person-bounding-box"></i> SOCSO Status</a>
+    <a class="side-nav-link myConfigT" href="#" id="StatutoryTaxBranch"><i class="bi-person-bounding-box"></i> Tax Branch</a>
+    <a class="side-nav-link myConfigT" href="#" id="StatutoryTaxStatus"><i class="bi-person-bounding-box"></i> Tax Status</a>
+  </div>
 
-  <div class="container-fluid">
-    <!-- ACTION BUTTON -->
-    <div class="d-flex flex-row-reverse mt-3">
-      <div class="p-2 bd-highlight"><a href="#" class="hide btn btn-danger" id="openModal" data-bs-toggle="modal" data-bs-target="#ctModal"><i class="bi bi-plus-circle-fill"></i> add</a></div>
-      <div class="p-2 bd-highlight"><a href="#" class="hide btn btn-danger" id="deleteCT"><i class="bi-dash-circle"></i> delete</a></div>
-      <div class="p-2 bd-highlight">
-        <div class="dropdown">
-          <button class="btn btn-secondary dropdown-toggle" type="button" id="dataView" data-bs-toggle="dropdown" aria-expanded="false">View</button>
-          <ul class="dropdown-menu" aria-labelledby="dataView" id="viewList"></ul>
+  <!-- MAIN CONTENT -->
+  <div class="container-fluid zoomOut main px-3 borderRadiusTop borderRadiusBottom shadow hide" id="pageDiv">
+    <!-- TITLE & ACTION BUTTONS -->
+    <div class="row mt-3">
+      <div class="col-10">
+        <h1 class="text-dark fw-bolder" id="configTableTitle"></h1>
+      </div>
+      <div class="col-2">
+        <!-- ACTION BUTTON -->
+        <div class="d-flex justify-content-end">
+          <div><a href="#" class="btn btn-secondary myButton" id="openModal" data-bs-toggle="modal" data-bs-target="#ctModal" data-bs-toggle="tooltip" title="Add"><i class="bi-plus-lg largeIcon"></i></a></div>
+          <div><a href="#" class="btn btn-secondary myButton hide" id="openModalPI" data-bs-toggle="modal" data-bs-target="#piModal" data-bs-toggle="tooltip" title="Add"><i class="bi-plus-lg largeIcon"></i></a></div>
+          <div>&nbsp;</div>
+          <div><a href="#" class="btn btn-secondary myButton" id="deleteCT" data-bs-toggle="tooltip" title="Delete"><i class="bi-x-lg largeIcon"></i></a></div>
         </div>
       </div>
-    </div>
+    </div>      
     <hr />
-
     <!-- CONFIG TABLE -->    
-    <div class="row justify-content-md-center">
-      <div class="col-sm-6">
-        <h2 class="text-secondary" id="configTableTitle"></h2>
+    <div class="row" id="configTable">
+      <div class="col">
         <div class="d-flex justify-content-between" >
-          <div><h4>Name</h4></div>
-          <div><h4>Action</h4></div>
+          <div class="text-danger"><h4>Name</h4></div>
+          <div class="text-danger"><h4>Action</h4></div>
         </div>
-        <div id="configTableData">Click on view button to select which config table you want to manage</div>
+        <div id="configTableData"></div>
       </div>
     </div>
-    
-
-  </div>
-<!-- modal: Confirm employee deletion -->
-<div class="modal fade" id="confirmDelete" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Confirm Delete</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <p id="confirmDeleteBody"></p>
-      </div>
-      <div class="modal-footer">
-        <a href="#" class="btn btn-danger" id="confirmDeleteSubmit"><i class="bi bi-save2-fill"></i> Confirm</a>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+    <!-- PAYROLL ITEMS -->    
+    <div class="row hide" id="piTable">
+      <div class="col">
+        <div class="row" >
+          <div class="col text-danger"><h4>Type</h4></div>
+          <div class="col text-danger"><h4>Code</h4></div>
+          <div class="col-5 text-danger"><h4>Description</h4></div>
+          <div class="col text-danger"><h4>Amount</h4></div>
+          <div class="col text-danger"><h4>Start</h4></div>
+          <div class="col text-danger"><h4>End</h4></div>
+          <div class="col text-danger"><h4>Action</h4></div>
+        </div>
+        <div id="piTableData"></div>
       </div>
     </div>
   </div>
-</div>
 
-<!-- modal: Create new config table entry -->
-<div class="modal fade" id="ctModal" tabindex="-1" aria-labelledby="ctModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="ctModalLabel">Add New Entry</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  <!-- modal: Confirm employee deletion -->
+  <div class="modal fade" id="confirmDelete" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirm Delete</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p id="confirmDeleteBody"></p>
+        </div>
+        <div class="modal-footer">
+          <a href="#" class="btn btn-danger" id="confirmDeleteSubmit"><i class="bi bi-save2-fill"></i> Confirm</a>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
       </div>
-      <form name="ctForm" id="ctForm">
-      <input type="hidden" name="ctName" id="ctName" />
-      <input type="hidden" name="connectedEmail" id="connectedEmail" value="{{.User.Email}}" />
-      <div class="modal-body">
-        <div class="row my-3">
-          <!-- identity:  ct new value -->
-          <div class="col-sm-4">
-            <input type="text" class="form-control form-control-sm" id="ctNewValue" name="ctNewValue" required />
-            <div class="fw-lighter fst-italic smaller mt-1"><i class="bi-shield-fill-exclamation"></i> name</div>
+    </div>
+  </div>
+
+  <!-- modal: Create new config table entry -->
+  <div class="modal fade" id="ctModal" tabindex="-1" aria-labelledby="ctModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="ctModalLabel">Add New Entry</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form name="ctForm" id="ctForm">
+        <input type="hidden" name="ctName" id="ctName" />
+        <input type="hidden" name="connectedEmail" id="connectedEmail" value="{{.User.Email}}" />
+        <div class="modal-body">
+          <div class="row my-3">
+            <!-- identity:  ct new value -->
+            <div class="col-sm-4">
+              <input type="text" class="form-control form-control-sm" id="ctNewValue" name="ctNewValue" required />
+              <div class="fw-lighter fst-italic smaller mt-1"><i class="bi-shield-fill-exclamation"></i> name</div>
+            </div>
           </div>
         </div>
-      </div>
-      </form>
-      <div class="modal-footer">
-        <a href="#" class="btn btn-danger" id="ctSubmit"><i class="bi bi-save2-fill"></i> Save</a>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </form>
+        <div class="modal-footer">
+          <a href="#" class="btn btn-danger" id="ctSubmit"><i class="bi bi-save2-fill"></i> Save</a>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
+
+  <!-- modal: Create new payroll iten entry -->
+  <div class="modal fade" id="piModal" tabindex="-1" aria-labelledby="piModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="piModalLabel">Add New Payroll Item</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form name="piForm" id="piForm">
+          <input type="hidden" name="connectedEmail" id="connectedEmail" value="{{.User.Email}}" />
+          <div class="modal-body">
+            <!-- PAYROLL ITEM: Type (Allowance | Deduction) & Code -->
+            <div class="row my-3">
+              <!-- Type (Allowance | Deduction) -->
+              <div class="col-sm-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="piType" id="piType1" value=1 checked />
+                  <label class="form-check-label" for="piType1">Allowance</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="piType" id="piType2" value=2 />
+                  <label class="form-check-label" for="piType2">Deduction</label>
+                </div>
+              </div>
+              <div class="col-sm-4"></div>
+              <!-- Code -->
+              <div class="col-sm-4">
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="piCode" name="piCode" />
+                  <label for="piCode">Code</label>
+                </div>
+                <div class="fw-bolder text-danger fst-italic smaller" id="piCodeError"></div>
+              </div>
+            </div>
+            <!-- PAYROLL ITEM: Description -->
+            <div class="row mb-3">
+              <!-- Description -->
+              <div class="col-sm-12">
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="piDescription" name="piDescription" />
+                  <label for="piDescription">Description</label>
+                </div>
+                <div class="fw-bolder text-danger fst-italic smaller" id="piDescriptionError"></div>
+              </div>
+            </div>
+            <!-- PAYROLL ITEM: Start & End & Amount -->
+            <div class="row mb-3">
+              <!-- Start -->
+              <div class="col-sm-4">
+                <div class="form-floating">
+                  <input type="date" class="form-control" value=NULL id="piStart" name="piStart" />
+                  <label for="piStart">Start</label>
+                </div>
+                <div class="fw-bolder text-danger fst-italic smaller" id="piStartError"></div>
+              </div>
+              <!-- End -->
+              <div class="col-sm-4">
+                <div class="form-floating">
+                  <input type="date" class="form-control" value=NULL id="piEnd" name="piEnd" />
+                  <label for="piEnd">End</label>
+                </div>
+                <div class="fw-bolder text-danger fst-italic smaller" id="piEndError"></div>
+              </div>
+              <!-- Amount -->
+              <div class="col-sm-4">
+                <div class="form-floating">
+                  <input type="number" step="0.01" class="form-control" id="piAmount" name="piAmount" />
+                  <label for="piAmount">Amount</label>
+                </div>
+                <div class="fw-bolder text-danger fst-italic smaller" id="piAmountError"></div>
+              </div>
+            </div>
+            <!-- PAYROLL ITEM: is Fixed & Pay EPF & Pay SOCSO -->
+            <div class="row">
+              <!-- Is Fixed --> 
+              <div class="col-sm-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="1" id="isFixed" name="isFixed">
+                  <label class="form-check-label " for="isFixed">Is Fixed</label>
+                </div>
+              </div>
+              <!-- Pay EPF -->
+              <div class="col-sm-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="1" id="payEPF" name="payEPF">
+                  <label class="form-check-label " for="payEPF">Pay EPF</label>
+                </div>
+              </div>
+              <!-- Pay SOCSO & EIS-->
+              <div class="col-sm-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="1" id="paySOCSO" name="paySOCSO">
+                  <label class="form-check-label " for="paySOCSO">Pay SOCSO</label>
+                </div>
+              </div>
+            </div>
+            <!-- PAYROLL ITEM: Pay HRDF & Pay Tax -->
+            <div class="row mb-3">
+              <div class="col-sm-4"></div>
+              <!-- Pay HRDF -->
+              <div class="col-sm-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="1" id="payHRDF" name="payHRDF">
+                  <label class="form-check-label " for="payHRDF">Pay HRDF</label>
+                </div>
+              </div>
+              <!-- Pay Tax-->
+              <div class="col-sm-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="1" id="payTax" name="payTax">
+                  <label class="form-check-label " for="payTax">Pay Tax</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+        <div class="modal-footer">
+          <a href="#" class="btn btn-danger" id="piSubmit"><i class="bi bi-save2-fill"></i> Save</a>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 {{end}}
 
 {{define "js"}}
-<script>
-  const connectedEmail = {{.User.Email}},
-        connectedID = '{{.User.EmployeeID}}'
-</script>
+  <script>
+    const connectedEmail = {{.User.Email}},
+          connectedID = '{{.User.EmployeeID}}'
+  </script>
 
-<script src="/static/js/common/MainHelpers.js"></script>
+  <script src="/static/js/common/MainHelpers.js"></script>
+  <script src="/static/js/common/JqueryDraggableModal.js"></script>
 
-<script src="/static/js/employee/configuration/EmployeeConfigAPI.js"></script>
-<script src="/static/js/employee/configuration/EmployeeConfigHelpers.js"></script>
-<script src="/static/js/employee/configuration/employeeConfig.js"></script>
+  <script src="/static/js/employee/configuration/EmployeeConfigAPI.js"></script>
+  <script src="/static/js/employee/configuration/EmployeeConfigHelpers.js"></script>
+  <script src="/static/js/employee/configuration/employeeConfig.js"></script>
 {{end}}

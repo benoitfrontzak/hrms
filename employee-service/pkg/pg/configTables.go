@@ -101,6 +101,7 @@ func getAllRowsPayrollItem() ([]PayrollItem, error) {
 				  	 cpi.is_fixed 
 			  FROM "CONFIG_PAYROLL_ITEM" cpi, "CONFIG_PAYROLL_TYPE" cpt 
 			  WHERE cpi.payroll_type_id = cpt.id
+			  AND cpi.soft_delete = 0
 			  ORDER by id`
 
 	// executes SQL query

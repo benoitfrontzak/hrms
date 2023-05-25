@@ -332,6 +332,7 @@ class EmployeeUpdateHelpers{
             target.appendChild(row)
           })
     }
+    
     // create payroll item tooltips
     createTooltipsPI(id){
         const myPI = allPI.get(id)

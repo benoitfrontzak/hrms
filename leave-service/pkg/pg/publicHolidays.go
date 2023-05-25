@@ -41,7 +41,7 @@ func (ph *PublicHoliday) Insert() (int, error) {
 }
 
 // update public holiday by rowID
-func (ph *PublicHoliday) Update(uid int) error {
+func (ph *PublicHoliday) Update() error {
 	now := time.Now().Format("2006-01-02")
 
 	// canceling this context releases resources associated with it
@@ -58,7 +58,7 @@ func (ph *PublicHoliday) Update(uid int) error {
 			 WHERE id=$6`
 
 	// executes SQL query
-	_, err := db.ExecContext(ctx, stmt, ph.Date, ph.Name, ph.Description, now, uid)
+	_, err := db.ExecContext(ctx, stmt, ph.Date, ph.Name, ph.Description, now, ph.UpdatedBy, ph.ID)
 	if err != nil {
 		return err
 	}

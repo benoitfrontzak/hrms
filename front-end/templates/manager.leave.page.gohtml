@@ -1,0 +1,179 @@
+{{template "base.manager" . }}
+
+<!-- We use css marker to load specific script of the page -->
+{{define "css"}}
+  <!-- DataTables -->
+  <script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+  <!-- Fixed columns -->
+  <script type="text/javascript" src="https://cdn.datatables.net/fixedcolumns/4.2.2/js/dataTables.fixedColumns.min.js"></script>
+  <!-- Export buttons -->
+  <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+  <!-- Reorder columns -->
+  <script src="https://cdn.datatables.net/colreorder/1.6.2/js/dataTables.colReorder.min.js"></script>
+  <!-- Draggable feature (modal) -->
+  <script type="text/javascript" src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+
+  <link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet"/>
+  <link href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.dataTables.min.css" rel="stylesheet"/>
+{{end}}
+
+{{define "content"}}
+
+<div class="container-fluid" style="width:100%">
+   <div class="zoomOut mt-3 p-3 borderRadiusTop borderRadiusBottom shadow">
+    <div class="row">
+      <div class="col-10">
+        <h1 class="text-dark fw-bolder" id="leaveTitle">Pending Leave Applications</h1>
+      </div>
+      <div class="col-2">
+        <div class="d-flex justify-content-end mb-1">
+          <div><a href="#" class="btn btn-secondary myButton" id="approveBtn" data-bs-toggle="tooltip" title="Approve Requests"><i class="bi-hand-thumbs-up largeIcon"></i></a></div>
+          <div>&nbsp;</div>
+          <div><a href="#" class="btn btn-secondary myButton" id="rejectBtn" data-bs-toggle="tooltip" title="Reject Requests"><i class="bi-hand-thumbs-down largeIcon"></i></a></div>
+        </div>
+        <div class="d-flex justify-content-end mb-1">
+          <div class="dropdown" data-bs-toggle="tooltip" title="Show/Hide Columns">
+              <button type="button" class="btn btn-secondary myButton dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi-card-checklist largeIcon"></i></button>
+              <ul class="dropdown-menu">
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Employee" id="Employee" /><span> Employee</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Leave" id="Leave" /><span> Leave</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Description" id="Description" /><span> Description</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Attachments" id="Attachments" /><span> Attachments</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="ApprovedAt" id="ApprovedAt" /><span> Approved At</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="ApprovedBy" id="ApprovedBy" /><span> Approved By</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Reason" id="Reason" /><span> Reason</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Dates" id="Dates" /><span> Dates</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="CreatedAt" id="CreatedAt" /><span> Created At</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="CreatedBy" id="CreatedBy" /><span> Created By</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="UpdatedAt" id="UpdatedAt" /><span> Updated At</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="UpdatedBy" id="UpdatedBy" /><span> Updated By</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Action" id="Action" /><span> Action</span></a></li>
+              </ul>
+          </div>
+          <div>&nbsp;</div>
+          <div class="dropdown" data-bs-toggle="tooltip" title="Data Source">
+            <button class="btn btn-secondary myButton dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi-funnel-fill largeIcon"></i></button>
+            <ul class="dropdown-menu" aria-labelledby="DropdownMenuButton1">
+              <li><a class="dropdown-item" href="#" id="approvedBtn">Approved</a></li>
+              <li><a class="dropdown-item" href="#" id="rejectedBtn">Rejected</a></li>
+              <li><a class="dropdown-item" href="#" id="pendingBtn">Pending</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+   
+    <!-- WARNING MODAL MESSAGE -->
+    <div class="alert alert-warning mt-3 hide" role="alert" id="modalWarningMessageDiv">
+      <div class="d-flex justify-content-between">
+        <div class="flex-grow-1"><h4 class="alert-heading"><i class="bi-exclamation-diamond-fill"></i> Warning!</h4></div>
+        <div class="flex-shrink-1"><i class="bi-x-circle-fill pointer" id="hideModalWarningMessage"></i></div>
+      </div>      
+      <p>You must select at least one entry before...</p>
+      <hr>
+      <p class="mb-0 smaller">Please check in on some of those fields below...</p>
+    </div>    
+    <hr />
+
+    <!-- DATATABLE PROCESSING -->
+    <div id="processing" class="row my-3">
+      <div class="row text-center w-100"><div class="col">Processing data...</div></div>
+      <div class="row text-center w-100"><div class="col"><div class="loader"></div></div></div>
+    </div>
+    <!-- DATATABLE PROCESSING -->
+
+    <!-- TABLE -->
+    <table id="leaveApplicationTable" class="table table-hover nowrap" style="width:100%">
+        <thead></thead>
+        <tbody id="myLeaveBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- modal: Reject leaves -->
+<div class="modal fade" id="rejectModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirm Rejection</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="text-warning" id="selectedLeaveRejection"></div>
+        <div class="row mt-3">
+          <div class="col-sm-4"></div>
+          <div class="col-sm-8">
+            <div class="form-floating">
+              <textarea class="form-control" placeholder="Leave a reason here" name="reject" id="reject" style="height: 100px"></textarea>
+              <label for="reject">Reject reason</label>
+              <div class="fw-bolder text-danger fst-italic smaller" id="rejectError"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="btn btn-danger" id="rejectSubmit"><i class="bi bi-save2-fill"></i> Confirm</a>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- modal: Approve claims -->
+<div class="modal fade" id="approveModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirm Approval</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="text-warning" id="selectedLeavesApproval"></div>
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="btn btn-danger" id="approveSubmit"><i class="bi bi-save2-fill"></i> Confirm</a>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Uploaded files -->
+<div class="modal fade" id="uploadedFilesModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="uploadedFilesModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="uploadedFilesModalLabel">Leave Attachments</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="uploadedFilesModalBody"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+{{end}}
+
+{{define "js"}}
+
+<script>
+  const connectedEmail = {{.User.Email}},
+        connectedID = '{{.User.EmployeeID}}',
+        connectedRole = {{.User.Role}}
+</script>
+
+<script src="/static/js/common/MainHelpers.js"></script>
+<script src="/static/js/common/JqueryDatables.js"></script>
+<script src="/static/js/common/JqueryDraggableModal.js"></script>
+
+<script src="/static/js/leave/application/LeaveHelpers.js"></script>
+<script src="/static/js/leave/application/LeaveManagerAPI.js"></script>
+<script src="/static/js/leave/application/leave.js"></script>
+{{end}}

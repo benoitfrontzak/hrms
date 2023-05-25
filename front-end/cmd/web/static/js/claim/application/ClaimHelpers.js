@@ -52,7 +52,7 @@ class ClaimHelpers {
             $('#claimApplicationsTable').DataTable().clear().draw()
             return
         }
-
+        
         data.forEach(element => {
             // since omitempty has been set golang side...
             let approvedBy, approvedAmount;

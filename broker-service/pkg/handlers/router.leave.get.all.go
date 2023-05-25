@@ -5,10 +5,10 @@ import (
 	"net/http"
 )
 
-// forward the get request from the front-end to employee-service to fetch all config tables
+// forward the get request from the front-end to leave-service to fetch all leaves
 func AllLeave(w http.ResponseWriter, r *http.Request) {
 
-	// send get request to employee-service and collect the response
+	// send get request to leave-service and collect the response
 	url := leaveService + "api/v1/leave/get/all"
 
 	resp, err := http.Get(url)
@@ -18,7 +18,7 @@ func AllLeave(w http.ResponseWriter, r *http.Request) {
 	}
 	defer resp.Body.Close()
 
-	// decode employee-service response
+	// decode leave-service response
 	var answer jsonResponse
 	dec := json.NewDecoder(resp.Body)
 	err = dec.Decode(&answer)

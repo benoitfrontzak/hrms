@@ -42,7 +42,6 @@
         </head>
 
         <body>
-
             <!-- Responsive navbar -->
             <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light" id="myNavBar">
                 <div class="container-fluid">
@@ -50,17 +49,17 @@
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     <div class="collapse navbar-collapse" id="navbarTogglerAdmin">
+                        <!-- Logo -->
                         <a class="navbar-brand" href="/home">
                             <img src="/static/images/ThunderSoft_logo_full.png" alt="Logo Thundersoft" width="auto" height="30" class="d-inline-block align-text-top">
                         </a>
+                        <!-- Navbar left -->
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                             <li class="nav-item myLink"> <a class="nav-link" id="homeMenuLink" aria-current="page" href="/home">Home</a> </li>
                             <li class="nav-item myLink"> <a class="nav-link" id="employeeMenuLink" href="/employee">Employee</a> </li>
-                            <!--<li class="nav-item"> <a class="nav-link" href="/configuration/employee">Employee</a> </li> -->
                             <li class="nav-item myLink dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="claimDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Claim</a>
                                 <ul class="dropdown-menu" aria-labelledby="claimDropdownMenuLink">
-                                    <!--<li><a class="dropdown-item" href="/configuration/claim">Configuration</a></li>-->
                                     <li><a class="dropdown-item claimMenuLink" href="/definition/claim">Definition</a></li>
                                     <li><a class="dropdown-item claimMenuLink" href="/claim">Application</a></li>
                                     <li><a class="dropdown-item claimMenuLink" href="/claim/employee">Employees</a></li>
@@ -69,14 +68,15 @@
                             <li class="nav-item myLink dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="leaveDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Leave</a>
                                 <ul class="dropdown-menu" aria-labelledby="leaveDropdownMenuLink">
-                                    <!--<li><a class="dropdown-item" href="/configuration/leave">Configuration</a></li>-->
                                     <li><a class="dropdown-item leaveMenuLink" href="/definition/leave">Definition</a></li>
                                     <li><a class="dropdown-item leaveMenuLink" href="/leave">Application</a></li>
                                     <li><a class="dropdown-item leaveMenuLink" href="/leave/employee">Employees</a></li>
                                 </ul>
                             </li>
                             <li class="nav-item myLink"> <a class="nav-link" id="phMenuLink" aria-current="page" href="/publicHolidays">Public Holidays</a> </li>
-                        </ul>                    
+                            <li class="nav-item myLink"> <a class="nav-link" id="configurationMenuLink" aria-current="page" href="/configuration/employee">Configuration</a> </li>
+                        </ul>
+                        <!-- Navbar right -->               
                         <ul class="navbar-nav me-3 mb-2 mb-lg-0">
                             <li class="nav-item myLink dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="userDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{.User.Nickname}}</a>

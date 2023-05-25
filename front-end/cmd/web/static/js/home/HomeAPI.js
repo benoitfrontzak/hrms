@@ -77,6 +77,14 @@ class HomeAPI{
         return result
     }
 
+    // fetch all approved leaves
+    async getAllApprovedLeaves(){
+        const url = broker + 'route/leave/get/all';
+        const response = await fetch(url)
+        const result = await response.json();
+        return result;
+    }
+
     // fetch all employees
     async getAllEmployees() {
         const url = broker + 'route/employee/get/all'
@@ -85,4 +93,11 @@ class HomeAPI{
         return result;
     }
     
+    // fetch all public holidays
+    async getAllPublicHolidays(){
+        const url = broker + 'route/publicHoliday/get/all';
+        const response = await fetch(url)
+        const result = await response.json();
+        return result;
+    }
 }

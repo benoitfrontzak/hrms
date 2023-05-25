@@ -4,7 +4,11 @@
 {{define "css"}}
   <!-- Google chart -->
   <script src="https://www.gstatic.com/charts/loader.js"></script>
-  <script>google.charts.load("current", {packages:["corechart"]});   </script>
+  <script>google.charts.load("current", {packages:["corechart"]})</script>
+  <!-- Full calendar -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
 {{end}}
 
 {{define "content"}}
@@ -206,6 +210,32 @@
         </div>
       </div>
       <div class="space"></div>
+      <!-- Cards: Public Holidays -->      
+      <div class="row">
+        <div class="col p-3">
+          <div class="row myTint2BG borderRadiusTop" >
+            <div class="col fs-5 fw-bolder text-white">CALENDAR</div>
+          </div>
+          <div class="row bg-white shadow my-3">
+            <div class="col-6 my-3"> <div id="calendar"></div> </div>
+            <div class="col-6 mt-3">
+              <div class="row mt-3"> <div class="col-2 mt-3 myTint2TextColor text-start fw-bolder">&nbsp;</div> </div> 
+              <div class="row mt-1 border"> 
+                <div class="d-flex align-items-center">
+                    <div class="circleBlue"></div>
+                    <div>&nbsp;</div>
+                    <div>Leave</div>
+                  </div>
+                  <div class="d-flex align-items-center">
+                    <div class="circleTurquoise"></div>
+                    <div>&nbsp;</div>
+                    <div>Public Holidays</div>
+                  </div>
+              </div> 
+            </div>
+          </div>          
+        </div>
+      </div>    
   </div>
 </div>
 
@@ -315,14 +345,15 @@
 {{end}}
 
 {{define "js"}}
-<script>
-  const connectedEmail = {{.User.Email}},
-        connectedID = '{{.User.EmployeeID}}'
-</script>
+  <script>
+    const connectedEmail = {{.User.Email}},
+          connectedID = '{{.User.EmployeeID}}',
+          connectedRole = {{.User.Role}}
+  </script>
 
-<script src="/static/js/common/MainHelpers.js"></script>
+  <script src="/static/js/common/MainHelpers.js"></script>
 
-<script src="/static/js/home/HomeAPI.js"></script>
-<script src="/static/js/home/HomeHelpers.js"></script>
-<script src="/static/js/home/home.js"></script>
+  <script src="/static/js/home/HomeAPI.js"></script>
+  <script src="/static/js/home/HomeHelpers.js"></script>
+  <script src="/static/js/home/home.js"></script>
 {{end}}

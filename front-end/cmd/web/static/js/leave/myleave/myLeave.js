@@ -55,8 +55,15 @@ window.addEventListener('DOMContentLoaded', () => {
         allEmployees        = Common.updateEmployeeList(resp.AllEmployees, allEmployees)
         allLeaveDefinition  = Helpers.populateLeaveDefinitionMap(resp.AllLeaveDefinitions, allLeaveDefinition)
         myEntitled          = Helpers.populateMyEntitledLeaveMap(resp.MyEntitled, myEntitled)
-        myLeaveDatesTaken   = Helpers.populateDatesForDisable(resp.MyLeaves)
-        datesForDisable     = Helpers.sortArray([...ph, ...myLeaveDatesTaken])
+        
+        let myLeaveDatesTaken, datesForDisable
+        if (resp.MyLeaves != null ){
+            myLeaveDatesTaken   = Helpers.populateDatesForDisable(resp.MyLeaves)
+            datesForDisable     = Helpers.sortArray([...ph, ...myLeaveDatesTaken])
+        }else{
+            myLeaveDatesTaken   = null
+            datesForDisable     = Helpers.sortArray(ph)
+        }
 
         // connected employee information
         const mySeniority   = Number(resp.MySeniority),

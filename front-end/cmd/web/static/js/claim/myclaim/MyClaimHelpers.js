@@ -136,22 +136,22 @@ class MyClaimHelpers {
     // (max amount allowed for selected claim definition)
     selectedClaimRequirements(claimDefinition, alreadyRequested, mySeniority){
         let maxAmount = 0.0, claimRequested = 0.0
-        if (typeof alreadyRequested != 'undefined') claimRequested = alreadyRequested
-        
+        if (typeof alreadyRequested != 'undefined' && alreadyRequested != null) claimRequested = alreadyRequested
+
         // sort claims details by seniority desc
         let claimDetails = claimDefinition.details
         claimDetails.sort(function(a, b) {
             let keyA = Number(a.seniority),
                 keyB = Number(b.seniority)
             // Compare the 2 seniority
-            if (keyA > keyB) return -1
-            if (keyA < keyB) return 1
+            if (keyA < keyB) return -1
+            if (keyA > keyB) return 1
             return 0
         })
 
         // calculate max entitlement for employee's seniority
         claimDetails.forEach(element => {
-            if (Number(element.seniority) >= mySeniority){
+            if (mySeniority >= Number(element.seniority)){
                 maxAmount      = Number(element.limitation)
                 maxClaimAllow = maxAmount - claimRequested
                 return

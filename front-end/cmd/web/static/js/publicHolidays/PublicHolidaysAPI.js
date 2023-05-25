@@ -44,6 +44,19 @@ class MyPublicHolidaysAPI {
     return result
   }
 
+  // update Public Holiday   
+  async updatePH(stringifiedJSON) {
+    const url = broker + 'route/publicHoliday/update',
+          body = {
+            method: 'POST',
+            body: stringifiedJSON,
+          },
+          response = await fetch(url, body),
+          result = await response.json()
+
+    return result
+  }
+
   // soft delete all Public Holidays
   async softDeletePH(phList, connectedUser, userID) {
     const url = broker + 'route/publicHoliday/softDelete'

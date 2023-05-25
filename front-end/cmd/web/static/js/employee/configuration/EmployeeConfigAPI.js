@@ -12,6 +12,34 @@ class EmployeeConfigTablesAPI{
   }
 
   // add new config table entry
+  async addNewPI(stringified) {
+    const url = broker + 'route/payrollItem/create'
+
+    const body = {
+      method: 'POST',
+      body: stringified,
+    }
+
+    const response = await fetch(url, body)
+    const result = await response.json()
+    return result
+  }
+
+   // update config table entry
+   async updateEntryPI(stringified) {
+    const url = broker + 'route/payrollItem/update'
+
+    const body = {
+      method: 'POST',
+      body: stringified,
+    }
+
+    const response = await fetch(url, body)
+    const result = await response.json()
+    return result
+  }
+
+  // add new config table entry
   async addNewConfigTableEntry(ctName, ctValue, email) {
     const url = broker + 'route/employee/configTable/create'
 
@@ -51,7 +79,7 @@ class EmployeeConfigTablesAPI{
     const result = await response.json()
     return result
   }
-
+  
   // delete config table entry
   async deleteConfigTableEntry(list, ctName, email) {
     const url = broker + 'route/employee/configTable/softDelete'

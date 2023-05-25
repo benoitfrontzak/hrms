@@ -36,10 +36,12 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // fetch all needed informations  
     API.getAllInformationsMyClaims(connectedID, connectedEmail).then(resp => {
+        console.log('resp');
+        console.log(resp);
         // update variables
         allEmployees        = Common.updateEmployeeList(resp.AllEmployees, allEmployees)
         allClaimDefinition  = Helpers.populateClaimDefinitionMap(resp.AllClaimsDefinitions.Active, allClaimDefinition)
-        myClaim             = Helpers.populateMyClaimMap(resp.MyClaims, myClaim)
+        if (resp.MyClaims != null) myClaim = Helpers.populateMyClaimMap(resp.MyClaims, myClaim)
 
         const mySeniority   = Number(resp.MySeniority)
 
@@ -54,9 +56,10 @@ window.addEventListener('DOMContentLoaded', () => {
         document.querySelector('#claimDefinition').addEventListener('change', (e) => {
             const claimDefinitionID = e.target.value,
                   docRequired = allClaimDefinition.get(claimDefinitionID).docRequired,
-                  claimDefinition = allClaimDefinition.get(claimDefinitionID),
-                  alreadyRequested = myClaim.get(claimDefinitionID);
+                  claimDefinition = allClaimDefinition.get(claimDefinitionID)
+            let alreadyRequested = null;
             
+            if (resp.MyClaims != null) alreadyRequested = myClaim.get(claimDefinitionID)
             // check if claim requires attachment
             if (docRequired == '1'){
                 attachmentRequired = 1

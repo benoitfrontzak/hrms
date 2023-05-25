@@ -1,0 +1,224 @@
+{{template "base.user" . }}
+
+<!-- We use css marker to load specific script of the page -->
+{{define "css"}}
+  <!-- DataTables -->
+  <script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+  <!-- Fixed columns -->
+  <script type="text/javascript" src="https://cdn.datatables.net/fixedcolumns/4.2.2/js/dataTables.fixedColumns.min.js"></script>
+  <!-- Export buttons -->
+  <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+  <!-- Reorder columns -->
+  <script src="https://cdn.datatables.net/colreorder/1.6.2/js/dataTables.colReorder.min.js"></script>
+  <!-- Draggable feature (modal) -->
+  <script type="text/javascript" src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+
+
+  <link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet"/>
+  <link href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.dataTables.min.css" rel="stylesheet"/> 
+{{end}}
+
+{{define "content"}}
+
+<div class="container-fluid" style="width:100%">
+  <div class="zoomOut mt-3 p-3 borderRadiusTop borderRadiusBottom shadow">
+    <!-- TITLE & BUTTONS -->
+    <div class="row">
+      <div class="col-10">
+        <h1 class="text-dark fw-bolder">My Claims</h1>
+      </div>
+      <div class="col-2">
+        <!-- ACTION BUTTON -->
+        <div class="d-flex justify-content-end mb-1">
+          <div><a href="#" class="btn btn-secondary myButton" id="openCreateMyClaim" data-bs-toggle="modal" data-bs-target="#myClaim" data-bs-toggle="tooltip" title="Add"><i class="bi-plus-lg largeIcon"></i></a></div>
+          <div>&nbsp;</div>
+          <div><a href="#" class="btn btn-secondary myButton" id="deleteAllMyClaim" data-bs-toggle="tooltip" title="Delete"><i class="bi-x-lg largeIcon"></i></a></div>
+        </div>
+        <div class="d-flex justify-content-end">
+          <div class="dropdown" data-bs-toggle="tooltip" title="Show/Hide Columns">
+              <button type="button" class="btn btn-secondary myButton dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi-card-checklist largeIcon"></i></button>
+              <ul class="dropdown-menu">
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Allowance" id="Allowance" /><span> Allowance</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Description" id="Description" /><span> Description</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Category" id="Category" /><span> Category</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Amount" id="Amount" /><span> Amount</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Status" id="Status" /><span> Status</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Approved_At" id="Approved_At" /><span> Approved At</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Approved_By" id="Approved_By" /><span> Approved By</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Approved_Amount" id="Approved_Amount" /><span> Approved Amount</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Reason" id="Reason" /><span> reason</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Created_By" id="Created_By" /><span> Created By</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Created_At" id="Created_At" /><span> Created At</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Updated_By" id="Updated_By" /><span> Updated By</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Updated_At" id="Updated_At" /><span> Updated At</span></a></li>
+                <li><a href="#" class="dropdown-item"><input class="form-check-input columnMenu" type="checkbox" checked="checked" name="Action" id="Action" /><span> Action</span></a></li>
+              </ul>
+            </div>
+        </div>
+      </div>
+    </div>
+    <!-- WARNING DELETE MESSAGE -->
+    <div class="alert alert-warning mt-3 hide" role="alert" id="deleteWarningMessageDiv">
+      <div class="d-flex justify-content-between">
+        <div class="flex-grow-1"><h4 class="alert-heading"><i class="bi-exclamation-diamond-fill"></i> Warning!</h4></div>
+        <div class="flex-shrink-1"><i class="bi-x-circle-fill pointer" id="hidedeleteWarningMessage"></i></div>
+      </div>      
+      <p>You must select at least one entry before deleting...</p>
+      <hr>
+      <p class="mb-0 smaller">Please check in on some of those fields below...</p>
+    </div>    
+    <hr />
+    <!-- DATATABLE PROCESSING -->
+    <div id="processing" class="row my-3">
+      <div class="row text-center w-100"><div class="col">Processing data...</div></div>
+      <div class="row text-center w-100"><div class="col"><div class="loader"></div></div></div>
+    </div>
+    <!-- TABLE -->
+    <table id="myClaimTable" class="table table-hover nowrap" style="width:100%">
+      <tbody id="myClaimBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- modal: Confirm employee deletion -->
+<div class="modal fade" id="confirmDelete" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirm Delete</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p id="confirmDeleteBody"></p>
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="btn btn-danger" id="confirmDeleteSubmit"><i class="bi bi-save2-fill"></i> Confirm</a>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: myClaim -->
+<div class="modal fade" id="myClaim" tabindex="-1" aria-labelledby="myClaimLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="myClaimLabel">New Claim</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- WARNING MESSAGE -->
+        <div class="alert alert-warning mt-3 hide" role="alert" id="warningMessageDiv">
+          <div class="d-flex justify-content-between">
+            <div class="flex-grow-1"><h4 class="alert-heading"><i class="bi-exclamation-diamond-fill"></i> Warning!</h4></div>
+            <div class="flex-shrink-1"><i class="bi-x-circle-fill pointer" id="hideWarningMessage"></i></div>
+          </div>      
+          <p id="warningMessageBody">Please you must fill those fields</p>
+          <hr>
+          <p class="mb-0 smaller">Please check in on some of those fields below...</p>
+        </div>
+
+        <div class="space"></div>
+
+        <form id="claimForm" name="claimForm">
+          <!-- Hidden fields -->
+          <input type="hidden" name="employeeid" id="employeeid"   value="{{.User.EmployeeID}}" />
+          <!-- 1st row (Claim definition | claim amount) -->
+          <div class="row mb-3">
+            <!-- claim definition -->
+            <div class="col-sm-4">
+              <div class="form-floating">
+                  <select class="form-select" id="claimDefinition" name="claimDefinition" aria-label="Select one claim definition"></select>
+                  <label for="claimDefinition"><i class="bi-shield-fill-exclamation"></i> Claim definition</label>
+              </div>
+              <div class="fw-bolder text-danger fst-italic smaller" id="claimDefinitionError"></div>
+            </div>
+            <div class="col-sm-4"></div>          
+            <!-- Claim amount -->
+            <div class="col-sm-4">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="amount" name="amount" />
+                <label for="amount"><i class="bi-shield-fill-exclamation"></i> Amount</label>
+                <div class="fw-bolder text-danger fst-italic smaller" id="amountError"></div>
+              </div>          
+            </div>          
+          </div>
+          <div class="text-secondary hide text-end small" id="myAuthorizationDiv"></div> <br /> <hr />
+          <!-- 2nd row (description) -->
+          <div class="row mb-3">
+            <!-- Claim description -->
+            <div class="col-sm-12">
+              <div class="form-floating">
+                <textarea class="form-control" name="description" id="description" style="height: 100px"></textarea>
+                <label for="description"><i class="bi-shield-fill-exclamation"></i> Description</label>
+              </div>
+              <div class="fw-bolder text-danger fst-italic smaller" id="descriptionError"></div>
+            </div>
+          </div>
+        </form>
+        <!-- 3rd row (upload attachment) -->
+        <form action="http://localhost/api/v1/claim/upload/" id="uploadedFilesForm" name="uploadedFilesForm"  method="POST" enctype="multipart/form-data">
+          <input type="hidden" id="applicationID" name="applicationID" value="" />
+          <input type="hidden" id="uploadedFilename" name="uploadedFilename" value="" />
+          <input type="hidden" id="employeeEmail" name="employeeEmail" value="" />
+          <input type="hidden" id="employeeID" name="employeeID" value="" />
+          <!-- 3rd row (attachment -->
+          <div class="hide" id="myAttachmentDiv">
+            <hr />
+            <div class="text-secondary text-end small">Attachment is required for this claim</div>
+            <div class="mb-3">
+              <label for="formFileMultiple" class="form-label">Select Files</label>
+              <input class="form-control" type="file" id="uploadedFiles" name="uploadedFiles" multiple />
+              <div class="fw-bolder text-warning fst-italic smaller">We accept only "JPG", "GIF", "PNG", "BMP", "PDF"</div>
+              <div class="fw-bolder text-danger fst-italic smaller" id="uploadedFilesError"></div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="btn btn-danger" id="claimFormSubmit"><i class="bi bi-save2-fill"></i> Save</a>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Uploaded files -->
+<div class="modal fade" id="uploadedFilesModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="uploadedFilesModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="uploadedFilesModalLabel">Claim Attachments</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="uploadedFilesModalBody"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+{{end}}
+
+{{define "js"}}
+
+<script>
+  const connectedEmail = {{.User.Email}},
+        connectedID = '{{.User.EmployeeID}}'
+</script>
+
+<script src="/static/js/common/MainHelpers.js"></script>
+<script src="/static/js/common/JqueryDatables.js"></script>
+<script src="/static/js/common/JqueryDraggableModal.js"></script>
+
+<script src="/static/js/claim/myclaim/MyClaimHelpers.js"></script>
+<script src="/static/js/claim/myclaim/MyClaimAPI.js"></script>
+<script src="/static/js/claim/myclaim/myClaim.js"></script>
+{{end}}

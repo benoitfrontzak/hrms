@@ -18,19 +18,24 @@ func multiplexer() http.Handler {
 	mux.HandleFunc("/api/v1/employee/payrollItem/softDelete", handlers.Repo.SoftDeletePI) // delete payroll item for specific employee
 
 	// EMPLOYEE GET
-	mux.HandleFunc("/api/v1/employee/get/seniority", handlers.Repo.GetSeniorityByID) // return seniority of employee id (year int)
-	mux.HandleFunc("/api/v1/employee/get/all", handlers.Repo.GetAll)                 // return all employee by status (active, inactive, deleted)
-	mux.HandleFunc("/api/v1/employee/get/allActive", handlers.Repo.GetAllActive)     // return list of all active employees
-	mux.HandleFunc("/api/v1/employee/get/id", handlers.Repo.GetByID)                 // return employee information by id
-	mux.HandleFunc("/api/v1/employee/get/email", handlers.Repo.GetByEmail)           // return employee information by email
-	mux.HandleFunc("/api/v1/employee/get/leave", handlers.Repo.GetLeaveInfo)         // return employee information relative to leave-service
-	mux.HandleFunc("/api/v1/employee/find/email", handlers.Repo.FindEmail)           // return employee information by email
+	mux.HandleFunc("/api/v1/employee/get/seniority", handlers.Repo.GetSeniorityByID)           // return seniority of employee id (year int)
+	mux.HandleFunc("/api/v1/employee/get/all", handlers.Repo.GetAll)                           // return all employee by status (active, inactive, deleted)
+	mux.HandleFunc("/api/v1/employee/get/allActive", handlers.Repo.GetAllActive)               // return list of all active employees
+	mux.HandleFunc("/api/v1/employee/get/managedEmployees", handlers.Repo.GetManagedEmployees) // return list of all employees managed by manager uid
+	mux.HandleFunc("/api/v1/employee/get/id", handlers.Repo.GetByID)                           // return employee information by id
+	mux.HandleFunc("/api/v1/employee/get/email", handlers.Repo.GetByEmail)                     // return employee information by email
+	mux.HandleFunc("/api/v1/employee/get/leave", handlers.Repo.GetLeaveInfo)                   // return employee information relative to leave-service
+	mux.HandleFunc("/api/v1/employee/find/email", handlers.Repo.FindEmail)                     // return employee information by email
 
 	// CONFIG TABLES CRUD
 	mux.HandleFunc("/api/v1/employee/configTables/get", handlers.Repo.GetCT)              // return all employee's config table
 	mux.HandleFunc("/api/v1/employee/configTable/create", handlers.Repo.CreateCT)         // create new config table entry
 	mux.HandleFunc("/api/v1/employee/configTable/update", handlers.Repo.UpdateCT)         // update one config table entry
 	mux.HandleFunc("/api/v1/employee/configTable/softDelete", handlers.Repo.SoftDeleteCT) // delete list of config table entries
+
+	// PAYROLL ITEM
+	mux.HandleFunc("/api/v1/payrollItem/create", handlers.Repo.CreateNewPI) // create new payroll item entry
+	mux.HandleFunc("/api/v1/payrollItem/update", handlers.Repo.UpdatePI)    // update payroll item entry
 
 	return mux
 }

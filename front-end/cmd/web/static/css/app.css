@@ -19,7 +19,7 @@
 
 /* Bootstrap customization */
 :root {
-  --nav-height: 70px; /*You HAVE To Give A Default Fallback Value*/
+  --nav-height: 50px; /*You HAVE To Give A Default Fallback Value*/
 }
 
 .form-control:focus {
@@ -153,11 +153,6 @@ table.dataTable thead tr>.dtfc-fixed-right{border-color: #DC0015;}
   background: #E66E7A !important;
   color:white !important;
 }
-/* .table-condensed>tbody>tr>td:hover{
-  background-color: #DC0015; 
-  background: #DC0015; 
-  background-image: none;
-} */
 .datepicker, .datepicker-inline{
   width: 100% !important;
   height: auto !important;
@@ -212,7 +207,10 @@ table.dataTable thead tr>.dtfc-fixed-right{border-color: #DC0015;}
   background-color: white !important; 
   background: white !important;
 }
-
+/* Full Calendar */
+.fc-content{
+  background-color: #3587DC !important;
+}
 /* Custom */
 .loader {
   position: relative;

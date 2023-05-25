@@ -194,6 +194,45 @@ func (e *Employee) GetEmployeeLeaveInfo(id int) (*employeeLeave, error) {
 	return &el, nil
 }
 
+// fetch all employees managed by manager uid
+func (e *Employee) GetManagedEmployees(id int) ([]int, error) {
+	// canceling this context releases resources associated with it
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+	// SQL statement which fetch employee summary
+	query := `SELECT e.employee_id  
+			  FROM "EMPLOYMENT" e
+			  WHERE e.employee_id = $1
+			  OR e.superior_id = $2
+			  OR e.supervisor_id = $3`
+
+	// executes SQL query
+	rows, err := db.QueryContext(ctx, query, id, id, id)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	// populate returned row to employee full struct
+	var list []int
+	for rows.Next() {
+		var eid int
+		err := rows.Scan(
+			&eid,
+		)
+		if err != nil {
+			return nil, err
+		}
+		list = append(list, eid)
+	}
+	if err != nil {
+		return nil, err
+	}
+	// return employee full row
+	return list, nil
+}
+
 // helpers
 func getEmployeeFullByID(id int) (*Employee, error) {
 	// canceling this context releases resources associated with it

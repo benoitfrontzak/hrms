@@ -42,6 +42,8 @@ func getTableNameDB(ct string) string {
 		dbTable = "CONFIG_STATUTORY_TAX_BRANCH"
 	case "StatutoryTaxStatus":
 		dbTable = "CONFIG_STATUTORY_TAX_STATUS"
+	case "PayrollItem":
+		dbTable = "CONFIG_PAYROLL_ITEM"
 	default:
 		dbTable = ""
 	}

@@ -34,6 +34,8 @@ func (rep *Repository) Leave(w http.ResponseWriter, r *http.Request) {
 	switch myc.User.Role {
 	case 2:
 		render.RenderTemplate(w, "admin.leave.page.gohtml", td)
+	case 3:
+		render.RenderTemplate(w, "manager.leave.page.gohtml", td)
 	default:
 		var empty any
 		render.RenderTemplate(w, "unauthorized.page.gohtml", empty)

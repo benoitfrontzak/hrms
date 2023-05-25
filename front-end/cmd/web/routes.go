@@ -31,7 +31,7 @@ func multiplexer() http.Handler {
 	// Information: super admin only (logs analysis)
 	mux.Handle("/information/", handlers.Middleware(http.HandlerFunc(handlers.Repo.Information)))
 
-	// Maintenance: Admin only
+	// Maintenance: Admin only (leave & leave/employee also manager)
 	mux.Handle("/employee/", handlers.Middleware(http.HandlerFunc(handlers.Repo.Employee)))             // CRUD operation
 	mux.Handle("/claim/", handlers.Middleware(http.HandlerFunc(handlers.Repo.Claim)))                   // Approve | reject claim
 	mux.Handle("/claim/employee/", handlers.Middleware(http.HandlerFunc(handlers.Repo.ClaimEmployee)))  // view employee's claims

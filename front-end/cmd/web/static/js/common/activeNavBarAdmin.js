@@ -1,12 +1,13 @@
-const homeLink      = document.querySelector('#homeMenuLink'),
-      employeeLink  = document.querySelector('#employeeMenuLink'),
-      claimLink     = document.querySelector('#claimDropdownMenuLink'),
-      myClaimLinks  = document.querySelectorAll('.claimMenuLink'),      // class submenu dropdown
-      leaveLink     = document.querySelector('#leaveDropdownMenuLink'),
-      myLeaveLinks  = document.querySelectorAll('.leaveMenuLink'),      // class submenu dropdown
-      phLink        = document.querySelector('#phMenuLink'),            // public holidays
-      userLink      = document.querySelector('#userDropdownMenuLink'),
-      myUserLinks   = document.querySelectorAll('.userMenuLink')        // class submenu dropdown
+const homeLink          = document.querySelector('#homeMenuLink'),
+      employeeLink      = document.querySelector('#employeeMenuLink'),
+      claimLink         = document.querySelector('#claimDropdownMenuLink'),
+      myClaimLinks      = document.querySelectorAll('.claimMenuLink'),      // class submenu dropdown
+      leaveLink         = document.querySelector('#leaveDropdownMenuLink'),
+      myLeaveLinks      = document.querySelectorAll('.leaveMenuLink'),      // class submenu dropdown
+      phLink            = document.querySelector('#phMenuLink'),            // public holidays
+      configurationLink = document.querySelector('#configurationMenuLink'),
+      userLink          = document.querySelector('#userDropdownMenuLink'),
+      myUserLinks       = document.querySelectorAll('.userMenuLink')        // class submenu dropdown
 
 // Set localStorage active link to home by default
 if (localStorage.getItem("activeLink") === null) {
@@ -55,6 +56,11 @@ phLink.addEventListener('click', () => {
     phLink.className = 'nav-link active border-bottom'
     localStorage.setItem("activeLink", "ph")
 })
+// when public holidays is clicked
+configurationLink.addEventListener('click', () => {
+    configurationLink.className = 'nav-link active border-bottom'
+    localStorage.setItem("activeLink", "configuration")
+})
 // when user is clicked
 userLink.addEventListener('click', () => {
     userLink.className = 'nav-link dropdown-toggle active border-bottom'
@@ -71,18 +77,24 @@ myUserLinks.forEach(user => {
 // set active link up to localStorage value
 switch (activeLink) {
     case 'home':
-        homeLink.className = 'nav-link active border-bottom'
+        homeLink.className = 'nav-link active border-bottom border-danger'
         break;                
     case 'employee':
-        employeeLink.className = 'nav-link active border-bottom'
+        employeeLink.className = 'nav-link active border-bottom border-danger'
         break;
     case 'claim':
-        claimLink.className = 'nav-link dropdown-toggle active border-bottom'
+        claimLink.className = 'nav-link dropdown-toggle active border-bottom border-danger'
         break;
     case 'leave':
-        leaveLink.className = 'nav-link dropdown-toggle active border-bottom'
+        leaveLink.className = 'nav-link dropdown-toggle active border-bottom border-danger'
+        break;
+    case 'ph':
+        phLink.className = 'nav-link active border-bottom border-danger'
+        break;
+    case 'configuration':
+        configurationLink.className = 'nav-link active border-bottom border-danger'
         break;
     case 'user':
-        userLink.className = 'nav-link dropdown-toggle active border-bottom'
+        userLink.className = 'nav-link dropdown-toggle active border-bottom border-danger'
         break;
 }

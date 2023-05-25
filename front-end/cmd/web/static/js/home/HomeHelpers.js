@@ -140,12 +140,17 @@ class HomeHelpers{
             // populate modal on leave today | tomorrow           
             target.innerHTML = ''
 
+            
             data.forEach(element => {
+                let myReason = ''
+                if (connectedRole == 2){
+                    myReason = element.Reason
+                }
                 let row = document.createElement('div')
                 row.classList = 'row'
                 row.innerHTML = `<div class="col">${allEmployees.get(Number(element.EmployeeID))}</div>
                                 <div class="col">${element.Code} - ${element.Description}</div>
-                                <div class="col">${element.Reason}</div>
+                                <div class="col">${myReason}</div>
                                 <div class="col">${this.myBooleanIcons(element.IsHalf)}</div>`
 
                 target.appendChild(row)
@@ -211,6 +216,10 @@ class HomeHelpers{
     // customize boolean (0|1) with icons
     myBooleanIcons(value){
         return (value == 1) ? '<i class="bi-check2-square"></i> true' : '<i class="bi-x-square"></i> false'
+    }
+
+    myBooleanIsHalf(value){
+        return (value == 1) ? 'Half day' : 'Full day'
     }
 
     // convert undefined value to 0

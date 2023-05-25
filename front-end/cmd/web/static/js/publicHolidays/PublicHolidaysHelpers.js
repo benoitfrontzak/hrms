@@ -33,22 +33,27 @@ class MyPublicHolidaysHelpers {
         data.forEach(element => { 
             let row = document.createElement('tr')
             row.id = 'myPH' + element.id
-            row.innerHTML = `<td class="row-data pointer">${this.formatDate(element.date)}</td>
-                             <td class="row-data pointer">${element.name}</td>
-                             <td class="row-data pointer">${element.description}</td>
-                             <td class="row-data pointer">${this.formatDate(element.createdAt)}</td>
-                             <td class="row-data pointer">${allEmployees.get(Number(element.createdBy))}</td>
-                             <td class="row-data pointer">${this.formatDate(element.updatedAt)}</td>
-                             <td class="row-data pointer">${allEmployees.get(Number(element.updatedBy))}</td>
+            row.innerHTML = `<td class="row-data pointer"><input type="text" class="form-control form-control-sm transparentInput" id="date${element.id}" value="${this.formatDate(element.date)}" disabled /></td>
+                             <td class="row-data pointer"><input type="text" class="form-control form-control-sm transparentInput" id="name${element.id}" value="${element.name}" /></td>
+                             <td class="row-data pointer"><input type="text" class="form-control form-control-sm transparentInput" id="description${element.id}" value="${element.description}" /></td>
+                             <td class="row-data pointer"><input type="text" class="form-control form-control-sm transparentInput" value="${this.formatDate(element.createdAt)}" disabled /></td>
+                             <td class="row-data pointer"><input type="text" class="form-control form-control-sm transparentInput" value="${allEmployees.get(Number(element.createdBy))}" disabled /></td>
+                             <td class="row-data pointer"><input type="text" class="form-control form-control-sm transparentInput" value="${this.formatDate(element.updatedAt)}" disabled /></td>
+                             <td class="row-data pointer"><input type="text" class="form-control form-control-sm transparentInput" value="${allEmployees.get(Number(element.updatedBy))}" disabled /></td>
                              <td>
-                                <div class="row">
+                                <div class="row" id="deleteAction${element.id}">
                                     <div class="col text-end">
                                         <div class="form-check">
                                             <label class="form-check-label fw-lighter fst-italic smaller" for="softDelete"><i class="bi-trash2-fill largeIcon pointer deletePH"></i></label>
                                             <input class="form-check-input deleteCheckboxes"  type="checkbox" value="${element.id}" name="softDelete">                                    
                                         </div> 
                                     </div>
-                                </div>                                                 
+                                </div>
+                                <div class="row hide" id="saveAction${element.id}">
+                                    <div class="col text-end">
+                                        <a href="#" class="btn btn-sm btn-danger saveRowBtn" data-id=${element.id}><i class="bi bi-save2-fill"></i> Save</a>
+                                    </div>
+                                </div>                                               
                              </td>`
             
                              
@@ -57,18 +62,61 @@ class MyPublicHolidaysHelpers {
 
         DT.initiateMyTable('publicHolidayTable', myColumns)
         this.createRowClickEvent()
+        this.saveRow()
+        // Delegate the click event to a static parent element
+        // $('#publicHolidayTable').on('click', '.saveRowBtn', this.saveRow);
     }
 
     // make datatable rows clickable but the last column 
-    // open employee to new tab for edit 
     createRowClickEvent(){
         $('#publicHolidayTable tbody').on('click', 'td:not(:last-child)', function() {
-          const tr = $(this).closest('tr'),
-          rowID = tr[0].id
-                console.log(rowID);
+            const tr = $(this).closest('tr'),
+                  rowID = tr[0].id.replace('myPH', '')
+            // hide delete button & show save button
+            Common.hideDivByID('deleteAction'+rowID)
+            Common.showDivByID('saveAction'+rowID)
         }) 
-      }
+    }
 
+    // save row
+    saveRow(){
+        document.querySelectorAll('.saveRowBtn').forEach(element => {
+            element.addEventListener('click', (e) => {
+                const rowID          = e.target.dataset.id,
+                      newDate        = document.querySelector('#date'+rowID),
+                      newName        = document.querySelector('#name'+rowID),
+                      newDescription = document.querySelector('#description'+rowID)
+                if (this.validateRow(newName.value) == ''){
+                    const data = this.getRow(rowID, newDate.value, newName.value, newDescription.value)
+            
+                    API.updatePH(data).then(resp => {
+                        if (!resp.error) location.reload()
+                    })
+                }      
+            })
+        });
+    }
+    validateRow(newName){
+        console.log('inside');
+        let myMsg = ''
+        if (newName == ''){
+            myMsg = 'You must set a name for the Public Holiday'
+            Common.showDivByID('rowWarningMessageDiv')
+            Common.insertHTML(myMsg, 'rowWarningMessage')
+        }
+        return myMsg
+    }
+    getRow(rowID, newDate, newName, newDescription){
+        const myjson = {}
+
+        myjson['id']          = rowID
+        myjson['date']        = newDate
+        myjson['name']        = newName
+        myjson['description'] = newDescription
+        myjson['updatedBy']   = connectedID
+
+        return JSON.stringify(myjson, function replacer(key, value) { return value})
+    }
     // returns list of selected leave id to be deleted
     selectedPH(){
         const checked = document.querySelectorAll('input[name=softDelete]:checked')
@@ -160,7 +208,7 @@ class MyPublicHolidaysHelpers {
     }
     
     // validate form (required fields & uniq date)
-    validateForm(myRequired){
+    validateForm(){
         // store not valid fields
         let notValid = []
 

@@ -81,6 +81,11 @@ window.addEventListener('DOMContentLoaded', () => {
         Helpers.cleanForm()
     })
 
+    // close warning message (row)
+    document.querySelector('#hideRowWarningMessage').addEventListener('click', () => {
+        Common.hideDivByID('rowWarningMessageDiv')
+    })
+
     // close warning message (form)
     document.querySelector('#hideWarningMessage').addEventListener('click', () => {
         Common.hideDivByID('warningMessageDiv')

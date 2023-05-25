@@ -1,35 +1,356 @@
 {{template "base.manager" . }}
 
-{{define "content"}}
+<!-- We use css marker to load specific script of the page -->
+{{define "css"}}
+  <!-- Google chart -->
+  <script src="https://www.gstatic.com/charts/loader.js"></script>
+  <script>google.charts.load("current", {packages:["corechart"]})</script>
+  <!-- Full calendar -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
+{{end}}
 
-  <div class="container">
-      <div class="row justify-content-md-center">
-          <div class="col-sm-6 mt-3 text-center">
-              <h1 class="text-danger mt-3">Welcome Manager</h1>
-              <hr>
-              <p class="text-start fw-bold">Paseto payload:</p>
-              <div class="row">
-                <div class="col text-start">UUID</div>
-                <div class="col-10 text-end">{{.ID}}</div>
+{{define "content"}}
+  <!-- Main home page -->
+  <div class="container-fluid bg-light">
+    <div class="zoomOut">   
+        <!-- Cards: On leave today | On leave tomorrow | My pending request | Requested my approval -->
+        <div class="row">
+          <!-- Card: On leave today -->
+          <div class="col p-3">
+            <div class="row myTint6BG shadow">
+              <div class="col p-3 myBaseTextColor fw-bolder largeIcon"><h1><i class="bi-calendar-event-fill "></i></h1></div>
+              <div class="col text-end mb-3">
+                <div class="fw-bolder fs-1" id="leaveToday"></div>
+                <div class="">On Leave Today</div>
+                <div class="smaller pointer myMainTextColor fw-bolder fs-6 my-3" data-bs-toggle="modal" data-bs-target="#onLeaveToday">VIEW DETAILS <i class="bi-caret-right-fill"></i></div>
               </div>
-              <div class="row">
-                <div class="col text-start">Email</div>
-                <div class="col-10 text-end">{{.Email}}</div>
-              </div>
-              <div class="row">
-                <div class="col text-start">Role</div>
-                <div class="col-10 text-end">{{.Role}}</div>
-              </div>
-              <div class="row">
-                <div class="col text-start">Issued</div>
-                <div class="col-10 text-end">{{.IssuedAt}}</div>
-              </div>
-              <div class="row">
-                <div class="col text-start">Expired</div>
-                <div class="col-10 text-end">{{.ExpiredAt}}</div>
-              </div>
+            </div>
           </div>
-      </div>
+          <!-- Card: On leave tomorrow -->
+          <div class="col p-3">
+            <div class="row myTint6BG shadow">
+              <div class="col p-3 myBaseTextColor fw-bolder largeIcon"><h1><i class="bi-calendar-range-fill"></i></h1></div>
+              <div class="col text-end mb-3">
+                <div class="fw-bolder fs-1" id="leaveTomorrow"></div>
+                <div class="">On Leave Tomorrow</div>
+                <div class="smaller pointer myMainTextColor fw-bolder fs-6 my-3" data-bs-toggle="modal" data-bs-target="#onLeaveTomorrow">VIEW DETAILS <i class="bi-caret-right-fill"></i></div>
+              </div>
+            </div>
+          </div>
+          <!-- Card: My pending request -->
+          <div class="col p-3">
+            <div class="row myTint6BG shadow">
+              <div class="col p-3 myBaseTextColor fw-bolder largeIcon"><h1><i class="bi-clipboard-data"></i></h1></div>
+              <div class="col text-end mb-3">
+                <div class="fw-bolder fs-1" id="myClaimsPending"></div>
+                <div class="">My Pending Request</div>
+                <div class="smaller pointer myMainTextColor fw-bolder fs-6 my-3" data-bs-toggle="modal" data-bs-target="#myPendingRequest">VIEW DETAILS <i class="bi-caret-right-fill"></i></div>
+              </div>
+            </div>
+          </div>
+          <!-- Card: Requested claims -->
+          <div class="col p-3">
+            <div class="row myTint6BG shadow">
+              <div class="col p-3 myBaseTextColor fw-bolder largeIcon"><h1><i class="bi-clipboard-check"></i></h1></div>
+              <div class="col text-end mb-3">
+                <div class="fw-bolder fs-1" id="myClaimsRequested"></div>
+                <div class="">Requested claims</div>
+                <div class="pointer myMainTextColor fw-bolder fs-6 my-3" data-bs-toggle="modal" data-bs-target="#requestedMyClaims">VIEW DETAILS <i class="bi-caret-right-fill"></i></div>
+              </div>
+            </div>
+          </div>       
+        </div>
+        <div class="space"></div>
+        <!-- Cards: Profile | My claim -->
+        <div class="row">
+          <!-- Card: Profile --> 
+          <div class="col-6">
+            <div class="myRedImgBG borderRadiusTop p-3">
+              <div class="row">
+                <div class="col fs-5 text-white fw-bolder">PROFILE</div>
+              </div>
+              <!-- space --> 
+              <div class="row">
+                <div class="col"><div class="space"></div></div>
+              </div>
+              <div class="row">
+                <div class="col"><div class="space"></div></div>
+              </div>
+              <div class="row">
+                <div class="col text-white text-center" style="font-size: 64px"><i class="bi-person-circle"></i></div>
+                <div class="col-10" >
+                  <div class="row">
+                    <!-- Profile name | ic/passport | job title -->
+                    <div class="col text-white" id="myProfile"></div>
+                  </div>
+                  <div class="row">
+                    <!-- Profile join & confirm dates -->
+                    <div class="col-8" id="myProfileDates"></div>
+                    <div class="col">
+                      <div class="d-flex justify-content-between"> 
+                        <a href="/myleave" class="btn btn-light myMainTextColor pointer">Leave</a>                    
+                        <a href="/myclaim" class="btn btn-light myMainTextColor pointer">Claim</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div> 
+              <!-- space --> 
+              <div class="row">
+                <div class="col"> <div class="space"></div> </div>
+              </div>
+              <div class="row">
+                <div class="col"><div class="space"></div></div>
+              </div>
+            </div>
+            <div class="bg-white borderRadiusBottom p-3">
+              <div class="row bg-white">
+                <div class="col fs-5 myTint1TextColor fw-bolder">PAY SLIP</div>
+              </div>
+              <!-- space --> 
+              <div class="row bg-white">
+                <div class="col"><div class="space bg-white"></div></div>
+              </div>
+              <!-- Pay Slip month-->
+              <div class="row bg-white myTint1TextColor text-center">
+                <div class="col">Jan</div>
+                <div class="col">Feb</div>
+                <div class="col">Mar</div>
+                <div class="col">Apr</div>
+                <div class="col">May</div>
+                <div class="col">Jun</div>
+                <div class="col">Jul</div>
+                <div class="col">Aug</div>
+                <div class="col">Sep</div>
+                <div class="col">Oct</div>
+                <div class="col">Nov</div>
+                <div class="col">Dec</div>
+              </div>
+              <!-- Pay Slip miniature --> 
+              <div class="row bg-white myTint1TextColor text-center">
+                <div class="col mb-3"><img class="myMiniature" src="/static/images/Payslip-demo.jpg" /></div>
+                <div class="col mb-3"><img class="myMiniature" src="/static/images/Payslip-demo.jpg" /></div>
+                <div class="col mb-3"><img class="myMiniature" src="/static/images/Payslip-demo.jpg" /></div>
+                <div class="col mb-3"><img class="myMiniature" src="/static/images/Payslip-demo.jpg" /></div>
+                <div class="col mb-3"></div>
+                <div class="col mb-3"></div>
+                <div class="col mb-3"></div>
+                <div class="col mb-3"></div>
+                <div class="col mb-3"></div>
+                <div class="col mb-3"></div>
+                <div class="col mb-3"></div>
+                <div class="col mb-3"></div>
+              </div>
+            </div>
+          </div>        
+          <!-- Card: My claim --> 
+          <div class="col-6 p-3">
+            <div class="row">
+              <div class="col fs-5 fw-bolder myMainTextColor" style="text-indent: 10px">MY CLAIM</div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <div id="pieChartClaims" style="width:300px; height:300px"></div>
+              </div>
+              <div class="col">               
+                <div class="row"> 
+                  <div class="col fw-bolder text-white myMainBG borderRadiusTop">TOTAL</div> 
+                </div>
+                <div class="row">
+                  <div class="col fw-bolder text-white fs-1 myMainBG borderRadiusBottom">RM <span id="claimsTotal"></span></div>
+                </div>
+                <div class="space"></div>
+                <div class="row"> 
+                  <div class="col">
+                    <div class="d-flex align-items-center">
+                      <div class="circleBlue"></div>
+                      <div>&nbsp;</div>
+                      <div> Pending: RM <span id="claimsTotalPending"></span></div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                      <div class="circleBlack"></div> 
+                      <div>&nbsp;</div>
+                      <div> Rejected: RM <span id="claimsTotalRejected"></span></div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                      <div class="circleTurquoise"></div>
+                      <div>&nbsp;</div>
+                      <div> Approved: RM <span id="claimsTotalApproved"></span></div>
+                    </div>                   
+                  </div> 
+                </div>                
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="space"></div>
+        <!-- Cards: Leave -->      
+        <div class="row">
+          <div class="col p-3">
+            <div class="row myTint2BG borderRadiusTop" >
+              <div class="col fs-5 fw-bolder text-white">LEAVES</div>
+            </div>
+            <div class="row bg-white shadow">
+              <div class="col-7 mt-3"><div class="p-3" id="chartLeaves"></div></div>
+              <div class="col-5 mt-3">
+                <div class="row my-3 border-bottom"> 
+                  <div class="col-4 mt-3 myTint2TextColor text-start fw-bolder">Title</div> 
+                  <div class="col-2 mt-3 myTint2TextColor text-start fw-bolder">Entitled</div> 
+                  <div class="col-2 mt-3 myTint2TextColor text-start fw-bolder">Credits</div> 
+                  <div class="col-2 mt-3 myTint2TextColor text-start fw-bolder">Taken</div> 
+                  <div class="col-2 mt-3 myTint2TextColor text-start fw-bolder">Balance</div> 
+                </div>
+                <div id="leaveDetailsBody"></div>
+              </div>
+            </div>          
+          </div>
+        </div>
+        <div class="space"></div>
+        <!-- Cards: Public Holidays -->      
+        <div class="row">
+          <div class="col p-3">
+            <div class="row myTint2BG borderRadiusTop" >
+              <div class="col fs-5 fw-bolder text-white">CALENDAR</div>
+            </div>
+            <div class="row bg-white shadow my-3">
+              <div class="col-6 my-3"> <div id="calendar"></div> </div>
+              <div class="col-6 mt-3">
+                <div class="row mt-3"> <div class="col-2 mt-3 myTint2TextColor text-start fw-bolder">&nbsp;</div> </div> 
+                <div class="row mt-1 border"> 
+                  <div class="d-flex align-items-center">
+                      <div class="circleBlue"></div>
+                      <div>&nbsp;</div>
+                      <div>Leave</div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                      <div class="circleTurquoise"></div>
+                      <div>&nbsp;</div>
+                      <div>Public Holidays</div>
+                    </div>
+                </div> 
+              </div>
+            </div>          
+          </div>
+        </div>    
+    </div>
   </div>
-  
+
+  <a href="javascript:void(0);" id="backToTop" class="back-to-top">
+    <i class="arrow"></i><i class="arrow"></i>
+  </a>
+
+  <!-- Modal: On leave today -->
+  <div class="modal fade" id="onLeaveToday" tabindex="-1" aria-labelledby="onLeaveTodayLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="onLeaveTodayLabel">On leave today</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row border-bottom"> 
+            <div class="col">Employee</div>
+            <div class="col">Leave</div>
+            <div class="col">Reason</div>
+            <div class="col">Half</div>
+          </div>
+          <div class="my-3" id="onLeaveTodayBody"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: On leave tomorrow -->
+  <div class="modal fade" id="onLeaveTomorrow" tabindex="-1" aria-labelledby="onLeaveTomorrowLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="onLeaveTomorrowLabel">On leave tomorrow</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row border-bottom"> 
+            <div class="col">Employee</div>
+            <div class="col">Leave</div>
+            <div class="col">Reason</div>
+            <div class="col">Half</div>
+          </div>
+          <div class="my-3" id="onLeaveTomorrowBody"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: My pending request -->
+  <div class="modal fade" id="myPendingRequest" tabindex="-1" aria-labelledby="myPendingRequestLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="myPendingRequestLabel">My pending request</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row border-bottom bd-highlight"> 
+            <div class="col fw-bolder">Requested</div>
+            <div class="col fw-bolder">Description</div>
+            <div class="col fw-bolder">Requested Amount</div>
+            <div class="col fw-bolder">Requested Date</div>
+          </div>
+          <div class="mb-3" id="myPendingRequestBody"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: My requested claims -->
+  <div class="modal fade" id="requestedMyClaims" tabindex="-1" aria-labelledby="requestedMyClaimsLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="requestedMyClaimsLabel">Requested claims</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row border-bottom"> 
+            <div class="col-2 fw-bolder">Requested</div>
+            <div class="col-3 fw-bolder">Description</div>
+            <div class="col fw-bolder">Status</div>
+            <div class="col fw-bolder">Amount</div>
+            <div class="col fw-bolder">Approved</div>
+            <div class="col-3 fw-bolder">Reason</div>
+            <div class="col fw-bolder">Date</div>
+          </div>
+          <div class="mb-3" id="requestedMyClaimsBody"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>  
+{{end}}
+
+{{define "js"}}
+  <script>
+    const connectedEmail = {{.User.Email}},
+          connectedID = '{{.User.EmployeeID}}',
+          connectedRole = {{.User.Role}}
+  </script>
+
+  <script src="/static/js/common/MainHelpers.js"></script>
+
+  <script src="/static/js/home/HomeManagerAPI.js"></script>
+  <script src="/static/js/home/HomeHelpers.js"></script>
+  <script src="/static/js/home/home.js"></script>
 {{end}}

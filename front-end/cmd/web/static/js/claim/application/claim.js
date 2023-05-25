@@ -33,7 +33,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 const capitalize = element => (element && element[0].toUpperCase() + element.slice(1)) || ""
 
                 document.querySelector('#'+element+'Btn').addEventListener('click', () => {
-                    $('#leaveApplicationTable').DataTable().destroy()
+                    $('#claimApplicationsTable').DataTable().destroy()
                     let ds
                     switch (element) {
                         case 'pending':

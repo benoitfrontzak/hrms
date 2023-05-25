@@ -32,6 +32,8 @@ func multiplexer() http.Handler {
 
 	// API v1 leave
 	mux.HandleFunc("/api/v1/leave/get/all", handlers.Repo.GetAllLeave)
+	mux.HandleFunc("/api/v1/leave/get/user", handlers.Repo.GetAllLeaveUser)
+	mux.HandleFunc("/api/v1/leave/get/manager", handlers.Repo.GetAllLeaveManager)
 	mux.HandleFunc("/api/v1/leave/get/today", handlers.Repo.GetAllLeaveToday)
 	mux.HandleFunc("/api/v1/leave/approve", handlers.Repo.ApproveLeave)
 	mux.HandleFunc("/api/v1/leave/reject", handlers.Repo.RejectLeave)
@@ -42,5 +44,6 @@ func multiplexer() http.Handler {
 	mux.HandleFunc("/api/v1/publicHoliday/create/csv", handlers.Repo.CreateCSV)
 	mux.HandleFunc("/api/v1/publicHoliday/get/all", handlers.Repo.GetAllPublicHoliday)
 	mux.HandleFunc("/api/v1/publicHoliday/softDelete", handlers.Repo.SoftDeletePublicHoliday)
+	mux.HandleFunc("/api/v1/publicHoliday/update", handlers.Repo.UpdatePH)
 	return mux
 }

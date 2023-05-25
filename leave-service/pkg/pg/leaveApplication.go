@@ -206,6 +206,70 @@ func (l *Leave) GetAllMyLeave(eid int) ([]*Leave, error) {
 }
 
 // get all leaves by status (pending | approved | rejected)
+func (l *Leave) GetAllLeaveManager(list string) (*AllLeave, error) {
+
+	// status id
+	// 0	not defined
+	// 1	draft
+	// 2	pending
+	// 3	rejected
+	// 4	approved
+
+	var all AllLeave
+
+	approved, err := getAllLeaveManagerByStatus(4, list)
+	if err != nil {
+		return nil, err
+	}
+	pending, err := getAllLeaveManagerByStatus(2, list)
+	if err != nil {
+		return nil, err
+	}
+	rejected, err := getAllLeaveManagerByStatus(3, list)
+	if err != nil {
+		return nil, err
+	}
+
+	all.Approved = approved
+	all.Pending = pending
+	all.Rejected = rejected
+
+	return &all, nil
+}
+
+// get all leaves by status (pending | approved | rejected)
+func (l *Leave) GetAllLeaveUser(eid int) (*AllLeave, error) {
+
+	// status id
+	// 0	not defined
+	// 1	draft
+	// 2	pending
+	// 3	rejected
+	// 4	approved
+
+	var all AllLeave
+
+	approved, err := getAllLeaveUserByStatus(4, eid)
+	if err != nil {
+		return nil, err
+	}
+	pending, err := getAllLeaveUserByStatus(2, eid)
+	if err != nil {
+		return nil, err
+	}
+	rejected, err := getAllLeaveUserByStatus(3, eid)
+	if err != nil {
+		return nil, err
+	}
+
+	all.Approved = approved
+	all.Pending = pending
+	all.Rejected = rejected
+
+	return &all, nil
+}
+
+// get all leaves by status (pending | approved | rejected)
 func (l *Leave) GetAllLeave() (*AllLeave, error) {
 
 	// status id
@@ -269,6 +333,157 @@ func (l *Leave) GetRequestedDatesNumber(lid int) (float32, error) {
 /*
 helpers
 */
+// get all leaves by status
+func getAllLeaveManagerByStatus(status int, list string) ([]*Leave, error) {
+	// canceling this context releases resources associated with it
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+	// SQL statement which fetch employee summary
+	query := `SELECT la.id, 
+					 la.leave_definition_id, 
+					 ld.code as leave_code,
+					 ld.description as leave_definition, 
+					 la.description, 
+					 la.status_id, 
+					 cs.name as status_id, 
+					 la.rejected_reason, 
+					 la.approved_at, 
+					 la.approved_by,
+					 la.employee_id,
+					 la.created_at, 
+					 la.created_by, 
+					 la.updated_at, 
+					 la.updated_by
+			 FROM public."LEAVE_APPLICATION" la, public."LEAVE_DEFINITION" ld, public."CONFIG_STATUS" cs
+			 WHERE la.soft_delete = 0
+			 AND la.status_id = $1
+			 AND la.leave_definition_id = ld.id
+			 AND la.status_id = cs.id
+			 AND la.employee_id IN (` + list + `)
+			 ORDER BY la.id;`
+
+	// executes SQL query
+	rows, err := db.QueryContext(ctx, query, status)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	// populate returned rows to employee summary struct
+	var all []*Leave
+	for rows.Next() {
+		var myLeaves Leave
+		err := rows.Scan(
+			&myLeaves.ID,
+			&myLeaves.LeaveDefinitionID,
+			&myLeaves.LeaveDefinitionCode,
+			&myLeaves.LeaveDefinitionName,
+			&myLeaves.Description,
+			&myLeaves.StatusID,
+			&myLeaves.Status,
+			&myLeaves.RejectedReason,
+			&myLeaves.ApprovedAt,
+			&myLeaves.ApprovedBy,
+			&myLeaves.EmployeeID,
+			&myLeaves.CreatedAt,
+			&myLeaves.CreatedBy,
+			&myLeaves.UpdatedAt,
+			&myLeaves.UpdatedBy,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		// fetch leave details
+		details, err := getAllMyRequestedDates(myLeaves.ID)
+		if err != nil {
+			return nil, err
+		}
+		myLeaves.Details = details
+
+		all = append(all, &myLeaves)
+	}
+
+	// return all employee summary rows
+	return all, nil
+}
+
+// get all leaves by status
+func getAllLeaveUserByStatus(status, eid int) ([]*Leave, error) {
+	// canceling this context releases resources associated with it
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+	// SQL statement which fetch employee summary
+	query := `SELECT la.id, 
+					 la.leave_definition_id, 
+					 ld.code as leave_code,
+					 ld.description as leave_definition, 
+					 la.description, 
+					 la.status_id, 
+					 cs.name as status_id, 
+					 la.rejected_reason, 
+					 la.approved_at, 
+					 la.approved_by,
+					 la.employee_id,
+					 la.created_at, 
+					 la.created_by, 
+					 la.updated_at, 
+					 la.updated_by
+			 FROM public."LEAVE_APPLICATION" la, public."LEAVE_DEFINITION" ld, public."CONFIG_STATUS" cs
+			 WHERE la.soft_delete = 0
+			 AND la.status_id = $1
+			 AND la.leave_definition_id = ld.id
+			 AND la.status_id = cs.id
+			 AND la.employee_id = $2
+			 ORDER BY la.id;`
+
+	// executes SQL query
+	rows, err := db.QueryContext(ctx, query, status, eid)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	// populate returned rows to employee summary struct
+	var all []*Leave
+	for rows.Next() {
+		var myLeaves Leave
+		err := rows.Scan(
+			&myLeaves.ID,
+			&myLeaves.LeaveDefinitionID,
+			&myLeaves.LeaveDefinitionCode,
+			&myLeaves.LeaveDefinitionName,
+			&myLeaves.Description,
+			&myLeaves.StatusID,
+			&myLeaves.Status,
+			&myLeaves.RejectedReason,
+			&myLeaves.ApprovedAt,
+			&myLeaves.ApprovedBy,
+			&myLeaves.EmployeeID,
+			&myLeaves.CreatedAt,
+			&myLeaves.CreatedBy,
+			&myLeaves.UpdatedAt,
+			&myLeaves.UpdatedBy,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		// fetch leave details
+		details, err := getAllMyRequestedDates(myLeaves.ID)
+		if err != nil {
+			return nil, err
+		}
+		myLeaves.Details = details
+
+		all = append(all, &myLeaves)
+	}
+
+	// return all employee summary rows
+	return all, nil
+}
 
 // get all leaves by status
 func getAllLeaveByStatus(status int) ([]*Leave, error) {

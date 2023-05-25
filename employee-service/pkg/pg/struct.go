@@ -14,14 +14,14 @@ type PayrollItem struct {
 	Type        string  `json:"type"`
 	Code        string  `json:"code"`
 	Description string  `json:"description"`
-	PayEPF      int     `json:"payEPF"`
-	PaySOCSO    int     `json:"paySOCSO"`
-	PayHRDF     int     `json:"payHRDF"`
-	PayTax      int     `json:"payTax"`
+	PayEPF      int     `json:"payEPF,string"`
+	PaySOCSO    int     `json:"paySOCSO,string"`
+	PayHRDF     int     `json:"payHRDF,string"`
+	PayTax      int     `json:"payTax,string"`
 	Start       string  `json:"start"`
 	End         string  `json:"end"`
 	Amount      float64 `json:"amount,string"`
-	IsFixed     int     `json:"isFixed"`
+	IsFixed     int     `json:"isFixed,string"`
 	EmployeeID  int     `json:"employeeID,string,omitempty"`
 	CreatedAt   string  `json:"createdAt,omitempty"`
 	CreatedBy   int     `json:"createdBy,string,omitempty"`
